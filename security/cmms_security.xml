@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+################################################################################
+#
+# Computerized maintenance management system (CMMS) module,
+# Copyright (C) 
+#    Nextma (http://www.nextma.com). All Right Reserved
+#    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
+#
+# CMMS module is free software: you can redistribute
+# it and/or modify it under the terms of the Affero GNU General Public License
+# as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# CMMS module is distributed in the hope that it will
+# be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU
+# General Public License for more details.
+#
+# You should have received a copy of the Affero GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+-->
+<openerp>
+
+    <data noupdate="1">
+
+        <record model="ir.module.category" id="module_category_cmms_management">
+            <field name="name">CMMS Management</field>
+            <field name="sequence">16</field>
+            <field name="description">Track maintenance on equipment</field>
+        </record>
+
+        <record id="group_cmms_user" model="res.groups">
+            <field name="name">User</field>
+            <field name="category_id" ref="module_category_cmms_management"/>
+            <field name="comment">the user will have access to basic CMMS application.</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="group_cmms_manager" model="res.groups">
+            <field name="name">Manager</field>
+            <field name="comment">the user will have an access to the CMMS configuration.</field>
+            <field name="category_id" ref="module_category_cmms_management"/>
+            <field name="implied_ids" eval="[(4, ref('group_cmms_user'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root'))]"/>
+        </record>
+
+    </data>
+
+    <data noupdate="1">
+    
+        <record model="ir.ui.menu" id="menu_cmms_configuration">
+            <field name="groups_id" eval="[(6,0,[ref('group_cmms_manager')])]"/>
+        </record>
+    
+    </data>
+
+</openerp>

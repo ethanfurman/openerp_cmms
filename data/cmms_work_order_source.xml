@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data noupdate="1">
+        <record id="line1" model="cmms.request.link">
+            <field name="name">Repair</field>
+            <field name="object">cmms.cm</field>
+            <field name="priority">5</field>
+        </record>
+         <record id="line2" model="cmms.request.link">
+            <field name="name">Preventive Maintenance </field>
+            <field name="object">cmms.pm</field>
+            <field name="priority">5</field>
+        </record>
+        <record id="line3" model="cmms.request.link">
+            <field name="name">Checklist</field>
+            <field name="object">cmms.checklist.history</field>
+            <field name="priority">5</field>
+        </record>
+	<record id="line4" model="cmms.request.link">
+            <field name="name">Help Request</field>
+            <field name="object">cmms.intervention</field>
+            <field name="priority">5</field>
+        </record>
+    </data>
+</openerp>

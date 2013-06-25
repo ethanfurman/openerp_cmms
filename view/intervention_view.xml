@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+################################################################################
+#
+# Computerized maintenance management system (CMMS) module,
+# Copyright (C) 
+#    Nextma (http://www.nextma.com). All Right Reserved
+#    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
+#
+# CMMS module is free software: you can redistribute
+# it and/or modify it under the terms of the Affero GNU General Public License
+# as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# CMMS module is distributed in the hope that it will
+# be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU
+# General Public License for more details.
+#
+# You should have received a copy of the Affero GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+-->
+<openerp>
+    <data>
+
+        <record id="view_intervention_form" model="ir.ui.view">
+            <field name="name">cmms.intervention.form</field>
+            <field name="model">cmms.intervention</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Help request">
+                    <group>
+                        <field name="equipment_id" />
+                        <field name="type"/>
+                    </group>
+                    <group>
+                        <field name="user_id"/>
+                        <field name="name" placeholder="unique id will be generated if blank"/>
+                    </group>
+                    <notebook colspan="4">
+                        <page string="General information">
+                            <group>
+                                <field name="user2_id"/>
+                                <field name="priority"/>
+                            </group>
+                            <group>
+                                <field name="date_inter"/>
+                                <field name="date_end"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field colspan="4" nolabel="1" name="observation"/>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_intervention_tree" model="ir.ui.view">
+            <field name="name">cmms.intervention.tree</field>
+            <field name="model">cmms.intervention</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Help Request">
+                    <field name="name" />
+                    <field name="user_id" />
+                    <field name="type" />
+                    <field name="equipment_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_view_intervention_list_my" model="ir.actions.act_window">
+            <field name="name">Help Requests</field>
+            <field name="res_model">cmms.intervention</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <!--
+        <menuitem id="menu_open_view_intervention_list" 
+            name="Help Request"
+            parent="cmms.menu_cmms" />
+        -->
+        <menuitem action="open_view_intervention_list_my" 
+            id="menu_open_view_intervention_list_my"
+            parent="cmms.menu_cmms_main" />
+
+        <!--
+        <record id="open_view_intervention_new" model="ir.actions.act_window">
+            <field name="name">New Request</field>
+            <field name="res_model">cmms.intervention</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+
+        <menuitem action="open_view_intervention_new" 
+            id="menu_open_view_intervention_new"
+            parent="menu_open_view_intervention_list" />
+        -->
+
+    </data>
+</openerp>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+################################################################################
+#
+# Computerized maintenance management system (CMMS) module,
+# Copyright (C) 
+#    Nextma (http://www.nextma.com). All Right Reserved
+#    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
+#
+# CMMS module is free software: you can redistribute
+# it and/or modify it under the terms of the Affero GNU General Public License
+# as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# CMMS module is distributed in the hope that it will
+# be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU
+# General Public License for more details.
+#
+# You should have received a copy of the Affero GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+-->
+<openerp>
+    <data>
+
+        <!-- 
+        ========== 
+        PM 
+        ========== 
+        -->
+
+        <record id="view_pm_form" model="ir.ui.view">
+            <field name="name">cmms.pm.form</field>
+            <field name="model">cmms.pm</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Properties">
+                    <group colspan="4" col="6">
+                        <group colspan="4" col="2">
+                            <field name="equipment_id"/>
+                            <field name="name" placeholder="unique id will be generated if left blank"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="recurrent" />
+                            <field name="meter" />
+                        </group>
+                    </group>
+                    <group colspan="4" col="6">
+                        <group colspan="2" col="2">
+                            <field name="state" />
+                            <field name="days_left" />
+                            <field name="days_next_due" />
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="days_last_done" />
+                            <field name="days_interval" />
+                            <field name="days_warn_period" />
+                        </group>
+                        <group colspan="2"/>
+                    </group>
+                    <separator string="Follow-up history" />
+                </form>
+            </field>
+        </record>
+        <record id="view_pm_tree" model="ir.ui.view">
+            <field name="name">cmms.pm.tree</field>
+            <field name="model">cmms.pm</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Properties" colors="blue:days_left&lt;=days_warn_period and days_left&gt;0;red:days_left&lt;=0;">
+                    <field name="name"/>
+                    <field name="equipment_id" colspan="2"/>
+                    <field name="days_last_done"/>
+                    <field name="days_next_due"/>
+                    <field name="days_warn_period"/>
+                    <field name="days_left"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_view_pm_list_my" model="ir.actions.act_window">
+            <field name="name">Preventive Maintenance</field>
+            <field name="res_model">cmms.pm</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+        </record>
+
+        <menuitem
+            action="open_view_pm_list_my"
+            id="menu_open_view_pm_list_my"
+            parent="cmms.menu_cmms_main"
+            sequence="10"
+            />
+
+    </data>
+</openerp>

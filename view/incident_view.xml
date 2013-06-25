@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+################################################################################
+#
+# Computerized maintenance management system (CMMS) module,
+# Copyright (C) 
+#    Nextma (http://www.nextma.com). All Right Reserved
+#    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
+#
+# CMMS module is free software: you can redistribute
+# it and/or modify it under the terms of the Affero GNU General Public License
+# as published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# CMMS module is distributed in the hope that it will
+# be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU
+# General Public License for more details.
+#
+# You should have received a copy of the Affero GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+################################################################################
+-->
+<openerp>
+    <data>
+
+        <!-- 
+        ==========
+        Incident
+        ========== 
+        -->
+
+        <record id="cmms_incident_tree-view" model="ir.ui.view">
+            <field name="name">cmms.incident.tree</field>
+            <field name="model">cmms.incident</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Incident">
+                    <field name="name"/>
+                    <field name="state"/>
+                    <field name="user_id"/>
+                    <field name="date"/>
+                    <field name="priority"/>
+                    <field name="equipment_id"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="cmms_incident-view" model="ir.ui.view">
+            <field name="name">cmms.incident.form</field>
+            <field name="model">cmms.incident</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Incident">
+                    <group>
+                        <group>
+                            <separator string="Incident description" colspan="4"/>
+                            <field name="name" placeholder="unique id will be generated if blank"/>
+                            <field name="date"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <separator string="Incident state" colspan="2"/>
+                            <field name="user_id"/>
+                            <field name="state"/>
+                            <field name="active"/>
+                        </group>
+                        <group colspan="4" col="6">
+                            <separator colspan="6" string="References"/>
+                            <field name="ref" colspan="4"/>
+                            <separator colspan="2"/>
+                        </group>
+                    </group>
+                    <newline/>
+                    <notebook colspan="4">
+                        <page string="General">
+                            <field name="equipment_id" colspan="2"/>
+                            <separator colspan="2"/>
+                        </page>
+                        <page string="History">
+                            <field colspan="4" name="archiving3_ids" nolabel="1">
+                                <form string="Follow-up history">
+                                    <field name="name" colspan="4"/>
+                                    <field name="user_id"/>
+                                    <field name="date"/>
+                                    <label string="Description"/>
+                                    <field name="description" nolabel="1" colspan="4"/>
+                                </form>
+                                <tree string="Follow-up history">
+                                    <field name="name"/>
+                                    <field name="user_id"/>
+                                    <field name="date"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <!--
+        <menuitem id="menu_open_view_incident_list" name="Work order" parent="cmms.menu_cmms"/>
+        -->
+
+        <record id="cmms_incident_act" model="ir.actions.act_window">
+            <field name="name">Work Orders</field>
+            <field name="res_model">cmms.incident</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="cmms_incident_tree-view"/>
+        </record>
+
+        <menuitem action="cmms_incident_act" id="menu_cmms_incident_act" parent="cmms.menu_cmms_main"/>
+
+        <!--
+        <record id="cmms_incident_act_open" model="ir.actions.act_window">
+            <field name="name">Opened Work Orders</field>
+            <field name="res_model">cmms.incident</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','confirmed')]</field>
+        </record>
+
+        <menuitem action="cmms_incident_act_open" id="menu_cmms_incident_act_open" parent="menu_cmms_incident_act"/>
+
+        <record id="cmms_incident_act_draft" model="ir.actions.act_window">
+            <field name="name">Draft Work Orders</field>
+            <field name="res_model">cmms.incident</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','draft')]</field>
+        </record>
+
+        <menuitem action="cmms_incident_act_draft" 
+            id="menu_cmms_incident_act_draft"
+            parent="menu_cmms_incident_act"/>
+
+        <record id="cmms_incident_act_done" model="ir.actions.act_window">
+            <field name="name">Done Work Orders</field>
+            <field name="res_model">cmms.incident</field>
+            <field name="view_type">form</field>
+            <field name="domain">[('state','=','done')]</field>
+        </record>
+
+        <menuitem action="cmms_incident_act_done" id="menu_cmms_incident_act_done" parent="menu_cmms_incident_act"/>
+
+        <record id="open_view_incident_new" model="ir.actions.act_window">
+            <field name="name">New Work Order</field>
+            <field name="res_model">cmms.incident</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form,tree</field>
+        </record>
+        <menuitem action="open_view_incident_new" id="menu_open_view_incident_new2" parent="menu_open_view_incident_list"/>
+        -->
+
+    </data>
+</openerp>

@@ -1,0 +1,33 @@
+OpenERP module : cmms
+
+Copyright (c) 
+    2013 - Emile van Sebille (http://salesinq.com). All Rights Reserved
+    2011 - Nextma (http://www.nextma.com). All Rights Reserved
+    2005 - 2011 Héonium (http://heonium.com). All Rights Reserved
+
+
+License
+-------
+
+We chose to distribute this module under AGPL-3 license term. See LICENCE file
+for details.
+
+
+Required dependencies
+---------------------
+
+ - An OpenERP environment :-) .
+
+
+Description
+-----------
+
+CMMS module for OpenERP (see module description for more details).
+
+
+Configuration
+-------------
+
+Just install the module in OpenERP environment.
+
+We hope it works for you.

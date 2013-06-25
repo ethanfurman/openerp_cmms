@@ -1,0 +1,19 @@
+2013-06-04
+=======================
+
+Upgraded to OpenERP 7.0 format.
+Adjusted many english terms.
+Made reference fields writable.
+Translated documentation to English.
+Some reworking of screens.
+
+2011-12-09: 1.1 
+=======================
+
+Change all french terms to english and re-translate in french in i18n folder.
+Modify structure menu for better integration in OpenERP.
+
+2011-11-30: 
+=======================
+
+Get the original module from Nextma
