@@ -202,37 +202,15 @@
            action="open_view_line_list_my"
            id="menu_open_view_line_list_my"
            parent="cmms.menu_cmms_main"
+           sequence="10"
            />
 
         <menuitem
            action="open_view_equipment_list_my"
            id="menu_open_view_equipment_list_my"
            parent="cmms.menu_cmms_main"
+           sequence="20"
            />
-
-        <!-- 
-        ========================
-        Configuration Menu Items 
-        ======================== 
-        -->
-
-        <menuitem 
-            id="menu_cmms_configuration" 
-            name="Configuration" 
-            sequence="99" 
-            parent="cmms.menu_cmms"
-            groups="group_cmms_manager"
-           />
-
-        <menuitem
-           action="open_view_line_new" id="menu_open_view_line_new2"
-            parent="menu_cmms_configuration"/>
-
-        <menuitem
-            action="open_view_equipment_new"
-            id="menu_open_view_equipment_new2"
-            parent="menu_cmms_configuration"
-            />
 
     </data>
 </openerp>

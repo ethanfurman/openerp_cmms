@@ -101,10 +101,6 @@
             </field>
         </record>
 
-        <!--
-        <menuitem id="menu_open_view_incident_list" name="Work order" parent="cmms.menu_cmms"/>
-        -->
-
         <record id="cmms_incident_act" model="ir.actions.act_window">
             <field name="name">Work Orders</field>
             <field name="res_model">cmms.incident</field>
@@ -112,9 +108,13 @@
             <field name="view_id" ref="cmms_incident_tree-view"/>
         </record>
 
-        <menuitem action="cmms_incident_act" id="menu_cmms_incident_act" parent="cmms.menu_cmms_main"/>
+        <menuitem
+            action="cmms_incident_act"
+            id="menu_cmms_incident_act"
+            parent="cmms.menu_cmms_main"
+            sequence="50"
+            />
 
-        <!--
         <record id="cmms_incident_act_open" model="ir.actions.act_window">
             <field name="name">Opened Work Orders</field>
             <field name="res_model">cmms.incident</field>
@@ -122,7 +122,11 @@
             <field name="domain">[('state','=','confirmed')]</field>
         </record>
 
-        <menuitem action="cmms_incident_act_open" id="menu_cmms_incident_act_open" parent="menu_cmms_incident_act"/>
+        <menuitem
+            action="cmms_incident_act_open"
+            id="menu_cmms_incident_act_open"
+            parent="menu_cmms_incident_act"
+            />
 
         <record id="cmms_incident_act_draft" model="ir.actions.act_window">
             <field name="name">Draft Work Orders</field>
@@ -131,9 +135,11 @@
             <field name="domain">[('state','=','draft')]</field>
         </record>
 
-        <menuitem action="cmms_incident_act_draft" 
+        <menuitem
+            action="cmms_incident_act_draft" 
             id="menu_cmms_incident_act_draft"
-            parent="menu_cmms_incident_act"/>
+            parent="menu_cmms_incident_act"
+            />
 
         <record id="cmms_incident_act_done" model="ir.actions.act_window">
             <field name="name">Done Work Orders</field>
@@ -144,6 +150,7 @@
 
         <menuitem action="cmms_incident_act_done" id="menu_cmms_incident_act_done" parent="menu_cmms_incident_act"/>
 
+        <!--
         <record id="open_view_incident_new" model="ir.actions.act_window">
             <field name="name">New Work Order</field>
             <field name="res_model">cmms.incident</field>

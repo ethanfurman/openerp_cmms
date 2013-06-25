@@ -80,27 +80,12 @@
             <field name="domain">[]</field>
         </record>
 
-        <!--
-        <menuitem id="menu_open_view_intervention_list" 
-            name="Help Request"
-            parent="cmms.menu_cmms" />
-        -->
-        <menuitem action="open_view_intervention_list_my" 
+        <menuitem
+            action="open_view_intervention_list_my" 
             id="menu_open_view_intervention_list_my"
-            parent="cmms.menu_cmms_main" />
-
-        <!--
-        <record id="open_view_intervention_new" model="ir.actions.act_window">
-            <field name="name">New Request</field>
-            <field name="res_model">cmms.intervention</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-
-        <menuitem action="open_view_intervention_new" 
-            id="menu_open_view_intervention_new"
-            parent="menu_open_view_intervention_list" />
-        -->
+            parent="cmms.menu_cmms_main"
+            sequence="70"
+            />
 
     </data>
 </openerp>

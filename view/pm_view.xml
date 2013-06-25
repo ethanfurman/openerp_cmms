@@ -64,6 +64,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_pm_tree" model="ir.ui.view">
             <field name="name">cmms.pm.tree</field>
             <field name="model">cmms.pm</field>
@@ -93,7 +94,7 @@
             action="open_view_pm_list_my"
             id="menu_open_view_pm_list_my"
             parent="cmms.menu_cmms_main"
-            sequence="10"
+            sequence="40"
             />
 
     </data>

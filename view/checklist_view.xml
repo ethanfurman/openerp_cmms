@@ -77,12 +77,6 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-      <menuitem 
-           id="menu_cmms_checklist_new" 
-           name="New Checklist" 
-           action="cmms_checklist_action_new" 
-           parent="menu_cmms_configuration" />
-
      <!--
         ==========
         checklists
@@ -162,7 +156,7 @@
         id="menu_cmms_checklist_history" 
         name="Checklists" 
         parent="cmms.menu_cmms_main"
-        sequence="70"
+        sequence="60"
         />
 
             
@@ -171,7 +165,7 @@
         name="All Checklists"  
         action="cmms_checklist_action_all"  
         parent="menu_cmms_checklist_history"
-        sequence="5"
+        sequence="10"
         />
             
     <menuitem 
@@ -179,6 +173,7 @@
         name="Checklists Follow-up"  
         action="cmms_checklist_history_action_all"  
         parent="menu_cmms_checklist_history"
+        sequence="20"
         />
 
     <menuitem 
@@ -186,6 +181,7 @@
         name="Fill a Checklist"  
         action="cmms_checklist_history_action_new"  
         parent="menu_cmms_checklist_history"
+        sequence="30"
         />
 
     </data>

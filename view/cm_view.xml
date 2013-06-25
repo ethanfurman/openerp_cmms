@@ -82,15 +82,12 @@
             <field name="domain">[]</field>
         </record>
 
-        <!--
-        <menuitem id="menu_open_view_cm_list" 
-            name="Repairs"
-            parent="cmms.menu_cmms" />
-        -->
-
-        <menuitem action="open_view_cm_list_my" 
+        <menuitem
+            action="open_view_cm_list_my" 
             id="menu_open_view_cm_list_my"
-            parent="cmms.menu_cmms_main" />
+            parent="cmms.menu_cmms_main"
+            sequence="30"
+            />
 
         <record id="open_view_cm_new" model="ir.actions.act_window">
             <field name="name">New Repair</field>
@@ -98,11 +95,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-
-        <!--
-        <menuitem action="open_view_cm_new" id="menu_open_view_cm_new"
-            parent="menu_open_view_cm_list" />
-        -->
 
         ======== 
         Failures
@@ -120,6 +112,7 @@
                 </form>
             </field>
         </record>
+
         <record id="view_failure_tree" model="ir.ui.view">
             <field name="name">cmms.failure.tree</field>
             <field name="model">cmms.failure</field>
@@ -139,13 +132,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
         </record>
-
-        <menuitem action="open_view_failure_new" 
-            id="menu_open_view_failure_new"
-            parent="cmms.menu_cmms_main"
-            sequence="80"
-            groups="group_cmms_manager"
-            />
 
     </data>
 </openerp>
