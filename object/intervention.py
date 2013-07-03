@@ -23,22 +23,30 @@
 
 from mx import DateTime
 import time
+from oe_utils import Normalize
 from osv import fields, osv
 from tools import config
 from tools.translate import _
 import tools
 
-class cmms_intervention(osv.osv):
+class cmms_intervention(Normalize, osv.osv):
     _name = "cmms.intervention"
     _description = "Intervention request"
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+            default = default.copy()
+            default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.intervention')
+        return super(cmms_intervention, self).copy(cr, uid, id, default=default, context=context)
+
     def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')==''):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.intervention')
+        if 'reference' not in vals or not vals['reference']:
+            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.intervention')
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
     _columns = {
-        'name': fields.char('Reference', size=64),
+        'reference': fields.char('Reference', size=64),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'date': fields.datetime('Date'),
         'user_id': fields.many2one('res.users', 'Sender'),
@@ -55,14 +63,10 @@ class cmms_intervention(osv.osv):
         'user_id': lambda object,cr,uid,context: uid,
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not context:
-            context = {}
-        if default is None:
-            default = {}
-            default = default.copy()
-            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.intervention')
-        return super(cmms_intervention, self).copy(cr, uid, id, default=default, context=context)
-
+    _sql_constraints = [
+            ('intervention_ref_key', 'unique(reference)', 'Repair reference already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('reference', *a), '\nRepair reference already exists', ['reference']),
+            ]
 cmms_intervention()

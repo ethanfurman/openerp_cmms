@@ -21,6 +21,7 @@
 #
 ################################################################################
 
+from oe_utils import Normalize
 from osv import osv, fields
 import pooler
 import math
@@ -30,38 +31,56 @@ import time
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, today, DateTime, localtime
 
-class cmms_line(osv.osv):
+import pdb
+
+class cmms_line(Normalize, osv.osv):
     _name = 'cmms.line'
     _description = 'Production line'
-    _columns = {
-        'name': fields.char('Production line', size=64, required=True),
-        'code': fields.char('Reference', size=64),
-        'location': fields.char('Location', size=64),
-        'sequence': fields.integer('Sequence'),
-    }
+
     def create(self, cr, user, vals, context=None):
-        if ('code' not in vals) or (vals.get('code')==''):
-            vals['code'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
+        if 'reference' not in vals or not vals['reference']:
+            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
         return super(cmms_line, self).create(cr, user, vals, context)
+
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default = default.copy()
-        default['code'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.line')
+        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.line')
         return super(cmms_line, self).copy(cr, uid, id, default=default, context=context)
+
+    _columns = {
+        'name': fields.char('Production line', size=64, required=True),
+        'reference': fields.char('Reference', size=64),
+        'location': fields.char('Location', size=64),
+        'sequence': fields.integer('Sequence'),
+    }
+    _sql_constraints = [
+            ('line_ref_key', 'unique(reference)', 'Line reference already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('reference', *a), '\nLine reference already exists', ['reference']),
+            ]
 cmms_line()
 
-class cmms_equipment(osv.osv):
+class cmms_equipment(Normalize, osv.osv):
     _name = "cmms.equipment"
     _description = "equipment"
+    
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.equipment')
+        return super(cmms_equipment, self).copy(cr, uid, id, default=default, context=context)
+
     def create(self, cr, user, vals, context=None):
-        if ('type' not in vals) or (vals.get('type')==''):
-            vals['type'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
+        if 'reference' not in vals or not vals['reference']:
+            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
         return super(cmms_equipment, self).create(cr, user, vals, context)
+
     _columns = {
-        'type': fields.char('Reference', size=64),
+        'reference': fields.char('Reference', size=64),
         'name': fields.char('Name', size=64 , required=True),
         'trademark': fields.char('Brand', size=64),
         'active' : fields.boolean('Active'),
@@ -79,12 +98,10 @@ class cmms_equipment(osv.osv):
         'active' : lambda *a: True,
         'user_id': lambda object,cr,uid,context: uid,
     }
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['type'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.equipment')
-        return super(cmms_equipment, self).copy(cr, uid, id, default=default, context=context)
+    _sql_constraints = [
+            ('equipment_ref_key', 'unique(reference)', 'Equipment reference already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('reference', *a), '\nEquipment reference already exists', ['reference']),
+            ]
 cmms_equipment()

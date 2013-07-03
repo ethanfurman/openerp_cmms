@@ -39,7 +39,7 @@
                     <group colspan="4" col="6">
                         <group colspan="4" string="Machine">
                             <field name="name"/>
-                            <field name="type" placeholder="unique id will be generated if blank"/>
+                            <field name="reference" placeholder="unique id will be generated if blank"/>
                             <field name="line_id"/>
                         </group>
                         <group colspan="2" string="Codes">
@@ -61,7 +61,7 @@
                                 <field colspan="4" name="description" nolabel="1"/>
                         </page>
                         <page string="Additional Information">
-                            <field domain="[('type', '=', 'in_invoice')]" name="invoice_id" colspan="2"/>
+                            <field domain="[('reference', '=', 'in_invoice')]" name="invoice_id" colspan="2"/>
                             <separator colspan="2"/>
                             <separator colspan="4" string="Safety Instruction"/>
                             <field colspan="4" nolabel="1" name="safety"/>
@@ -82,7 +82,7 @@
             <field name="arch" type="xml">
                 <tree string="Equipment">
                     <field name="name"/>
-                    <field name="type"/>
+                    <field name="reference"/>
                     <field name="line_id"/>
                     <field name="active"/>
                     <field name="user_id"/>
@@ -100,7 +100,7 @@
             <field name="arch" type="xml">
                 <tree string="Equipment">
                     <field name="line_id"/>
-                    <field name="type"/>
+                    <field name="reference"/>
                     <field name="name"/>
                     <field name="active"/>
                     <field name="trademark"/>
@@ -144,7 +144,7 @@
             <field name="arch" type="xml">
                 <form string="Production Line">
                     <field name="name"/>
-                    <field name="code" placeholder="unique id will be generated if blank"/>
+                    <field name="reference" placeholder="unique id will be generated if blank"/>
                     <field name="location"/>
                     <field name="sequence"/>
                 </form>
@@ -157,7 +157,7 @@
             <field name="arch" type="xml">
                 <tree string="Production line">
                     <field name="name"/>
-                    <field name="code"/>
+                    <field name="reference"/>
                     <field name="location"/>
                     <field name="sequence"/>
                 </tree>

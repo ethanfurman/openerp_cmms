@@ -25,12 +25,13 @@ import pooler
 import math
 import time
 import mx.DateTime
+from oe_utils import Normalize
 from tools import config
 from tools.translate import _
 from osv import osv, fields
 from mx.DateTime import RelativeDateTime, today, DateTime, localtime
 
-class cmms_failure(osv.osv):
+class cmms_failure(Normalize, osv.osv):
     _name = "cmms.failure"
     _description = "failure cause"
     _columns = {
@@ -39,14 +40,11 @@ class cmms_failure(osv.osv):
         'description': fields.text('Description'),
     }
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if ('code' not in vals) or (vals.get('code')==''):
+        if 'code' not in vals or not vals['code']:
             vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.failure')
         return super(cmms_failure, self).create(cr, uid, vals, context=context)
+
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
         if default is None:
             default = {}
         default = default.copy()
@@ -54,11 +52,24 @@ class cmms_failure(osv.osv):
         return super(cmms_failure, self).copy(cr, uid, id, default=default, context=context)
 cmms_failure()
 
-class cmms_cm(osv.osv):
+class cmms_cm(Normalize, osv.osv):
     _name = "cmms.cm"
     _description = "Corrective Maintenance System"
+
+    def create(self, cr, uid, vals, context=None):
+        if 'reference' not in vals or not vals['reference']:
+            vals['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        return super(cmms_cm, self).create(cr, uid, vals, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        return super(cmms_cm, self).copy(cr, uid, id, default=default, context=context)
+
     _columns = {
-        'name': fields.char('CM Reference',size=20),
+        'reference': fields.char('CM Reference',size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'failure_id': fields.many2one('cmms.failure', 'Failure?'),
         'date': fields.datetime('Date'),
@@ -70,23 +81,15 @@ class cmms_cm(osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'user_id': lambda object,cr,uid,context: uid,
     }
-    def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        if ('name' not in vals) or (vals.get('name')==''):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
-        return super(cmms_cm, self).create(cr, uid, vals, context=context)
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
-        return super(cmms_cm, self).copy(cr, uid, id, default=default, context=context)
+    _sql_constraints = [
+            ('cm_ref_key', 'unique(reference)', 'CM Reference already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('reference', *a), '\nCM Reference already exists', ['reference']),
+            ]
 cmms_cm()
 
-class cmms_diagnosistab(osv.osv):
+class cmms_diagnosistab(Normalize, osv.osv):
     _name = "cmms.diagnosistab"
     _description = "Diagnostics List"
     _columns = {
@@ -96,7 +99,7 @@ class cmms_diagnosistab(osv.osv):
     }
 cmms_diagnosistab()
 
-class cmms_archiving(osv.osv):
+class cmms_archiving(Normalize, osv.osv):
     _name = "cmms.archiving"
     _description = "CM follow-up History"
     _columns = {

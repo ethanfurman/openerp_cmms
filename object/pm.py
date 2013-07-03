@@ -28,8 +28,9 @@ from tools import config
 from tools.translate import _
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, today, DateTime, localtime
+from oe_utils import Normalize
 
-class cmms_pm(osv.osv):
+class cmms_pm(Normalize, osv.osv):
     _name = "cmms.pm"
     _description = "Preventive Maintenance System"
     
@@ -83,13 +84,20 @@ class cmms_pm(osv.osv):
                         res[record.id] = 'OK'
             return res
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+            default = default.copy()
+            default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.pm')
+        return super(cmms_pm, self).copy(cr, uid, id, default=default, context=context)
+
     def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')==''):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
+        if 'reference' not in vals or not vals['reference']:
+            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
         return super(cmms_pm, self).create(cr, user, vals, context)
     
     _columns = {
-        'name':fields.char('PM Reference',size=20, required=True),
+        'reference':fields.char('PM Reference',size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'meter':fields.selection([ ('days', 'Days')], 'Unit of measure'),
         'recurrent':fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
@@ -98,7 +106,8 @@ class cmms_pm(osv.osv):
         'days_next_due':fields.function(_days_next_due, method=True, type="date", string='Next service date'),
         'days_warn_period':fields.integer('Warning time'),
         'days_left':fields.function(_days_due, method=True, type="integer", string='Days until next service'),
-        'state':fields.function(_get_state, method=True, type="char", string='Status')
+        'state':fields.function(_get_state, method=True, type="char", string='Status'),
+        'archiving2_ids': fields.one2many('cmms.archiving2', 'pm_id', 'follow-up history'),
     }
     _defaults = {
         'meter': lambda * a: 'days',
@@ -106,17 +115,15 @@ class cmms_pm(osv.osv):
         'days_last_done': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
-    def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            context = {}
-        if default is None:
-            default = {}
-            default = default.copy()
-            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.pm')
-        return super(cmms_pm, self).copy(cr, uid, id, default=default, context=context)
+    _sql_constraints = [
+            ('pm_ref_key', 'unique(reference)', 'PM reference already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('reference', *a), '\nPM reference already exists', ['reference']),
+            ]
 cmms_pm()
 
-class cmms_archiving2(osv.osv):
+class cmms_archiving2(Normalize, osv.osv):
     _name = "cmms.archiving2"
     _description = "PM follow-up history"
     _columns = {

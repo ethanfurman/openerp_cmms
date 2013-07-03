@@ -21,23 +21,30 @@
 #
 ################################################################################
 
+import base64
 import time
 import tools
 from osv import fields,osv,orm
 
 import mx.DateTime
 from mx.DateTime import RelativeDateTime, today, DateTime, localtime
+from oe_utils import Normalize
 from tools import config
-import base64
 from tools.translate import _
 
-AVAILABLE_PRIORITIES = [
+PRIORITIES = [
     ('3','Normal'),
     ('2','Low'),
-    ('1','High')
-]
+    ('1','High'),
+    ]
 
-class cmms_request_link(osv.osv):
+STATES = [
+    ('draft','Draft'),
+    ('confirmed','Confirmed'),
+    ('done','Done'),
+    ]
+
+class cmms_request_link(Normalize, osv.osv):
     _name = 'cmms.request.link'
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
@@ -51,13 +58,20 @@ class cmms_request_link(osv.osv):
 
 cmms_request_link()
 
-class cmms_incident(osv.osv):
+class cmms_incident(Normalize, osv.osv):
     _name = "cmms.incident"
     _description = "Incident" 
     
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.incident')
+        return super(cmms_incident, self).copy(cr, uid, id, default=default, context=context)
+
     def create(self, cr, user, vals, context=None):
-        if ('name' not in vals) or (vals.get('name')==''):
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
+        if 'reference' not in vals or not vals['reference']:
+            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
         return super(cmms_incident, self).create(cr, user, vals, context)
 
     def _links_get(self, cr, uid, context={}):
@@ -66,10 +80,19 @@ class cmms_incident(osv.osv):
         res = obj.read(cr, uid, ids, ['object', 'name'], context)
         return [(r['object'], r['name']) for r in res]
 
+    def onchange_ref_id(self, cr, uid, ids, id, context={}):
+        if not id:
+            return {}
+        table, id = id.split(',')
+        id = int(id)
+        record = self.pool.get(table).browse(cr, uid, [id])[0]
+        liste = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
+        return {'value':{'equipment_id': record.equipment_id.id}}
+
     _columns = {
-        'name':fields.char('Work order reference',size=64),
-        'state': fields.selection([('draft','Draft'),('confirmed','Confirmed'),('done','Done')],'State', size=32),
-        'priority': fields.selection(AVAILABLE_PRIORITIES, 'Priority'),
+        'reference':fields.char('Work order reference',size=64),
+        'state': fields.selection(STATES,'State', size=32),
+        'priority': fields.selection(PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'date': fields.datetime('Work order date'),
         'active' : fields.boolean('Active?'),
@@ -78,29 +101,26 @@ class cmms_incident(osv.osv):
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history'),
     }
     _defaults = {
-        'active': lambda * a:True,
+        'active': lambda *a: True,
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
-        'priority': lambda *a: AVAILABLE_PRIORITIES[2][0],
-        'user_id': lambda object,cr,uid,context: uid,
-        'state': lambda * a:'draft',
+        'priority': lambda *a: PRIORITIES[2][0],
+        'user_id': lambda obj,cr,uid,context: uid,
+        'state': lambda *a: 'draft',
     }
-
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not context:
-            context = {}
-        if default is None:
-            default = {}
-        default = default.copy()
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.incident')
-        return super(cmms_incident, self).copy(cr, uid, id, default=default, context=context)
-
+    _sql_constraints = [
+            ('incident_ref_key', 'unique(reference)', 'Work Order reference already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('reference', *a), '\nWork Order reference already exists', ['reference']),
+            ]
 cmms_incident()
 
-class cmms_archiving3(osv.osv):
+class cmms_archiving3(Normalize, osv.osv):
     _name = "cmms.archiving3"
     _description = "Incident follow-up history"
+
     _columns = {
-        'name': fields.char('Objet', size=32, required=True),
+        'name': fields.char('Object', size=32, required=True),
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
         'incident_id': fields.many2one('cmms.incident', 'Incident',required=True),

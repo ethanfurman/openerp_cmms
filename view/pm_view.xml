@@ -40,7 +40,7 @@
                     <group colspan="4" col="6">
                         <group colspan="4" col="2">
                             <field name="equipment_id"/>
-                            <field name="name" placeholder="unique id will be generated if left blank"/>
+                            <field name="reference" placeholder="unique id will be generated if left blank"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="recurrent" />
@@ -60,7 +60,23 @@
                         </group>
                         <group colspan="2"/>
                     </group>
-                    <separator string="Follow-up history" />
+                    <notebook colspan="4">
+                        <page string="Follow-up History">
+                            <field colspan="4" name="archiving2_ids" nolabel="1">
+                                <form string="Follow-up history">
+                                    <field name="name" colspan="4"/>
+                                    <field name="date"/>
+                                    <label string="Description"/>
+                                    <field name="description" nolabel="1" colspan="4"/>
+                                </form>
+                                <tree string="Follow-up history">
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -71,7 +87,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Properties" colors="blue:days_left&lt;=days_warn_period and days_left&gt;0;red:days_left&lt;=0;">
-                    <field name="name"/>
+                    <field name="reference"/>
                     <field name="equipment_id" colspan="2"/>
                     <field name="days_last_done"/>
                     <field name="days_next_due"/>
@@ -94,7 +110,7 @@
             action="open_view_pm_list_my"
             id="menu_open_view_pm_list_my"
             parent="cmms.menu_cmms_main"
-            sequence="40"
+            sequence="30"
             />
 
     </data>

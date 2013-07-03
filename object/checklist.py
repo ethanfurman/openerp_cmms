@@ -21,6 +21,7 @@
 #
 ################################################################################
 
+from oe_utils import Normalize
 from osv import fields,osv
 from osv import orm
 from tools.translate import _
@@ -30,7 +31,7 @@ CHOICE = [
     ('no','No'),
 ]
 
-class cmms_checklist(osv.osv):
+class cmms_checklist(Normalize, osv.Model):
     _name="cmms.checklist"
     _description= "checklist"
     _columns={
@@ -39,9 +40,15 @@ class cmms_checklist(osv.osv):
         'questions_ids': fields.one2many("cmms.question","checklist_id","Questions",),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine'),
         }
+    _sql_constraints = [
+            ('checklist_name_key', 'unique(name)', 'Checklist name already exists'),
+            ]
+    _constraints = [
+            (lambda s, *a: s.check_unique('name', *a), '\nChecklist name already exists', ['name']),
+            ]
 cmms_checklist()
 
-class cmms_question(osv.osv):
+class cmms_question(Normalize, osv.Model):
     _name = "cmms.question"
     _description = "Question"
     _columns = {
@@ -50,11 +57,11 @@ class cmms_question(osv.osv):
     }
 cmms_question()
 
-class cmms_checklist_history(osv.osv):
+class cmms_checklist_history(Normalize, osv.Model):
     _name="cmms.checklist.history"
     _description= "Checklist History"
     
-    def onchange_checklist_id(self, cr, uid, ids, id, context={}):
+    def onchange_checklist_id(self, cr, uid, ids, id, context=None):
         liste = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
         enrs = self.pool.get('cmms.question').name_get(cr, uid, liste)
         res = []
@@ -62,12 +69,7 @@ class cmms_checklist_history(osv.osv):
             obj = {'name': name}
             res.append(obj)
         return {'value':{'answers_ids': res}}
-    
-    def create(self, cr, uid, vals, context=None):
-        for i, obj in enumerate(vals['answers_ids']):
-            vals['answers_ids'][i] = [0,0,vals['answers_ids'][i][2]]
-        return osv.osv.create(self, cr, uid, vals, context=context)
-    
+
     _columns={
         'name': fields.char("Name",size=128, required=True),
         'checklist_id': fields.many2one('cmms.checklist', 'Checklist'), 
@@ -82,10 +84,9 @@ class cmms_checklist_history(osv.osv):
         'status' : lambda *a: 'draft',
         'user_id': lambda object,cr,uid,context: uid,
     }
-    
 cmms_checklist_history()
 
-class cmms_question_history(osv.osv):
+class cmms_question_history(Normalize, osv.Model):
     _name="cmms.answer.history"
     _description= "Answers"
     _columns={    
@@ -94,5 +95,4 @@ class cmms_question_history(osv.osv):
         'answer': fields.selection(CHOICE, "Response"),
         'detail': fields.char("Detail",size=128),
     }
-    
 cmms_question_history()
