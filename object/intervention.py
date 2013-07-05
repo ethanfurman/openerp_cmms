@@ -29,6 +29,20 @@ from tools import config
 from tools.translate import _
 import tools
 
+PRIORITIES = [
+    ('normal','Normal'),
+    ('low','Low'),
+    ('urgent','Urgent'),
+    ('other','Other'),
+    ]
+
+REQUEST_TYPES = [
+    ('check','Check'),
+    ('repair','Repair'),
+    ('overhaul','Overhaul'),
+    ('other','Other'),
+    ]
+
 class cmms_intervention(Normalize, osv.osv):
     _name = "cmms.intervention"
     _description = "Intervention request"
@@ -51,11 +65,11 @@ class cmms_intervention(Normalize, osv.osv):
         'date': fields.datetime('Date'),
         'user_id': fields.many2one('res.users', 'Sender'),
         'user2_id': fields.many2one('res.users', 'Recipient'),
-        'priority': fields.selection([('normal','Normal'),('low','Low'),('urgent','Urgent'),('other','Other')],'Priority', size=32),
+        'priority': fields.selection(PRIORITIES,'Priority', size=32),
         'observation': fields.text('Observation'),
         'date_inter': fields.datetime('Request date'),
         'date_end': fields.datetime('Completion date'),
-        'type': fields.selection([('check','Check'),('repair','Repair'),('overhaul','Overhaul'),('other','Other')],'Request type', size=32),
+        'type': fields.selection(REQUEST_TYPES,'Request type', size=32),
     }
     _defaults = {
         'type': lambda * a:'repair',

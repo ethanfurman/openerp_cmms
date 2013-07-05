@@ -51,52 +51,57 @@
         <record id="cmms_incident-view" model="ir.ui.view">
             <field name="name">cmms.incident.form</field>
             <field name="model">cmms.incident</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Incident">
-                    <group>
+                <form string="Incident" version="7.0">
+                    <sheet string="Incident">
                         <group>
-                            <separator string="Incident description" colspan="4"/>
-                            <field name="reference" placeholder="unique id will be generated if blank"/>
-                            <field name="date"/>
-                            <field name="priority"/>
+                            <group>
+                                <separator string="Incident description" colspan="4"/>
+                                <field name="reference" placeholder="unique id will be generated if blank"/>
+                                <field name="date"/>
+                                <field name="priority"/>
+                            </group>
+                            <group>
+                                <separator string="Incident state" colspan="2"/>
+                                <field name="user_id"/>
+                                <field name="state"/>
+                                <field name="active"/>
+                            </group>
+                            <group colspan="4" col="6">
+                                <separator colspan="6" string="References"/>
+                                <field name="ref" colspan="4" on_change="onchange_ref_id(ref)"/>
+                                <separator colspan="2"/>
+                            </group>
                         </group>
-                        <group>
-                            <separator string="Incident state" colspan="2"/>
-                            <field name="user_id"/>
-                            <field name="state"/>
-                            <field name="active"/>
-                        </group>
-                        <group colspan="4" col="6">
-                            <separator colspan="6" string="References"/>
-                            <field name="ref" colspan="4" on_change="onchange_ref_id(ref)"/>
-                            <separator colspan="2"/>
-                        </group>
-                    </group>
-                    <newline/>
-                    <notebook colspan="4">
-                        <page string="General">
-                            <field name="equipment_id" colspan="2"/>
-                            <separator colspan="2"/>
-                        </page>
-                        <page string="History">
-                            <field colspan="4" name="archiving3_ids" nolabel="1">
-                                <form string="Follow-up history">
-                                    <field name="name" colspan="4"/>
-                                    <field name="user_id"/>
-                                    <field name="date"/>
-                                    <label string="Description"/>
-                                    <field name="description" nolabel="1" colspan="4"/>
-                                </form>
-                                <tree string="Follow-up history">
-                                    <field name="name"/>
-                                    <field name="user_id"/>
-                                    <field name="date"/>
-                                    <field name="description"/>
-                                </tree>
-                            </field>
-                        </page>
-                    </notebook>
+                        <newline/>
+                        <notebook colspan="4">
+                            <page string="General">
+                                <field name="equipment_id" colspan="2"/>
+                                <separator colspan="2"/>
+                            </page>
+                            <page string="History">
+                                <field colspan="4" name="archiving3_ids" nolabel="1">
+                                    <form string="Follow-up history">
+                                        <field name="name" colspan="4"/>
+                                        <field name="user_id"/>
+                                        <field name="date"/>
+                                        <label string="Description"/>
+                                        <field name="description" nolabel="1" colspan="4"/>
+                                    </form>
+                                    <tree string="Follow-up history">
+                                        <field name="name"/>
+                                        <field name="user_id"/>
+                                        <field name="date"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" help="Follow this work order to automatically track associated events." groups="base.group_user"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -106,9 +111,10 @@
             <field name="model">cmms.incident</field>
             <field name="arch" type="xml">
                 <search string="Search Work Orders">
-                    <!-- <field name="name"/> -->
-                    <!-- filter_domain="['|','|',('name','ilike',self),('parent_id','ilike',self),('ref','=',self)]"/> -->
                     <field name="reference" string="Reference" filter_domain="[(1,'=',1)]"/>
+                    <field name="state" string="Status" filter_domain="[(1,'=',1)]"/>
+                    <field name="user_id" string="Assigned To" filter_domain="[(1,'=',1)]"/>
+                    <field name="equipment_id" string="Machine" filter_domain="[(1,'=',1)]"/>
                     <separator/>
                     <filter string="My Work Orders" name="type_owner" domain="[('user_id','=',uid)]" help="Work orders assigned to me"/>
                     <filter string="Unassigned Work Orders" name="type_unassigned" domain="[('user_id','=',False)]"/>
@@ -141,53 +147,6 @@
             parent="cmms.menu_cmms_main"
             sequence="50"
             />
-
-        <!--
-        <record id="cmms_incident_act_open" model="ir.actions.act_window">
-            <field name="name">Opened Work Orders</field>
-            <field name="res_model">cmms.incident</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','confirmed'),('user_id','=',uid)]</field>
-        </record>
-
-        <menuitem
-            action="cmms_incident_act_open"
-            id="menu_cmms_incident_act_open"
-            parent="menu_cmms_incident_act"
-            />
-
-        <record id="cmms_incident_act_draft" model="ir.actions.act_window">
-            <field name="name">Draft Work Orders</field>
-            <field name="res_model">cmms.incident</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-        </record>
-
-        <menuitem
-            action="cmms_incident_act_draft" 
-            id="menu_cmms_incident_act_draft"
-            parent="menu_cmms_incident_act"
-            />
-
-        <record id="cmms_incident_act_done" model="ir.actions.act_window">
-            <field name="name">Done Work Orders</field>
-            <field name="res_model">cmms.incident</field>
-            <field name="view_type">form</field>
-            <field name="domain">[('state','=','done'),('user_id','=',uid)]</field>
-        </record>
-
-        <menuitem action="cmms_incident_act_done" id="menu_cmms_incident_act_done" parent="menu_cmms_incident_act"/>
-        -->
-
-        <!--
-        <record id="open_view_incident_new" model="ir.actions.act_window">
-            <field name="name">New Work Order</field>
-            <field name="res_model">cmms.incident</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form,tree</field>
-        </record>
-        <menuitem action="open_view_incident_new" id="menu_open_view_incident_new2" parent="menu_open_view_incident_list"/>
-        -->
 
     </data>
 </openerp>

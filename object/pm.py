@@ -97,17 +97,18 @@ class cmms_pm(Normalize, osv.osv):
         return super(cmms_pm, self).create(cr, user, vals, context)
     
     _columns = {
-        'reference':fields.char('PM Reference',size=20),
+        'reference': fields.char('PM Reference',size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
-        'meter':fields.selection([ ('days', 'Days')], 'Unit of measure'),
-        'recurrent':fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
-        'days_interval':fields.integer('Interval'),
-        'days_last_done':fields.date('Last done',required=True),
-        'days_next_due':fields.function(_days_next_due, method=True, type="date", string='Next service date'),
-        'days_warn_period':fields.integer('Warning time'),
-        'days_left':fields.function(_days_due, method=True, type="integer", string='Days until next service'),
-        'state':fields.function(_get_state, method=True, type="char", string='Status'),
+        'meter': fields.selection([ ('days', 'Days')], 'Unit of measure'),
+        'recurrent': fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
+        'days_interval': fields.integer('Interval'),
+        'days_last_done': fields.date('Last done',required=True),
+        'days_next_due': fields.function(_days_next_due, method=True, type="date", string='Next service date'),
+        'days_warn_period': fields.integer('Warning time'),
+        'days_left': fields.function(_days_due, method=True, type="integer", string='Days until next service'),
+        'state': fields.function(_get_state, method=True, type="char", string='Status'),
         'archiving2_ids': fields.one2many('cmms.archiving2', 'pm_id', 'follow-up history'),
+        'note': fields.text('Notes'),
     }
     _defaults = {
         'meter': lambda * a: 'days',
@@ -135,5 +136,4 @@ class cmms_archiving2(Normalize, osv.osv):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
-
 cmms_archiving2()

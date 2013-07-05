@@ -26,10 +26,16 @@ from osv import fields,osv
 from osv import orm
 from tools.translate import _
 
-CHOICE = [
+YESNO = [
     ('yes','Yes'),
     ('no','No'),
-]
+    ]
+
+STATES = [
+    ('draft', 'Draft'),
+    ('confirmed', 'Confirmed'),
+    ('done', 'Done'),
+    ]
 
 class cmms_checklist(Normalize, osv.Model):
     _name="cmms.checklist"
@@ -62,13 +68,13 @@ class cmms_checklist_history(Normalize, osv.Model):
     _description= "Checklist History"
     
     def onchange_checklist_id(self, cr, uid, ids, id, context=None):
-        liste = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
-        enrs = self.pool.get('cmms.question').name_get(cr, uid, liste)
-        res = []
-        for id, name in enrs:
+        question_ids = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
+        records = self.pool.get('cmms.question').name_get(cr, uid, question_ids)
+        results = []
+        for id, name in records:
             obj = {'name': name}
-            res.append(obj)
-        return {'value':{'answers_ids': res}}
+            results.append(obj)
+        return {'value':{'answers_ids': results}}
 
     _columns={
         'name': fields.char("Name",size=128, required=True),
@@ -78,7 +84,7 @@ class cmms_checklist_history(Normalize, osv.Model):
         'date_end': fields.datetime("Completed Date"), 
         'equipment_id': fields.many2one('cmms.equipment', 'Machine'),
         'user_id': fields.many2one('res.users', 'Assigned to'),
-        'status': fields.selection([('draft', 'Draft'), ('confirmed', 'Confirmed'),('done', 'Done')], "Status"),
+        'status': fields.selection(STATES, "Status"),
         }
     _defaults = {
         'status' : lambda *a: 'draft',
@@ -92,7 +98,7 @@ class cmms_question_history(Normalize, osv.Model):
     _columns={    
         'name': fields.char("Question",size=128, required=True),
         'checklist_history_id': fields.many2one('cmms.checklist.history', 'Checklist'),
-        'answer': fields.selection(CHOICE, "Response"),
+        'answer': fields.selection(YESNO, "Response"),
         'detail': fields.char("Detail",size=128),
     }
 cmms_question_history()

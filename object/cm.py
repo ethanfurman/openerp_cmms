@@ -76,6 +76,7 @@ class cmms_cm(Normalize, osv.osv):
         'note': fields.text('Notes'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         'diagnosistab_ids': fields.one2many('cmms.diagnosistab', 'cm_id', 'Diagnostic Table'),
+        'archiving_ids': fields.one2many('cmms.archiving', 'cm_id', 'Follow-up History'),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -95,7 +96,7 @@ class cmms_diagnosistab(Normalize, osv.osv):
     _columns = {
         'name': fields.char('Failure Causes', size=32, required=True),
         'solution': fields.text('Solution'),
-        'cm_id': fields.many2one('cmms.cm', 'Repair'),
+        'cm_id': fields.many2one('cmms.cm', 'Corrective Maintenance'),
     }
 cmms_diagnosistab()
 
@@ -106,7 +107,7 @@ class cmms_archiving(Normalize, osv.osv):
         'name': fields.char('Effect', size=32, required=True),
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
-        #'cm2_id': fields.many2one('cmms.cm', 'Archiving',required=True),
+        'cm_id': fields.many2one('cmms.cm', 'Archiving',required=True),
     }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

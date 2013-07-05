@@ -61,11 +61,11 @@ cmms_request_link()
 class cmms_incident(Normalize, osv.osv):
     _name = "cmms.incident"
     _description = "Incident" 
+    _inherit = ['mail.thread']
     
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default = default.copy()
         default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.incident')
         return super(cmms_incident, self).copy(cr, uid, id, default=default, context=context)
 
@@ -74,10 +74,10 @@ class cmms_incident(Normalize, osv.osv):
             vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
         return super(cmms_incident, self).create(cr, user, vals, context)
 
-    def _links_get(self, cr, uid, context={}):
+    def _links_get(self, cr, uid, context=None):
         obj = self.pool.get('cmms.request.link')
         ids = obj.search(cr, uid, [])
-        res = obj.read(cr, uid, ids, ['object', 'name'], context)
+        res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
     def onchange_ref_id(self, cr, uid, ids, id, context={}):
@@ -98,7 +98,7 @@ class cmms_incident(Normalize, osv.osv):
         'active' : fields.boolean('Active?'),
         'ref' : fields.reference('Work order source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
-        'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history'),
+        'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
     }
     _defaults = {
         'active': lambda *a: True,
