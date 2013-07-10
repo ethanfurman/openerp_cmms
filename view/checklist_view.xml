@@ -110,7 +110,7 @@
                             <field name="name" />
                             <field name="equipment_id"/>
                             <field name="checklist_id" on_change="onchange_checklist_id(checklist_id)" />
-                            <field name="user_id"/>
+                            <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="date_planned"/>

@@ -27,7 +27,7 @@
     <data noupdate="1">
 
         <record model="ir.module.category" id="module_category_cmms_management">
-            <field name="name">CMMS Management</field>
+            <field name="name">CMMS</field>
             <field name="sequence">16</field>
             <field name="description">Track maintenance on equipment</field>
         </record>
@@ -35,26 +35,18 @@
         <record id="group_cmms_user" model="res.groups">
             <field name="name">User</field>
             <field name="category_id" ref="module_category_cmms_management"/>
-            <field name="comment">the user will have access to basic CMMS application.</field>
+            <field name="comment">User will have access to the basic CMMS application.</field>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <record id="group_cmms_manager" model="res.groups">
             <field name="name">Manager</field>
-            <field name="comment">the user will have an access to the CMMS configuration.</field>
+            <field name="comment">User will have access to CMMS configuration.</field>
             <field name="category_id" ref="module_category_cmms_management"/>
             <field name="implied_ids" eval="[(4, ref('group_cmms_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root'))]"/>
         </record>
 
-    </data>
-
-    <data noupdate="1">
-    
-        <record model="ir.ui.menu" id="menu_cmms_configuration">
-            <field name="groups_id" eval="[(6,0,[ref('group_cmms_manager')])]"/>
-        </record>
-    
     </data>
 
 </openerp>

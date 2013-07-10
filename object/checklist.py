@@ -83,7 +83,7 @@ class cmms_checklist_history(Normalize, osv.Model):
         'date_planned': fields.datetime("Planned Date"), 
         'date_end': fields.datetime("Completed Date"), 
         'equipment_id': fields.many2one('cmms.equipment', 'Machine'),
-        'user_id': fields.many2one('res.users', 'Assigned to'),
+        'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
         'status': fields.selection(STATES, "Status"),
         }
     _defaults = {

@@ -41,7 +41,7 @@
                     <field name="reference" placeholder="unique id will be generated if blank"/>
                     <field name="failure_id"/>
                     <field name="date"/>
-                    <field name="user_id"/>
+                    <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                     <field colspan="4" name="diagnosistab_ids" nolabel="1">
                         <form string="Diagnosis Table">
                             <group colspan="4">

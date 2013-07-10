@@ -72,7 +72,10 @@ class cmms_incident(Normalize, osv.osv):
     def create(self, cr, user, vals, context=None):
         if 'reference' not in vals or not vals['reference']:
             vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
-        return super(cmms_incident, self).create(cr, user, vals, context)
+        wo_id = super(cmms_incident, self).create(cr, user, vals, context)
+        partner_ids = [id for id in set([user, user_id]) if id]
+        self.message_subscribe_users(self, cr, uid, [wo_id], partner_ids, context=context)
+        return wo_id
 
     def _links_get(self, cr, uid, context=None):
         obj = self.pool.get('cmms.request.link')
@@ -80,20 +83,25 @@ class cmms_incident(Normalize, osv.osv):
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
-    def onchange_ref_id(self, cr, uid, ids, id, context={}):
-        if not id:
+    def onchange_ref_id(self, cr, uid, ids, ref_id, context={}):
+        if not ref_id:
             return {}
-        table, id = id.split(',')
-        id = int(id)
-        record = self.pool.get(table).browse(cr, uid, [id])[0]
-        liste = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
+        table, ref_id = ref_id.split(',')
+        ref_id = int(ref_id)
+        record = self.pool.get(table).browse(cr, uid, [ref_id])[0]
+        liste = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', ref_id)])
         return {'value':{'equipment_id': record.equipment_id.id}}
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('user_id') and vals['user_id']:
+            self.message_subscribe_users(cr, uid, ids, [vals['user_id']], context=context)
+        return super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
 
     _columns = {
         'reference':fields.char('Work order reference',size=64),
         'state': fields.selection(STATES,'State', size=32),
         'priority': fields.selection(PRIORITIES, 'Priority'),
-        'user_id': fields.many2one('res.users', 'Assigned to'),
+        'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
         'date': fields.datetime('Work order date'),
         'active' : fields.boolean('Active?'),
         'ref' : fields.reference('Work order source', selection=_links_get, size=128),

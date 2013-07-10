@@ -63,8 +63,8 @@ class cmms_intervention(Normalize, osv.osv):
         'reference': fields.char('Reference', size=64),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'date': fields.datetime('Date'),
-        'user_id': fields.many2one('res.users', 'Sender'),
-        'user2_id': fields.many2one('res.users', 'Recipient'),
+        'user_id': fields.many2one('res.users', 'Sender', domain="[('groups_id.category_id.name','=','CMMS')]"),
+        'user2_id': fields.many2one('res.users', 'Recipient', domain="[('groups_id.category_id.name','=','CMMS')]"),
         'priority': fields.selection(PRIORITIES,'Priority', size=32),
         'observation': fields.text('Observation'),
         'date_inter': fields.datetime('Request date'),
@@ -78,9 +78,9 @@ class cmms_intervention(Normalize, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     _sql_constraints = [
-            ('intervention_ref_key', 'unique(reference)', 'Repair reference already exists'),
+            ('intervention_ref_key', 'unique(reference)', 'CM reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('reference', *a), '\nRepair reference already exists', ['reference']),
+            (lambda s, *a: s.check_unique('reference', *a), '\nCM reference already exists', ['reference']),
             ]
 cmms_intervention()

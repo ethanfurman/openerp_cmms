@@ -36,13 +36,13 @@
                         <field name="type"/>
                     </group>
                     <group>
-                        <field name="user_id"/>
+                        <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                         <field name="reference" placeholder="unique id will be generated if blank"/>
                     </group>
                     <notebook colspan="4">
                         <page string="General information">
                             <group>
-                                <field name="user2_id"/>
+                                <field name="user2_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                                 <field name="priority"/>
                             </group>
                             <group>

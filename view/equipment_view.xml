@@ -50,7 +50,7 @@
                     <notebook colspan="4">
                         <page string="General Information">
                             <group>
-                                <field name="user_id"/>
+                                <field name="user_id" options="{'create':False, 'create_edit':False}"/>
                             </group>
                             <group>
                                 <field name="startingdate"/>
@@ -147,6 +147,8 @@
                     <field name="reference" placeholder="unique id will be generated if blank"/>
                     <field name="location"/>
                     <field name="sequence"/>
+                    <separator string="Equipment" colspan="4"/>
+                    <field name="equipment_ids" colspan="4" nolabel="1"/>
                 </form>
             </field>
         </record>

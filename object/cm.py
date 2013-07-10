@@ -74,7 +74,7 @@ class cmms_cm(Normalize, osv.osv):
         'failure_id': fields.many2one('cmms.failure', 'Failure?'),
         'date': fields.datetime('Date'),
         'note': fields.text('Notes'),
-        'user_id': fields.many2one('res.users', 'Responsible'),
+        'user_id': fields.many2one('res.users', 'Responsible', domain="[('groups_id.category_id.name','=','CMMS')]"),
         'diagnosistab_ids': fields.one2many('cmms.diagnosistab', 'cm_id', 'Diagnostic Table'),
         'archiving_ids': fields.one2many('cmms.archiving', 'cm_id', 'Follow-up History'),
     }

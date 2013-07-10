@@ -54,6 +54,7 @@ class cmms_line(Normalize, osv.osv):
         'reference': fields.char('Reference', size=64),
         'location': fields.char('Location', size=64),
         'sequence': fields.integer('Sequence'),
+        'equipment_ids': fields.one2many('cmms.equipment', 'line_id', 'Equipment'),
     }
     _sql_constraints = [
             ('line_ref_key', 'unique(reference)', 'Line reference already exists'),
@@ -92,7 +93,11 @@ class cmms_equipment(Normalize, osv.osv):
         'deadlinegar': fields.datetime("Warranty Expiration"),
         'description': fields.text('Description'),
         'safety': fields.text('Safety Instruction'),
-        'user_id': fields.many2one('res.users', 'Assigned to'),
+        'user_id': fields.many2one(
+                'res.users',
+                'Assigned to',
+                domain="[('groups_id.category_id.name','=','CMMS')]",
+                )
     }
     _defaults = {
         'active' : lambda *a: True,

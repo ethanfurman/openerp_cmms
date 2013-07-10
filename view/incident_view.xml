@@ -63,7 +63,7 @@
                             </group>
                             <group>
                                 <separator string="Incident state" colspan="2"/>
-                                <field name="user_id"/>
+                                <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                                 <field name="state"/>
                                 <field name="active"/>
                             </group>
