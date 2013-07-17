@@ -96,9 +96,9 @@
                     <!--
                     <field name="days_last_done"/>
                     <field name="days_next_due"/>
+                    -->
                     <field name="days_warn_period" attrs="{'invisible': True}"/>
                     <field name="days_left" attrs="{'invisible': True}"/>
-                    -->
                     <field name="state"/>
                 </tree>
             </field>
