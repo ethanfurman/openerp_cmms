@@ -89,7 +89,8 @@ class cmms_equipment(Normalize, osv.osv):
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
         'startingdate': fields.datetime("Start Date"),
-        'product_ids': fields.many2many('product.product','product_equipment_rel','product_id','equipment_id','Spare Parts'),
+        'product_ids': fields.many2many('product.product','product_equipment_rel','product_id','equipment_id','Spare Parts',
+                                        domain="[('product_tmpl_id.categ_id.name','=','Spare Parts')]",),
         'deadlinegar': fields.datetime("Warranty Expiration"),
         'description': fields.text('Description'),
         'safety': fields.text('Safety Instruction'),
@@ -97,7 +98,8 @@ class cmms_equipment(Normalize, osv.osv):
                 'res.users',
                 'Assigned to',
                 domain="[('groups_id.category_id.name','=','CMMS')]",
-                )
+                ),
+        'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
     }
     _defaults = {
         'active' : lambda *a: True,
