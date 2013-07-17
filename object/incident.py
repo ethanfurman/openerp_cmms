@@ -73,8 +73,8 @@ class cmms_incident(Normalize, osv.osv):
         if 'reference' not in vals or not vals['reference']:
             vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
         wo_id = super(cmms_incident, self).create(cr, user, vals, context)
-        partner_ids = [id for id in set([user, user_id]) if id]
-        self.message_subscribe_users(self, cr, uid, [wo_id], partner_ids, context=context)
+        partner_ids = [id for id in set([user, vals['user_id']]) if id]
+        self.message_subscribe_users(cr, user, [wo_id], partner_ids, context=context)
         return wo_id
 
     def _links_get(self, cr, uid, context=None):
@@ -99,6 +99,7 @@ class cmms_incident(Normalize, osv.osv):
 
     _columns = {
         'reference':fields.char('Work order reference',size=64),
+        'description': fields.char('Description', size=64),
         'state': fields.selection(STATES,'State', size=32),
         'priority': fields.selection(PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),

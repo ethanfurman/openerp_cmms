@@ -38,12 +38,13 @@
             <field name="arch" type="xml">
                 <tree string="Incident">
                     <field name="reference"/>
-                    <field name="state"/>
-                    <field name="user_id"/>
-                    <field name="date"/>
-                    <field name="priority"/>
                     <field name="equipment_id"/>
+                    <field name="description"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                    <field name="priority"/>
                     <field name="active"/>
+                    <!-- <field name="date"/> -->
                 </tree>
             </field>
         </record>
@@ -54,21 +55,19 @@
             <field name="arch" type="xml">
                 <form string="Incident" version="7.0">
                     <sheet string="Incident">
-                        <group>
-                            <group>
-                                <separator string="Incident description" colspan="4"/>
+                        <group colspan="4" col="6">
+                            <group colspan="4" col="2">
                                 <field name="reference" placeholder="unique id will be generated if blank"/>
+                                <field name="description"/>
                                 <field name="date"/>
                                 <field name="priority"/>
                             </group>
-                            <group>
-                                <separator string="Incident state" colspan="2"/>
+                            <group colspan="2" col="2">
                                 <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                                 <field name="state"/>
                                 <field name="active"/>
                             </group>
-                            <group colspan="4" col="6">
-                                <separator colspan="6" string="References"/>
+                            <group colspan="6" col="6">
                                 <field name="ref" colspan="4" on_change="onchange_ref_id(ref)"/>
                                 <separator colspan="2"/>
                             </group>
