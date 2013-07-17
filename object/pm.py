@@ -99,6 +99,7 @@ class cmms_pm(Normalize, osv.osv):
     _columns = {
         'reference': fields.char('PM Reference',size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
+        'description': fields.char('Description', size=64),
         'meter': fields.selection([ ('days', 'Days')], 'Unit of measure'),
         'recurrent': fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
         'days_interval': fields.integer('Interval'),
