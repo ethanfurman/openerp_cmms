@@ -61,6 +61,7 @@
                                 <field colspan="4" name="description" nolabel="1"/>
                         </page>
                         <page string="Additional Information">
+                            <separator colspan="4" string="Accounting"/>
                             <field domain="[('reference', '=', 'in_invoice')]" name="invoice_id" colspan="2"/>
                             <separator colspan="2"/>
                             <separator colspan="4" string="Safety Instruction"/>
