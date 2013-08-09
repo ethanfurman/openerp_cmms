@@ -68,6 +68,7 @@
                                 <field name="active"/>
                             </group>
                             <group colspan="6" col="6">
+                                <field name="time" widget="float_time"/>
                                 <field name="ref" colspan="4" on_change="onchange_ref_id(ref)"/>
                                 <separator colspan="2"/>
                             </group>

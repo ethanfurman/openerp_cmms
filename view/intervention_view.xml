@@ -44,6 +44,7 @@
                             <group>
                                 <field name="user2_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                                 <field name="priority"/>
+                                <field name="time" widget="float_time"/>
                             </group>
                             <group>
                                 <field name="date_inter"/>

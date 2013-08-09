@@ -70,6 +70,7 @@ class cmms_intervention(Normalize, osv.osv):
         'date_inter': fields.datetime('Request date'),
         'date_end': fields.datetime('Completion date'),
         'type': fields.selection(REQUEST_TYPES,'Request type', size=32),
+        'float': fields.float('Duration (in hours)'),
     }
     _defaults = {
         'type': lambda * a:'repair',

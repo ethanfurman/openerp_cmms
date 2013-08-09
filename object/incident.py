@@ -108,6 +108,7 @@ class cmms_incident(Normalize, osv.osv):
         'ref' : fields.reference('Work order source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
+        'time': fields.float('Duration (in hours)'),
     }
     _defaults = {
         'active': lambda *a: True,
