@@ -98,14 +98,14 @@ class cmms_incident(Normalize, osv.osv):
         return super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
 
     _columns = {
-        'reference':fields.char('Work order reference',size=64),
+        'reference':fields.char('Reference',size=64),
         'description': fields.char('Description', size=64),
         'state': fields.selection(STATES,'State', size=32),
         'priority': fields.selection(PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
-        'date': fields.datetime('Work order date'),
+        'date': fields.datetime('Date'),
         'active' : fields.boolean('Active?'),
-        'ref' : fields.reference('Work order source', selection=_links_get, size=128),
+        'ref' : fields.reference('Source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
         'time': fields.float('Duration (in hours)'),

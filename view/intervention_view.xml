@@ -30,25 +30,32 @@
             <field name="model">cmms.intervention</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Help request">
+                <form string="Help request" version="7.0">
                     <group>
-                        <field name="equipment_id" />
-                        <field name="type"/>
+                        <field name="description"/>
                     </group>
-                    <group>
-                        <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
-                        <field name="reference" placeholder="unique id will be generated if blank"/>
+                    <group colspan="4" col="4">
+                        <group colspan="2" col="2">
+                            <field name="equipment_id" />
+                            <field name="type"/>
+                        </group>
+                        <group colspan="2" col="2">
+                            <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
+                            <field name="reference" placeholder="unique id will be generated if blank"/>
+                        </group>
                     </group>
                     <notebook colspan="4">
                         <page string="General information">
                             <group>
-                                <field name="user2_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
-                                <field name="priority"/>
-                                <field name="time" widget="float_time"/>
-                            </group>
-                            <group>
-                                <field name="date_inter"/>
-                                <field name="date_end"/>
+                                <group>
+                                    <field name="user2_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
+                                    <field name="priority"/>
+                                    <field name="time" widget="float_time"/>
+                                </group>
+                                <group>
+                                    <field name="date_inter"/>
+                                    <field name="date_end"/>
+                                </group>
                             </group>
                         </page>
                         <page string="Notes">

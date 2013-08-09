@@ -33,7 +33,6 @@
         <record id="view_equipment_form" model="ir.ui.view">
             <field name="name">cmms.equipment.form</field>
             <field name="model">cmms.equipment</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Equipment" version="7.0">
                     <group colspan="4" col="6">
@@ -71,10 +70,30 @@
                             <field colspan="4" mode="tree,form" name="product_ids" nolabel="1"/>
                         </page>
                         <page string="Maintenance">
-                            <field colspan="4" mode="tree" name="work_order_ids" nolabel="1"/>
+                            <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
+                                <tree>
+                                    <field name="reference"/>
+                                    <field name="priority"/>
+                                    <field name="description"/>
+                                    <field name="user_id"/>
+                                    <field name="state"/>
+                                    <field name="time"/>
+                                    <field name="active"/>
+                                </tree>
+                            </field>
                         </page>
                         <page string="Help Requests">
-                            <field colspan="4" mode="tree" name="help_request_ids" nolabel="1"/>
+                            <field colspan="4" mode="tree" name="help_request_ids" nolabel="1">
+                                <tree>
+                                    <field name="reference"/>
+                                    <field name="priority"/>
+                                    <field name="description"/>
+                                    <field name="user_id"/>
+                                    <field name="user2_id"/>
+                                    <field name="type"/>
+                                    <field name="time"/>
+                                </tree>
+                            </field>
                         </page>
                     </notebook>
                 </form>
@@ -84,7 +103,6 @@
         <record id="view_equipment_list" model="ir.ui.view">
             <field name="name">cmms.equipment.list</field>
             <field name="model">cmms.equipment</field>
-            <field name="type">tree</field>
             <field name="priority" eval="5"/>
             <field name="arch" type="xml">
                 <tree string="Equipment">
@@ -102,7 +120,6 @@
         <record id="view_equipment_tree" model="ir.ui.view">
             <field name="name">cmms.equipment.tree</field>
             <field name="model">cmms.equipment</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_id</field>
             <field name="arch" type="xml">
                 <tree string="Equipment">
@@ -147,7 +164,6 @@
         <record id="view_line_form" model="ir.ui.view">
             <field name="name">cmms.line.form</field>
             <field name="model">cmms.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Production Line">
                     <field name="name"/>
@@ -162,7 +178,6 @@
         <record id="view_line_tree" model="ir.ui.view">
             <field name="name">cmms.line.tree</field>
             <field name="model">cmms.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Production line">
                     <field name="name"/>
