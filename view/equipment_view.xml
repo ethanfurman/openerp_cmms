@@ -73,6 +73,9 @@
                         <page string="Maintenance">
                             <field colspan="4" mode="tree" name="work_order_ids" nolabel="1"/>
                         </page>
+                        <page string="Help Requests">
+                            <field colspan="4" mode="tree" name="help_request_ids" nolabel="1"/>
+                        </page>
                     </notebook>
                 </form>
             </field>

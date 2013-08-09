@@ -100,6 +100,7 @@ class cmms_equipment(Normalize, osv.osv):
                 domain="[('groups_id.category_id.name','=','CMMS')]",
                 ),
         'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
+        'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
     }
     _defaults = {
         'active' : lambda *a: True,
