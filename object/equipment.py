@@ -84,7 +84,6 @@ class cmms_equipment(Normalize, osv.osv):
         'reference': fields.char('Reference', size=64),
         'name': fields.char('Name', size=64 , required=True),
         'trademark': fields.char('Brand', size=64),
-        'active' : fields.boolean('Active'),
         'local_id': fields.many2one('stock.location', 'Location'),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
@@ -103,7 +102,6 @@ class cmms_equipment(Normalize, osv.osv):
         'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
     }
     _defaults = {
-        'active' : lambda *a: True,
         'user_id': lambda object,cr,uid,context: uid,
     }
     _sql_constraints = [

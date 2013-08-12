@@ -43,7 +43,6 @@
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="priority"/>
-                    <field name="active"/>
                     <!-- <field name="date"/> -->
                 </tree>
             </field>
@@ -65,7 +64,6 @@
                             <group colspan="2" col="2">
                                 <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
                                 <field name="state"/>
-                                <field name="active"/>
                             </group>
                             <group colspan="6" col="6">
                                 <field name="time" widget="float_time"/>

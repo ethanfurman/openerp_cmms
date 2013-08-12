@@ -104,14 +104,12 @@ class cmms_incident(Normalize, osv.osv):
         'priority': fields.selection(PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
         'date': fields.datetime('Date'),
-        'active' : fields.boolean('Active?'),
         'ref' : fields.reference('Source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
         'time': fields.float('Duration (in hours)'),
     }
     _defaults = {
-        'active': lambda *a: True,
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'priority': lambda *a: PRIORITIES[2][0],
         'user_id': lambda obj,cr,uid,context: uid,

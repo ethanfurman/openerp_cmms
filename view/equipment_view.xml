@@ -42,7 +42,6 @@
                             <field name="line_id"/>
                         </group>
                         <group colspan="2" col="2">
-                            <field name="active"/>
                             <field name="trademark"/>
                         </group>
                     </group>
@@ -78,7 +77,6 @@
                                     <field name="user_id"/>
                                     <field name="state"/>
                                     <field name="time"/>
-                                    <field name="active"/>
                                 </tree>
                             </field>
                         </page>
@@ -109,7 +107,6 @@
                     <field name="name"/>
                     <field name="reference"/>
                     <field name="line_id"/>
-                    <field name="active"/>
                     <field name="user_id"/>
                     <field name="trademark"/>
                     <field name="deadlinegar"/>
@@ -126,7 +123,6 @@
                     <field name="line_id"/>
                     <field name="reference"/>
                     <field name="name"/>
-                    <field name="active"/>
                     <field name="trademark"/>
                     <field name="deadlinegar"/>
                 </tree>
