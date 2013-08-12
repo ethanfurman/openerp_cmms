@@ -74,7 +74,6 @@
                                     <field name="reference"/>
                                     <field name="priority"/>
                                     <field name="description"/>
-                                    <field name="user_id"/>
                                     <field name="state"/>
                                     <field name="time"/>
                                 </tree>
@@ -86,8 +85,6 @@
                                     <field name="reference"/>
                                     <field name="priority"/>
                                     <field name="description"/>
-                                    <field name="user_id"/>
-                                    <field name="user2_id"/>
                                     <field name="type"/>
                                     <field name="time"/>
                                 </tree>

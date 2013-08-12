@@ -75,8 +75,6 @@
                     <field name="reference" />
                     <field name="priority"/>
                     <field name="description"/>
-                    <field name="user_id" />
-                    <field name="user2_id"/>
                     <field name="type" />
                     <field name="equipment_id" />
                 </tree>
