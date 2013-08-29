@@ -21,9 +21,8 @@
 #
 ################################################################################
 
-from mx import DateTime
 import time
-from oe_utils import Normalize
+from fnx import Normalize
 from osv import fields, osv
 from tools import config
 from tools.translate import _

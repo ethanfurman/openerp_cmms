@@ -42,6 +42,12 @@ maintenance operations:
 
 With this module you can track all equipment types.
 """,
+    'depends': [
+        'base',
+        'fnx',
+        'product',
+        'stock',
+        ],
     "init_xml": [
         "data/cmms_work_order_source.xml"
     ],

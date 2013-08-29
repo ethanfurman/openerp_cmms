@@ -24,12 +24,10 @@
 import pooler
 import math
 import time
-import mx.DateTime
-from oe_utils import Normalize
+from fnx import Normalize
 from tools import config
 from tools.translate import _
 from osv import osv, fields
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
 
 class cmms_failure(Normalize, osv.osv):
     _name = "cmms.failure"

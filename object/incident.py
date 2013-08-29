@@ -26,9 +26,7 @@ import time
 import tools
 from osv import fields,osv,orm
 
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
-from oe_utils import Normalize
+from fnx import Normalize
 from tools import config
 from tools.translate import _
 

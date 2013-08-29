@@ -21,17 +21,13 @@
 #
 ################################################################################
 
-from oe_utils import Normalize
+from fnx import Normalize
 from osv import osv, fields
 import pooler
 import math
 from tools import config
 from tools.translate import _
 import time
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
-
-import pdb
 
 class cmms_line(Normalize, osv.osv):
     _name = 'cmms.line'

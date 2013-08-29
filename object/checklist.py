@@ -21,7 +21,7 @@
 #
 ################################################################################
 
-from oe_utils import Normalize
+from fnx import Normalize
 from osv import fields,osv
 from osv import orm
 from tools.translate import _

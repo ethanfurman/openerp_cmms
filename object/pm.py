@@ -21,14 +21,12 @@
 #
 ################################################################################
 from osv import osv, fields
-import datetime
 from dateutil.relativedelta import *
-import time
 from tools import config
 from tools.translate import _
-import mx.DateTime
-from mx.DateTime import RelativeDateTime, today, DateTime, localtime
-from oe_utils import Normalize
+from fnx import Normalize
+import datetime
+import time
 
 class cmms_pm(Normalize, osv.osv):
     _name = "cmms.pm"
