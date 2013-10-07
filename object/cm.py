@@ -55,19 +55,19 @@ class cmms_cm(Normalize, osv.osv):
     _description = "Corrective Maintenance System"
 
     def create(self, cr, uid, vals, context=None):
-        if 'reference' not in vals or not vals['reference']:
-            vals['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        if 'name' not in vals or not vals['name']:
+            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
         return super(cmms_cm, self).create(cr, uid, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
-        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
         return super(cmms_cm, self).copy(cr, uid, id, default=default, context=context)
 
     _columns = {
-        'reference': fields.char('CM Reference',size=20),
+        'name': fields.char('CM Reference',size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'failure_id': fields.many2one('cmms.failure', 'Failure?'),
         'date': fields.datetime('Date'),
@@ -81,10 +81,10 @@ class cmms_cm(Normalize, osv.osv):
         'user_id': lambda object,cr,uid,context: uid,
     }
     _sql_constraints = [
-            ('cm_ref_key', 'unique(reference)', 'CM Reference already exists'),
+            ('cm_ref_key', 'unique(name)', 'CM Reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('reference', *a), '\nCM Reference already exists', ['reference']),
+            (lambda s, *a: s.check_unique('name', *a), '\nCM Reference already exists', ['name']),
             ]
 cmms_cm()
 
