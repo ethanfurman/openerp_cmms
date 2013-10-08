@@ -119,6 +119,9 @@
                     <filter string="Unassigned Work Orders" name="type_unassigned" domain="[('user_id','=',False)]"/>
                     <filter string="All Work Orders" name="type_all" domain="[(1,'=',1)]"/>
                     <separator/>
+                    <filter string="This week's Work Orders" name="type_this_week" domain="[('date','in','THIS_WEEK')]"/>
+                    <filter string="Last week's Work Orders" name="type_this_week" domain="[('date','in','LAST_WEEK')]"/>
+                    <separator/>
                     <filter string="Draft Work Orders" name="type_draft" domain="[('state','=','draft')]"/>
                     <filter string="Open Work Orders" name="type_open" domain="[('state','=','confirmed')]"/>
                     <filter string="Done Work Orders" name="type_done" domain="[('state','=','done')]"/>
@@ -132,7 +135,7 @@
             </field>
         </record>
 
-        <record id="cmms_incident_act" model="ir.actions.act_window">
+        <record model="ir.actions.act_window" id="cmms_incident_act">
             <field name="name">Work Orders</field>
             <field name="res_model">cmms.incident</field>
             <field name="view_type">form</field>
