@@ -106,10 +106,10 @@ class cmms_incident(Normalize, osv.osv):
             today = Date.today()
             if arg[2] == 'THIS_WEEK':
                 start = today.replace(day=RelativeDay.LAST_MONDAY)
-                stop = start.replace(delta_day=7)
+                stop = start.replace(delta_day=6)
             elif arg[2] == 'LAST_WEEK':
                 start = today.replace(day=RelativeDay.LAST_MONDAY, delta_day=-7)
-                stop = start.replace(delta_day=7)
+                stop = start.replace(delta_day=6)
             else:
                 raise ValueError("forgot to update something! (arg[2] is %r)" % (arg[2],))
             op = arg[1]
