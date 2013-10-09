@@ -34,29 +34,29 @@ class cmms_line(Normalize, osv.osv):
     _description = 'Production line'
 
     def create(self, cr, user, vals, context=None):
-        if 'reference' not in vals or not vals['reference']:
-            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
+        if 'name' not in vals or not vals['name']:
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
         return super(cmms_line, self).create(cr, user, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
-        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.line')
+        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.line')
         return super(cmms_line, self).copy(cr, uid, id, default=default, context=context)
 
     _columns = {
-        'name': fields.char('Production line', size=64, required=True),
-        'reference': fields.char('Reference', size=64),
+        'line': fields.char('Production line', size=64, required=True),
+        'name': fields.char('Reference', size=64),
         'location': fields.char('Location', size=64),
         'sequence': fields.integer('Sequence'),
         'equipment_ids': fields.one2many('cmms.equipment', 'line_id', 'Equipment'),
     }
     _sql_constraints = [
-            ('line_ref_key', 'unique(reference)', 'Line reference already exists'),
+            ('line_ref_key', 'unique(name)', 'Line reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('reference', *a), '\nLine reference already exists', ['reference']),
+            (lambda s, *a: s.check_unique('name', *a), '\nLine reference already exists', ['name']),
             ]
 cmms_line()
 
@@ -68,18 +68,18 @@ class cmms_equipment(Normalize, osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.equipment')
+        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.equipment')
         return super(cmms_equipment, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
-        if 'reference' not in vals or not vals['reference']:
-            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
+        if 'name' not in vals or not vals['name']:
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
         return super(cmms_equipment, self).create(cr, user, vals, context)
 
     _columns = {
-        'reference': fields.char('Reference', size=64),
-        'name': fields.char('Name', size=64 , required=True),
-        'trademark': fields.char('Brand', size=64),
+        'name': fields.char('Reference', size=64),
+        'trademark': fields.char('Make', size=64),
+        'model': fields.char('Model', size=64),
         'local_id': fields.many2one('stock.location', 'Location'),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
@@ -101,9 +101,9 @@ class cmms_equipment(Normalize, osv.osv):
         'user_id': lambda object,cr,uid,context: uid,
     }
     _sql_constraints = [
-            ('equipment_ref_key', 'unique(reference)', 'Equipment reference already exists'),
+            ('equipment_ref_key', 'unique(name)', 'Equipment reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('reference', *a), '\nEquipment reference already exists', ['reference']),
+            (lambda s, *a: s.check_unique('name', *a), '\nEquipment reference already exists', ['name']),
             ]
 cmms_equipment()

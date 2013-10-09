@@ -37,12 +37,12 @@
                 <form string="Equipment" version="7.0">
                     <group colspan="4" col="6">
                         <group colspan="4" col="2">
-                            <field name="name"/>
-                            <field name="reference" placeholder="unique id will be generated if blank"/>
+                            <field name="name" placeholder="unique id will be generated if blank"/>
                             <field name="line_id"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="trademark"/>
+                            <field name="model"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -71,7 +71,7 @@
                         <page string="Maintenance">
                             <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
                                 <tree>
-                                    <field name="reference"/>
+                                    <field name="name"/>
                                     <field name="priority"/>
                                     <field name="description"/>
                                     <field name="state"/>
@@ -82,7 +82,7 @@
                         <page string="Help Requests">
                             <field colspan="4" mode="tree" name="help_request_ids" nolabel="1">
                                 <tree>
-                                    <field name="reference"/>
+                                    <field name="name"/>
                                     <field name="priority"/>
                                     <field name="description"/>
                                     <field name="type"/>
@@ -102,10 +102,10 @@
             <field name="arch" type="xml">
                 <tree string="Equipment">
                     <field name="name"/>
-                    <field name="reference"/>
                     <field name="line_id"/>
                     <field name="user_id"/>
                     <field name="trademark"/>
+                    <field name="model"/>
                     <field name="deadlinegar"/>
                 </tree>
             </field>
@@ -118,9 +118,9 @@
             <field name="arch" type="xml">
                 <tree string="Equipment">
                     <field name="line_id"/>
-                    <field name="reference"/>
                     <field name="name"/>
                     <field name="trademark"/>
+                    <field name="model"/>
                     <field name="deadlinegar"/>
                 </tree>
             </field>
@@ -159,10 +159,10 @@
             <field name="model">cmms.line</field>
             <field name="arch" type="xml">
                 <form string="Production Line">
-                    <field name="name"/>
-                    <field name="reference" placeholder="unique id will be generated if blank"/>
-                    <field name="location"/>
-                    <field name="sequence"/>
+                    <field name="name" placeholder="unique id will be generated if blank" colspan="4"/>
+                    <field name="location" colspan="4"/>
+                    <field name="sequence" colspan="4"/>
+                    <field name="line" colspan="4"/>
                     <separator string="Equipment" colspan="4"/>
                     <field name="equipment_ids" colspan="4" nolabel="1" attrs="{'readonly': [('name','=',False)]}"/>
                 </form>
@@ -173,8 +173,8 @@
             <field name="model">cmms.line</field>
             <field name="arch" type="xml">
                 <tree string="Production line">
+                    <field name="line"/>
                     <field name="name"/>
-                    <field name="reference"/>
                     <field name="location"/>
                     <field name="sequence"/>
                 </tree>

@@ -29,12 +29,9 @@ import datetime
 import time
 
 class cmms_pm(Normalize, osv.osv):
-    _name = "cmms.pm"
-    _description = "Preventive Maintenance System"
-    
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
-        res = self.name_get(cr, uid, ids, context)
-        return dict(res)
+    #def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
+    #    res = self.name_get(cr, uid, ids, context)
+    #    return dict(res)
     
     def _days_next_due(self, cr, uid, ids, prop, unknow_none, context):
         if ids:
@@ -86,22 +83,25 @@ class cmms_pm(Normalize, osv.osv):
         if default is None:
             default = {}
             default = default.copy()
-            default['reference'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.pm')
+            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.pm')
         return super(cmms_pm, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
-        if 'reference' not in vals or not vals['reference']:
-            vals['reference'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
+        if 'name' not in vals or not vals['name']:
+            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
         return super(cmms_pm, self).create(cr, user, vals, context)
-    
+
+    _name = "cmms.pm"
+    _description = "Preventive Maintenance System"
+
     _columns = {
-        'reference': fields.char('PM Reference',size=20),
+        'name': fields.char('PM Reference', size=20, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'description': fields.char('Description', size=64),
         'meter': fields.selection([ ('days', 'Days')], 'Unit of measure'),
         'recurrent': fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
         'days_interval': fields.integer('Interval'),
-        'days_last_done': fields.date('Last done',required=True),
+        'days_last_done': fields.date('Last done', required=True),
         'days_next_due': fields.function(_days_next_due, method=True, type="date", string='Next service date'),
         'days_warn_period': fields.integer('Warning time'),
         'days_left': fields.function(_days_due, method=True, type="integer", string='Days until next service'),
@@ -116,10 +116,10 @@ class cmms_pm(Normalize, osv.osv):
     }
 
     _sql_constraints = [
-            ('pm_ref_key', 'unique(reference)', 'PM reference already exists'),
+            ('pm_ref_key', 'unique(name)', 'PM reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('reference', *a), '\nPM reference already exists', ['reference']),
+            (lambda s, *a: s.check_unique('name', *a), '\nPM reference already exists', ['name']),
             ]
 cmms_pm()
 

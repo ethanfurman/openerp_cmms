@@ -37,7 +37,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Incident">
-                    <field name="reference"/>
+                    <field name="name"/>
                     <field name="equipment_id"/>
                     <field name="description"/>
                     <field name="user_id"/>
@@ -56,7 +56,7 @@
                     <sheet string="Incident">
                         <group colspan="4" col="6">
                             <group colspan="4" col="2">
-                                <field name="reference" placeholder="unique id will be generated if blank"/>
+                                <field name="name" placeholder="unique id will be generated if blank"/>
                                 <field name="description"/>
                                 <field name="date"/>
                                 <field name="priority"/>
@@ -110,7 +110,7 @@
             <field name="model">cmms.incident</field>
             <field name="arch" type="xml">
                 <search string="Search Work Orders">
-                    <field name="reference" string="Reference" filter_domain="[(1,'=',1)]"/>
+                    <field name="name" string="Reference" filter_domain="[(1,'=',1)]"/>
                     <field name="state" string="Status" filter_domain="[(1,'=',1)]"/>
                     <field name="user_id" string="Assigned To" filter_domain="[(1,'=',1)]"/>
                     <field name="equipment_id" string="Machine" filter_domain="[(1,'=',1)]"/>
@@ -120,7 +120,9 @@
                     <filter string="All Work Orders" name="type_all" domain="[(1,'=',1)]"/>
                     <separator/>
                     <filter string="This week's Work Orders" name="type_this_week" domain="[('date','in','THIS_WEEK')]"/>
-                    <filter string="Last week's Work Orders" name="type_this_week" domain="[('date','in','LAST_WEEK')]"/>
+                    <filter string="Last week's Work Orders" name="type_last_week" domain="[('date','in','LAST_WEEK')]"/>
+                    <filter string="This month's Work Orders" name="type_this_month" domain="[('date','in','THIS_MONTH')]"/>
+                    <filter string="Last month's Work Orders" name="type_last_month" domain="[('date','in','LAST_MONTH')]"/>
                     <separator/>
                     <filter string="Draft Work Orders" name="type_draft" domain="[('state','=','draft')]"/>
                     <filter string="Open Work Orders" name="type_open" domain="[('state','=','confirmed')]"/>

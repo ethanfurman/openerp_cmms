@@ -41,7 +41,7 @@
                         <group colspan="4" col="2">
                             <field name="description"/>
                             <field name="equipment_id"/>
-                            <field name="reference" placeholder="unique id will be generated if left blank"/>
+                            <field name="name" placeholder="unique id will be generated if left blank"/>
                         </group>
                         <group colspan="2" col="2">
                             <field name="recurrent" />
@@ -90,15 +90,15 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Properties" colors="blue:days_left&lt;=days_warn_period and days_left&gt;0;red:days_left&lt;=0;">
-                    <field name="reference"/>
+                    <field name="name"/>
                     <field name="equipment_id"/>
                     <field name="description"/>
                     <!--
                     <field name="days_last_done"/>
                     <field name="days_next_due"/>
                     -->
-                    <field name="days_warn_period" attrs="{'invisible': True}"/>
-                    <field name="days_left" attrs="{'invisible': True}"/>
+                    <field name="days_warn_period"/>
+                    <field name="days_left"/>
                     <field name="state"/>
                 </tree>
             </field>
