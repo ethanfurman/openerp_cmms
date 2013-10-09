@@ -34,29 +34,34 @@ class cmms_line(Normalize, osv.osv):
     _description = 'Production line'
 
     def create(self, cr, user, vals, context=None):
+        if 'ref_num' not in vals or not vals['ref_num']:
+            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
         if 'name' not in vals or not vals['name']:
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
+            vals['name'] = vals['ref_num']
         return super(cmms_line, self).create(cr, user, vals, context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.line')
+        default['ref_num'] = False
+        default['name'] = False
         return super(cmms_line, self).copy(cr, uid, id, default=default, context=context)
 
     _columns = {
-        'line': fields.char('Production line', size=64, required=True),
-        'name': fields.char('Reference', size=64),
+        'name': fields.char('Production line', size=64, required=True),
+        'ref_num': fields.char('Inventory ID', size=64),
         'location': fields.char('Location', size=64),
         'sequence': fields.integer('Sequence'),
         'equipment_ids': fields.one2many('cmms.equipment', 'line_id', 'Equipment'),
     }
     _sql_constraints = [
-            ('line_ref_key', 'unique(name)', 'Line reference already exists'),
+            ('line_ref_key', 'unique(ref_num)', 'Line inventory tag already exists'),
+            ('line_name_key', 'unique(name)', 'Line name already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('name', *a), '\nLine reference already exists', ['name']),
+            (lambda s, *a: s.check_unique('ref_num', *a), '\nLine inventory tag already exists', ['name']),
+            (lambda s, *a: s.check_unique('name', *a), '\nLine name already exists', ['name']),
             ]
 cmms_line()
 
@@ -68,16 +73,20 @@ class cmms_equipment(Normalize, osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.equipment')
+        default['inv_tag'] = False
+        default['name'] = False
         return super(cmms_equipment, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
+        if 'inv_tag' not in vals or not vals['inv_tag']:
+            vals['inv_tag'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
         if 'name' not in vals or not vals['name']:
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
+            vals['name'] = vals['inv_tag']
         return super(cmms_equipment, self).create(cr, user, vals, context)
 
     _columns = {
-        'name': fields.char('Reference', size=64),
+        'name': fields.char('Machine', size=64, required=True),
+        'inv_tag': fields.char('Inventory ID', size=64),
         'trademark': fields.char('Make', size=64),
         'model': fields.char('Model', size=64),
         'local_id': fields.many2one('stock.location', 'Location'),
@@ -101,9 +110,11 @@ class cmms_equipment(Normalize, osv.osv):
         'user_id': lambda object,cr,uid,context: uid,
     }
     _sql_constraints = [
-            ('equipment_ref_key', 'unique(name)', 'Equipment reference already exists'),
+            ('equipment_ref_key', 'unique(inv_tag)', 'Machine inventory ID already exists'),
+            ('equipment_name_key', 'unique(name)', 'Machine name already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('name', *a), '\nEquipment reference already exists', ['name']),
+            (lambda s, *a: s.check_unique('inv_tag', *a), '\nMachine inventory ID already exists', ['inv_tag']),
+            (lambda s, *a: s.check_unique('name', *a), '\nMachine name already exists', ['name']),
             ]
 cmms_equipment()

@@ -55,21 +55,27 @@ class cmms_cm(Normalize, osv.osv):
     _description = "Corrective Maintenance System"
 
     def create(self, cr, uid, vals, context=None):
-        if 'name' not in vals or not vals['name']:
-            vals['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        if 'ref_num' not in vals or not vals['ref_num']:
+            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        machines = self.pool.get('cmms.equipment')
+        machine = machines.browse(cr, uid, vals['equipment_id'])
+        failures = self.pool.get('cmms.failure')
+        failure = failures.browse(cr, uid, vals['failure_id'])
+        vals['name'] = "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), failure.name.strip())
         return super(cmms_cm, self).create(cr, uid, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+        default['ref_num'] = False
         return super(cmms_cm, self).copy(cr, uid, id, default=default, context=context)
 
     _columns = {
-        'name': fields.char('CM Reference',size=20),
+        'name': fields.char('Name', size=64),
+        'ref_num': fields.char('CM Reference', size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
-        'failure_id': fields.many2one('cmms.failure', 'Failure?'),
+        'failure_id': fields.many2one('cmms.failure', 'Failure?', required=True),
         'date': fields.datetime('Date'),
         'note': fields.text('Notes'),
         'user_id': fields.many2one('res.users', 'Responsible', domain="[('groups_id.category_id.name','=','CMMS')]"),
@@ -81,10 +87,10 @@ class cmms_cm(Normalize, osv.osv):
         'user_id': lambda object,cr,uid,context: uid,
     }
     _sql_constraints = [
-            ('cm_ref_key', 'unique(name)', 'CM Reference already exists'),
+            ('cm_ref_key', 'unique(ref_num)', 'CM Reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('name', *a), '\nCM Reference already exists', ['name']),
+            (lambda s, *a: s.check_unique('ref_num', *a), '\nCM Reference already exists', ['ref_num']),
             ]
 cmms_cm()
 

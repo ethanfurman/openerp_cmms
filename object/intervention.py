@@ -49,17 +49,20 @@ class cmms_intervention(Normalize, osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-            default = default.copy()
-            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.intervention')
+        default = default.copy()
+        default['ref_num'] = False
         return super(cmms_intervention, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
-        if 'name' not in vals or not vals['name']:
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.intervention')
+        if 'ref_num' not in vals or not vals['ref_num']:
+            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.intervention')
+        machines = self.pool.get('cmms.equipment')
+        machine = machines.browse(cr, uid, vals['equipment_id'])
+        vals['name'] = "%s - %s - %s - %s" % (vals['ref_num'], vals['type'], machine.name.strip(), vals['description'])
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
     _columns = {
-        'name': fields.char('Reference', size=64, select=True),
+        'ref_num': fields.char('Reference', size=64, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'date': fields.datetime('Date'),
         'user_id': fields.many2one('res.users', 'Sender', domain="[('groups_id.category_id.name','=','CMMS')]"),
@@ -79,9 +82,9 @@ class cmms_intervention(Normalize, osv.osv):
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
     }
     _sql_constraints = [
-            ('intervention_ref_key', 'unique(name)', 'CM reference already exists'),
+            ('intervention_ref_key', 'unique(ref_num)', 'CM reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('name', *a), '\nCM reference already exists', ['name']),
+            (lambda s, *a: s.check_unique('ref_num', *a), '\nCM reference already exists', ['ref_num']),
             ]
 cmms_intervention()

@@ -41,7 +41,7 @@
                         </group>
                         <group colspan="2" col="2">
                             <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
-                            <field name="name" placeholder="unique id will be generated if blank"/>
+                            <field name="ref_num" placeholder="unique id will be generated if blank"/>
                         </group>
                     </group>
                     <notebook colspan="4">
@@ -72,7 +72,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Help Request">
-                    <field name="name" />
+                    <field name="ref_num" />
                     <field name="priority"/>
                     <field name="description"/>
                     <field name="type" />

@@ -65,12 +65,13 @@ class cmms_incident(Normalize, osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-        default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.incident')
+        default['ref_num'] = False
         return super(cmms_incident, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
-        if 'name' not in vals or not vals['name']:
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
+        if 'ref_num' not in vals or not vals['ref_num']:
+            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
+        vals['name'] = "%s - %s" % (vals['ref_num'], vals['description'])
         wo_id = super(cmms_incident, self).create(cr, user, vals, context)
         partner_ids = [id for id in set([user, vals['user_id']]) if id]
         self.message_subscribe_users(cr, user, [wo_id], partner_ids, context=context)
@@ -141,8 +142,9 @@ class cmms_incident(Normalize, osv.osv):
         return super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
 
     _columns = {
-        'name':fields.char('Reference',size=64),
-        'description': fields.char('Description', size=64),
+        'name': fields.char('Name', size=64),
+        'ref_num':fields.char('Reference',size=64),
+        'description': fields.char('Description', size=64, required=True),
         'state': fields.selection(STATES,'State', size=32),
         'priority': fields.selection(PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
@@ -159,10 +161,10 @@ class cmms_incident(Normalize, osv.osv):
         'state': lambda *a: 'draft',
     }
     _sql_constraints = [
-            ('incident_ref_key', 'unique(name)', 'Work Order reference already exists'),
+            ('incident_ref_key', 'unique(ref_num)', 'Work Order reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('name', *a), '\nWork Order reference already exists', ['name']),
+            (lambda s, *a: s.check_unique('ref_num', *a), '\nWork Order reference already exists', ['ref_num']),
             ]
 cmms_incident()
 

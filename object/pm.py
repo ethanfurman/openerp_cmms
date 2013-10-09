@@ -83,19 +83,23 @@ class cmms_pm(Normalize, osv.osv):
         if default is None:
             default = {}
             default = default.copy()
-            default['name'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.pm')
+        default['ref_num'] = False
         return super(cmms_pm, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
-        if 'name' not in vals or not vals['name']:
-            vals['name'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
+        if 'ref_num' not in vals or not vals['ref_num']:
+            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
+        machines = self.pool.get('cmms.equipment')
+        machine = machines.browse(cr, uid, vals['equipment_id'])
+        vals['name'] = "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), vals['description'])
         return super(cmms_pm, self).create(cr, user, vals, context)
 
     _name = "cmms.pm"
     _description = "Preventive Maintenance System"
 
     _columns = {
-        'name': fields.char('PM Reference', size=20, select=True),
+        'name': fields.char('Name', size=64),
+        'ref_num': fields.char('PM Reference', size=20, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'description': fields.char('Description', size=64),
         'meter': fields.selection([ ('days', 'Days')], 'Unit of measure'),
@@ -116,10 +120,10 @@ class cmms_pm(Normalize, osv.osv):
     }
 
     _sql_constraints = [
-            ('pm_ref_key', 'unique(name)', 'PM reference already exists'),
+            ('pm_ref_key', 'unique(ref_num)', 'PM reference already exists'),
             ]
     _constraints = [
-            (lambda s, *a: s.check_unique('name', *a), '\nPM reference already exists', ['name']),
+            (lambda s, *a: s.check_unique('ref_num', *a), '\nPM reference already exists', ['ref_num']),
             ]
 cmms_pm()
 
@@ -127,7 +131,7 @@ class cmms_archiving2(Normalize, osv.osv):
     _name = "cmms.archiving2"
     _description = "PM follow-up history"
     _columns = {
-        'name': fields.char('effect', size=32, required=True),
+        'name': fields.char('Effect', size=32, required=True),
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
         'pm_id': fields.many2one('cmms.pm', 'Archiving',required=True),

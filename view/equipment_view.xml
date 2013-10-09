@@ -37,7 +37,8 @@
                 <form string="Equipment" version="7.0">
                     <group colspan="4" col="6">
                         <group colspan="4" col="2">
-                            <field name="name" placeholder="unique id will be generated if blank"/>
+                            <field name="name" placeholder="nickname for machine (must be unique)"/>
+                            <field name="inv_tag" placeholder="unique id will be generated if blank"/>
                             <field name="line_id"/>
                         </group>
                         <group colspan="2" col="2">
@@ -60,7 +61,7 @@
                         </page>
                         <page string="Additional Information">
                             <separator colspan="4" string="Accounting"/>
-                            <field domain="[('name', '=', 'in_invoice')]" name="invoice_id" colspan="2"/>
+                            <field domain="[('inv_tag', '=', 'in_invoice')]" name="invoice_id" colspan="2"/>
                             <separator colspan="2"/>
                             <separator colspan="4" string="Safety Instruction"/>
                             <field colspan="4" nolabel="1" name="safety"/>
@@ -102,6 +103,7 @@
             <field name="arch" type="xml">
                 <tree string="Equipment">
                     <field name="name"/>
+                    <field name="inv_tag"/>
                     <field name="line_id"/>
                     <field name="user_id"/>
                     <field name="trademark"/>
@@ -119,6 +121,7 @@
                 <tree string="Equipment">
                     <field name="line_id"/>
                     <field name="name"/>
+                    <field name="inv_tag"/>
                     <field name="trademark"/>
                     <field name="model"/>
                     <field name="deadlinegar"/>
@@ -159,12 +162,12 @@
             <field name="model">cmms.line</field>
             <field name="arch" type="xml">
                 <form string="Production Line">
-                    <field name="name" placeholder="unique id will be generated if blank" colspan="4"/>
+                    <field name="ref_num" placeholder="unique id will be generated if blank" colspan="4"/>
+                    <field name="name" placeholder="nickname for line (must be unique)" colspan="4"/>
                     <field name="location" colspan="4"/>
                     <field name="sequence" colspan="4"/>
-                    <field name="line" colspan="4"/>
                     <separator string="Equipment" colspan="4"/>
-                    <field name="equipment_ids" colspan="4" nolabel="1" attrs="{'readonly': [('name','=',False)]}"/>
+                    <field name="equipment_ids" colspan="4" nolabel="1" attrs="{'readonly': [('ref_num','=',False)]}"/>
                 </form>
             </field>
         </record>
@@ -173,8 +176,8 @@
             <field name="model">cmms.line</field>
             <field name="arch" type="xml">
                 <tree string="Production line">
-                    <field name="line"/>
                     <field name="name"/>
+                    <field name="ref_num"/>
                     <field name="location"/>
                     <field name="sequence"/>
                 </tree>

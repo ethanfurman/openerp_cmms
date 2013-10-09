@@ -38,7 +38,7 @@
             <field name="arch" type="xml">
                 <form string="CM">
                     <field name="equipment_id"/>
-                    <field name="name" placeholder="unique id will be generated if blank"/>
+                    <field name="ref_num" placeholder="unique id will be generated if blank"/>
                     <field name="failure_id"/>
                     <field name="date"/>
                     <field name="user_id" options="{'create':False, 'create_edit':False, 'limit':15}"/>
@@ -84,7 +84,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="CM">
-                    <field name="name" />
+                    <field name="ref_num" />
                     <field name="equipment_id" />
                     <field name="failure_id" />
                     <field name="date" />
