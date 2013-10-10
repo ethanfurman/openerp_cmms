@@ -1,0 +1,88 @@
+#!/usr/bin/env python
+from scription import Script, Run
+from VSS.utils import PropertyDict
+import openerplib
+
+additions = []
+for line in open('cmms_equipment_descriptions.txt').readlines():
+    id, desc = line.strip('\n').split('\t')
+    id = int(id)
+    desc = desc.replace(r'\n', '\n')
+    additions.append((id, desc))
+
+def fix_cm_names(conn):
+    # "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), failure.name.strip())
+    cm = conn.get_model('cmms.cm')
+    ids = cm.search([])
+    for values in cm.read(ids):
+        id = values['id']
+        ref =  values['ref_num']
+        machine = values['equipment_id'][1]
+        if '#' in machine:
+            machine = machine[:machine.index('#')]
+        if '(' in machine:
+            machine = machine[:machine.index('(')]
+        failure = values['failure_id'][1]
+        cm_name = '%s - %s - %s' % (ref, machine, failure)
+        cm.write(id, dict(name=cm_name))
+    
+
+def fix_pm_names(conn):
+    # "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), vals['description'])
+    pm = conn.get_model('cmms.pm')
+    ids = pm.search([])
+    for values in pm.read(ids):
+        id = values['id']
+        ref =  values['ref_num']
+        machine = values['equipment_id'][1]
+        if '#' in machine:
+            machine = machine[:machine.index('#')]
+        if '(' in machine:
+            machine = machine[:machine.index('(')]
+        description = values['description']
+        pm_name = '%s - %s - %s' % (ref, machine, description)
+        pm.write(id, dict(name=pm_name))
+
+def fix_help_names(conn):
+    # "%s - %s - %s - %s" % (vals['ref_num'], vals['type'], machine.name.strip(), vals['description']
+    inter = conn.get_model('cmms.intervention')
+    ids = inter.search([])
+    for values in inter.read(ids):
+        id = values['id']
+        ref =  values['ref_num']
+        type = values['type']
+        machine = values['equipment_id'][1]
+        if '#' in machine:
+            machine = machine[:machine.index('#')]
+        if '(' in machine:
+            machine = machine[:machine.index('(')]
+        description = values['description']
+        inter_name = '%s - %s - %s - %s' % (ref, type, machine, description)
+        inter.write(id, dict(name=inter_name))
+
+def fix_wo_names(conn):
+    # "%s - %s" % (vals['ref_num'], vals['description'])
+    wo = conn.get_model('cmms.incident')
+    ids = wo.search([])
+    for values in wo.read(ids):
+        id = values['id']
+        ref =  values['ref_num']
+        description = values['description']
+        wo_name = '%s - %s' % (ref, description)
+        wo.write(id, dict(name=wo_name))
+
+@Script(
+        host=("host to connect to",),
+        db=('OpenERP database to use',),
+        user=('login name to use',),
+        pw=('password to use',),
+        )
+def main(host, db, user='admin', pw='admin'):
+    oe = PropertyDict()
+    oe.conn = openerplib.get_connection(hostname=host, database=db, login=user, password=pw)
+    for fixer in (fix_cm_names, fix_pm_names, fix_help_names, fix_wo_names):
+        fixer(oe.conn)
+
+
+if __name__ == '__main__':
+    Run()
