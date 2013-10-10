@@ -111,10 +111,8 @@ class cmms_equipment(Normalize, osv.osv):
     }
     _sql_constraints = [
             ('equipment_ref_key', 'unique(inv_tag)', 'Machine inventory ID already exists'),
-            ('equipment_name_key', 'unique(name)', 'Machine name already exists'),
             ]
     _constraints = [
             (lambda s, *a: s.check_unique('inv_tag', *a), '\nMachine inventory ID already exists', ['inv_tag']),
-            (lambda s, *a: s.check_unique('name', *a), '\nMachine name already exists', ['name']),
             ]
 cmms_equipment()

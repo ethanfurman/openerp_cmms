@@ -72,7 +72,7 @@
                         <page string="Maintenance">
                             <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
                                 <tree>
-                                    <field name="name"/>
+                                    <field name="ref_num"/>
                                     <field name="priority"/>
                                     <field name="description"/>
                                     <field name="state"/>
@@ -83,7 +83,7 @@
                         <page string="Help Requests">
                             <field colspan="4" mode="tree" name="help_request_ids" nolabel="1">
                                 <tree>
-                                    <field name="name"/>
+                                    <field name="ref_num"/>
                                     <field name="priority"/>
                                     <field name="description"/>
                                     <field name="type"/>
