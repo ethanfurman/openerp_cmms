@@ -62,6 +62,7 @@ class cmms_intervention(Normalize, osv.osv):
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
     _columns = {
+        'name': fields.char('Name', size=64),
         'ref_num': fields.char('Reference', size=64, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'date': fields.datetime('Date'),
