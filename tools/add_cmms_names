@@ -3,13 +3,6 @@ from scription import Script, Run
 from VSS.utils import PropertyDict
 import openerplib
 
-additions = []
-for line in open('cmms_equipment_descriptions.txt').readlines():
-    id, desc = line.strip('\n').split('\t')
-    id = int(id)
-    desc = desc.replace(r'\n', '\n')
-    additions.append((id, desc))
-
 def fix_cm_names(conn):
     # "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), failure.name.strip())
     cm = conn.get_model('cmms.cm')
@@ -56,8 +49,8 @@ def fix_help_names(conn):
             machine = machine[:machine.index('#')]
         if '(' in machine:
             machine = machine[:machine.index('(')]
-        description = values['description']
-        inter_name = '%s - %s - %s - %s' % (ref, type, machine, description)
+        description = values['description'] or ''
+        inter_name = ('%s - %s - %s - %s' % (ref, type, machine, description)).strip(' -')
         inter.write(id, dict(name=inter_name))
 
 def fix_wo_names(conn):
