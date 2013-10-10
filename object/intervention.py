@@ -58,7 +58,7 @@ class cmms_intervention(Normalize, osv.osv):
             vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.intervention')
         machines = self.pool.get('cmms.equipment')
         machine = machines.browse(cr, uid, vals['equipment_id'])
-        vals['name'] = "%s - %s - %s - %s" % (vals['ref_num'], vals['type'], machine.name.strip(), vals['description'])
+        vals['name'] = ("%s - %s - %s - %s" % (vals['ref_num'], vals['type'], machine.name.strip(), vals['description'] or '')).strip(' -')
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
     _columns = {
