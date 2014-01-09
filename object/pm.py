@@ -90,7 +90,7 @@ class cmms_pm(Normalize, osv.osv):
         if 'ref_num' not in vals or not vals['ref_num']:
             vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
         machines = self.pool.get('cmms.equipment')
-        machine = machines.browse(cr, uid, vals['equipment_id'])
+        machine = machines.browse(cr, 1, vals['equipment_id'])
         vals['name'] = "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), vals['description'])
         return super(cmms_pm, self).create(cr, user, vals, context)
 
