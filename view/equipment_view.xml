@@ -69,7 +69,7 @@
                         <page string="Spare Parts">
                             <field colspan="4" mode="tree,form" name="product_ids" nolabel="1"/>
                         </page>
-                        <page string="Maintenance">
+                        <page string="Work Orders">
                             <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
                                 <tree>
                                     <field name="ref_num"/>
@@ -77,6 +77,25 @@
                                     <field name="description"/>
                                     <field name="state"/>
                                     <field name="time"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="PMs">
+                            <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
+                                <tree>
+                                    <field name="ref_num"/>
+                                    <field name="description"/>
+                                    <field name="days_next_due"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Repairs">
+                            <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
+                                <tree>
+                                    <field name="ref_num"/>
+                                    <field name="failure"/>
+                                    <field name="date"/>
+                                    <field name="user_id"/>
                                 </tree>
                             </field>
                         </page>
