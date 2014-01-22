@@ -81,7 +81,7 @@
                             </field>
                         </page>
                         <page string="PMs">
-                            <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
+                            <field colspan="4" mode="tree" name="pm_ids" nolabel="1">
                                 <tree>
                                     <field name="ref_num"/>
                                     <field name="description"/>
@@ -90,10 +90,10 @@
                             </field>
                         </page>
                         <page string="Repairs">
-                            <field colspan="4" mode="tree" name="work_order_ids" nolabel="1">
+                            <field colspan="4" mode="tree" name="cm_ids" nolabel="1">
                                 <tree>
                                     <field name="ref_num"/>
-                                    <field name="failure"/>
+                                    <field name="failure_id"/>
                                     <field name="date"/>
                                     <field name="user_id"/>
                                 </tree>
