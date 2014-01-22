@@ -105,6 +105,8 @@ class cmms_equipment(Normalize, osv.osv):
                 ),
         'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
         'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
+        'pm_ids': fields.one2many('cmms.pm', 'equipment_id', 'Preventive Maintenance History'),
+        'cm_ids': fields.one2many('cmms.cm', 'equipment_id', 'Corrective Maintenance History'),
     }
     _defaults = {
         'user_id': lambda object,cr,uid,context: uid,
