@@ -38,6 +38,7 @@
             <field name="arch" type="xml">
                 <tree string="Incident">
                     <field name="ref_num"/>
+                    <field name="date"/>
                     <field name="equipment_id"/>
                     <field name="description"/>
                     <field name="user_id"/>
