@@ -61,6 +61,7 @@ class cmms_incident(Normalize, osv.osv):
     _name = "cmms.incident"
     _description = "Incident" 
     _inherit = ['mail.thread']
+    _order = 'date desc'
     
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
