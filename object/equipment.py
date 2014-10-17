@@ -89,7 +89,7 @@ class cmms_equipment(Normalize, osv.osv):
         'inv_tag': fields.char('Inventory ID', size=64),
         'trademark': fields.char('Make', size=64),
         'model': fields.char('Model', size=64),
-        'local_id': fields.many2one('stock.location', 'Location'),
+        # 'local_id': fields.many2one('stock.location', 'Location'),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
         'startingdate': fields.datetime("Start Date"),
