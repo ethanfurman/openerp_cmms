@@ -47,6 +47,7 @@ With this module you can track all equipment types.
         'base',
         'fnx',
         'product',
+        # 'account',
         # 'stock',
         ],
     "init_xml": [

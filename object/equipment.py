@@ -91,7 +91,7 @@ class cmms_equipment(Normalize, osv.osv):
         'model': fields.char('Model', size=64),
         # 'local_id': fields.many2one('stock.location', 'Location'),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
-        'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
+        # 'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
         'startingdate': fields.datetime("Start Date"),
         'product_ids': fields.many2many('product.product','product_equipment_rel','product_id','equipment_id','Spare Parts',
                                         domain="[('product_tmpl_id.categ_id.name','=','Spare Parts')]",),
