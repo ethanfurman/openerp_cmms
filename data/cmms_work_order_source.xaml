@@ -1,0 +1,25 @@
+!!! coding: utf8
+!!! xml1.0
+
+%openerp
+    %data noupdate='1'
+
+        %record #line1 model='cmms.request.link'
+            @name: Repair
+            @object: cmms.cm
+            @priority: 5
+
+        %record #line2 model='cmms.request.link'
+            @name: Preventive Maintenance
+            @object: cmms.pm
+            @priority: 5
+
+        %record #line3 model='cmms.request.link'
+            @name: Checklist
+            @object: cmms.checklist.history
+            @priority: 5
+
+        %record #line4 model='cmms.request.link'
+            @name: Help Request
+            @object: cmms.intervention
+            @priority: 5

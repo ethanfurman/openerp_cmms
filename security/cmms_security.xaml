@@ -1,0 +1,23 @@
+!!! coding: utf8
+!!! xml1.0
+
+%openerp
+    %data noupdate='1'
+
+        %record model='ir.module.category' #module_category_cmms_management
+            @name: CMMS
+            @sequence: 16
+            @description: Track maintenance on equipment
+
+        %record #group_cmms_user model='res.groups'
+            @name: User
+            @category_id ref='module_category_cmms_management'
+            @comment: User will have access to the basic CMMS application.
+            @implied_ids eval="[(4, ref('base.group_user'))]"
+
+        %record #group_cmms_manager model='res.groups'
+            @name: Manager
+            @comment: User will have access to CMMS configuration.
+            @category_id ref='module_category_cmms_management'
+            @implied_ids eval="[(4, ref('group_cmms_user'))]"
+            @users eval="[(4, ref('base.user_root'))]"

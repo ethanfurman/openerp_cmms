@@ -1,0 +1,122 @@
+!!! coding: utf8
+!!! xml1.0
+
+//################################################################################
+//#
+//# Computerized maintenance management system (CMMS) module,
+//# Copyright (C) 
+//#    Nextma (http://www.nextma.com). All Right Reserved
+//#    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
+//#
+//# CMMS module is free software: you can redistribute
+//# it and/or modify it under the terms of the Affero GNU General Public License
+//# as published by the Free Software Foundation, either version 3 of the
+//# License, or (at your option) any later version.
+//#
+//# CMMS module is distributed in the hope that it will
+//# be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+//# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the Affero GNU
+//# General Public License for more details.
+//#
+//# You should have received a copy of the Affero GNU General Public License
+//# along with this program.  If not, see %http://www.gnu.org/licenses/: .
+//#
+//################################################################################
+
+%openerp
+    %data noupdate='1'
+
+        // Sequences for cmms.incident
+        %record #seq_type_cmms_incident model='ir.sequence.type'
+            @name: cmms incident
+            @code: cmms.incident
+        
+        %record #seq_cmms_incident model='ir.sequence'
+            @name: cmms incident
+            @code: cmms.incident
+            @prefix: Intervention card-
+            @padding: 5
+        
+
+        // Sequences for cmms.pm
+        %record #seq_type_cmms_pm model='ir.sequence.type'
+            @name: cmms pm
+            @code: cmms.pm
+        
+        %record #seq_cmms_pm model='ir.sequence'
+            @name: cmms pm
+            @code: cmms.pm
+            @prefix: PM-
+            @padding: 5
+         
+
+        // Sequences for cmms.cm
+        %record #seq_type_cmms_cm model='ir.sequence.type'
+            @name: cmms cm
+            @code: cmms.cm
+        
+        %record #seq_cmms_cm model='ir.sequence'
+            @name: cmms cm
+            @code: cmms.cm
+            @prefix: CM-
+            @padding: 5
+         
+
+         // Sequences for cmms.questionnaire.history
+        %record #seq_type_cmms_checklist_history model='ir.sequence.type'
+            @name: cmms history
+            @code: cmms.checklist.history
+        
+        %record #seq_cmms_checklist_history model='ir.sequence'
+            @name: cmms history
+            @code: cmms.checklist.history
+            @prefix: Checklist-
+            @padding: 5
+         
+
+        // Sequences for cmms.equipment
+        %record #seq_type_cmms_equipment model='ir.sequence.type'
+            @name: cmms equipment
+            @code: cmms.equipment
+        
+        %record #seq_cmms_equipment model='ir.sequence'
+            @name: cmms equipment
+            @code: cmms.equipment
+            @prefix: Equipment-
+            @padding: 5
+         
+
+        // Sequences for cmms.line
+        %record #seq_type_cmms_line model='ir.sequence.type'
+            @name: cmms line
+            @code: cmms.line
+        
+        %record #seq_cmms_line model='ir.sequence'
+            @name: cmms line
+            @code: cmms.line
+            @prefix: Line-
+            @padding: 5
+         
+
+        // Sequences for cmms.intervention
+        %record #seq_type_cmms_intervention model='ir.sequence.type'
+            @name: cmms intervention
+            @code: cmms.intervention
+        
+        %record #seq_cmms_intervention model='ir.sequence'
+            @name: cmms intervention
+            @code: cmms.intervention
+            @prefix: IR-
+            @padding: 5
+         
+
+        // Sequences for cmms.failure
+        %record #seq_type_cmms_failure model='ir.sequence.type'
+            @name: cmms failure
+            @code: cmms.failure
+        
+        %record #seq_cmms_failure model='ir.sequence'
+            @name: cmms failure
+            @code: cmms.failure
+            @prefix: Failure-
+            @padding: 5
