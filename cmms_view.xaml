@@ -1,8 +1,7 @@
 !!! xml1.0
 
-:python
-    act_window = 'ir.actions.act_window'
-    view = 'ir.ui.view'
+-act_window = 'ir.actions.act_window'
+-view = 'ir.ui.view'
 
 %openerp
     %data
