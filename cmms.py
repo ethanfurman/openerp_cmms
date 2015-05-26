@@ -137,7 +137,7 @@ class cmms_equipment(Normalize, osv.Model):
         'user_id': fields.many2one(
             'res.users',
             'Assigned to',
-            domain="[('groups_id.category_id.name','=','CMMS')]",
+            domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','User')]",
             ),
         'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
         'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
@@ -218,7 +218,7 @@ class cmms_cm(Normalize, osv.Model):
         'failure_id': fields.many2one('cmms.failure', 'Failure?', required=True),
         'date': fields.datetime('Date'),
         'note': fields.text('Notes'),
-        'user_id': fields.many2one('res.users', 'Responsible', domain="[('groups_id.category_id.name','=','CMMS')]"),
+        'user_id': fields.many2one('res.users', 'Responsible', domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','Staff')]"),
         'diagnosistab_ids': fields.one2many('cmms.diagnosistab', 'cm_id', 'Diagnostic Table'),
         'archiving_ids': fields.one2many('cmms.archiving', 'cm_id', 'Follow-up History'),
         }
@@ -428,7 +428,7 @@ class cmms_incident(Normalize, osv.Model):
         'description': fields.char('Description', size=64, required=True),
         'state': fields.selection(STATES,'State', size=32),
         'priority': fields.selection(WO_PRIORITIES, 'Priority'),
-        'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
+        'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','Staff')]"),
         'date': fields.datetime('Date'),
         'date_due': fields.date('Due Date', help='Date when servicing must be finished'),
         'days_left': fields.function(
@@ -445,7 +445,7 @@ class cmms_incident(Normalize, osv.Model):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'priority': lambda *a: WO_PRIORITIES[2][0],
-        'user_id': lambda obj,cr,uid,context: uid,
+        # 'user_id': lambda obj,cr,uid,context: uid,
         'state': lambda *a: 'draft',
         }
     _sql_constraints = [
@@ -559,8 +559,8 @@ class cmms_intervention(Normalize, osv.Model):
         'ref_num': fields.char('Reference', size=64, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'date': fields.datetime('Date'),
-        'user_id': fields.many2one('res.users', 'Sender', domain="[('groups_id.category_id.name','=','CMMS')]"),
-        'user2_id': fields.many2one('res.users', 'Recipient', domain="[('groups_id.category_id.name','=','CMMS')]"),
+        'user_id': fields.many2one('res.users', 'Sender', domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','Staff')]"),
+        'user2_id': fields.many2one('res.users', 'Recipient', domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','Staff')]"),
         'priority': fields.selection(HELP_PRIORITIES,'Priority', size=32),
         'observation': fields.text('Observation'),
         'date_inter': fields.datetime('Request date'),
@@ -650,7 +650,7 @@ class cmms_checklist_history(Normalize, osv.Model):
         'date_planned': fields.datetime("Planned Date"),
         'date_end': fields.datetime("Completed Date"),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine'),
-        'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
+        'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','Staff')]"),
         'status': fields.selection(STATES, "Status"),
         }
     _defaults = {
