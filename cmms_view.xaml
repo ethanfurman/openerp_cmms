@@ -60,6 +60,7 @@
                         %group colspan='2' col='2'
                             @trademark
                             @model
+                            @user_id
                     %notebook colspan='4'
                         %page $General_Information
                             %group
@@ -563,7 +564,7 @@
             @view_type: form
             @view_mode: tree,form
 
-         %record model=view #view_checklist_history_tree
+        %record model=view #view_checklist_history_tree
             @name: cmms.checklist.history.tree
             @model: cmms.checklist.history
             @type: tree
