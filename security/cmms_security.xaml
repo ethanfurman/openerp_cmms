@@ -2,7 +2,7 @@
 !!! xml1.0
 
 %openerp
-    %data noupdate='1'
+    %data noupdate='0'
 
         %record model='ir.module.category' #module_category_cmms_management
             @name: CMMS
@@ -14,6 +14,12 @@
             @category_id ref='module_category_cmms_management'
             @comment: User will have access to the basic CMMS application.
             @implied_ids eval="[(4, ref('base.group_user'))]"
+
+        %record #group_cmms_staff model='res.groups'
+            @name: Staff
+            @category_id ref='module_category_cmms_management'
+            @comment: User can be assigned work
+            @implied_ids eval="[(4, ref('group_cmms_user'))]"
 
         %record #group_cmms_manager model='res.groups'
             @name: Manager
