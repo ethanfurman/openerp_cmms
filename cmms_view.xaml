@@ -31,7 +31,15 @@
                                 @incoming_qty
                                 @outgoing_qty
                                 @virtual_available
-                            @description colspan='4' $Product_Description
+                        %notebook
+                            %page $Suppliers
+                                @seller_ids nolabel='1'
+                                    %tree
+                                        @product_name
+                                        @name
+                                        @product_code
+                            %page $Description
+                                @description nolable='1'
 
         %record model=view #equipment_parts_tree
             @name: cmms.equipment.products.tree
@@ -39,7 +47,9 @@
             @arch type='xml'
                 %tree $Spare_Parts version='7.0'
                     @name
-                    @description
+                    @seller_id
+                    @seller_product_name
+                    @seller_product_code
                     @qty_available $QoH
 
 

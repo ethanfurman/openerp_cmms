@@ -25,6 +25,7 @@
 from dateutil.relativedelta import *
 from fnx import Normalize, xrange, one_day
 from fnx.dbf import Date, RelativeDay, RelativeMonth
+from openerp import SUPERUSER_ID
 from osv import fields, osv, orm
 from tools import config
 from tools.translate import _
@@ -670,3 +671,23 @@ class cmms_question_history(Normalize, osv.Model):
         'detail': fields.char("Detail",size=128),
         }
 
+class product_product(osv.Model):
+    _name = 'product.product'
+    _inherit = 'product.product'
+
+    def _calc_extra_seller(self, cr, uid, ids, fields, arg, context=None):
+        result = super(product_product, self)._calc_seller(cr, uid, ids, fields, arg, context=context)
+        for product_id, values in result.items():
+            main_supplier_id = values['seller_info_id']
+            if main_supplier_id:
+                main_supplier = self.pool.get('product.supplierinfo').browse(cr, SUPERUSER_ID, main_supplier_id, context=context)
+                values.update({
+                   'seller_product_name':main_supplier.product_name or False,
+                   'seller_product_code':main_supplier.product_code or False,
+                })
+        return result
+
+    _columns = {
+        'seller_product_name': fields.function(_calc_extra_seller, type='char', string='Supplier Product Name', help="Main Supplier's product name.", multi="extra_seller_info"),
+        'seller_product_code': fields.function(_calc_extra_seller, type='char', string='Supplier Product Code', help="Main Supplier's product code.", multi="extra_seller_info"),
+        }
