@@ -26,6 +26,7 @@ from dateutil.relativedelta import *
 from fnx import Normalize, xrange, one_day
 from fnx.dbf import Date, RelativeDay, RelativeMonth
 from openerp import SUPERUSER_ID
+from osv.osv import except_osv as ERPError
 from osv import fields, osv, orm
 from tools import config
 from tools.translate import _
@@ -120,9 +121,7 @@ class cmms_equipment(Normalize, osv.Model):
         'inv_tag': fields.char('Inventory ID', size=64),
         'trademark': fields.char('Make', size=64),
         'model': fields.char('Model', size=64),
-        # 'local_id': fields.many2one('stock.location', 'Location'),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
-        # 'invoice_id': fields.many2one('account.invoice', 'Purchase Invoice'),
         'startingdate': fields.datetime("Start Date"),
         'product_ids': fields.many2many(
             'product.product',
@@ -130,7 +129,7 @@ class cmms_equipment(Normalize, osv.Model):
             'product_id',
             'equipment_id',
             string='Spare Parts',
-            domain="[('product_tmpl_id.categ_id.name','=','Spare Parts')]",
+            domain="[('categ_id','child_of','Spare Parts')]",
             ),
         'deadlinegar': fields.datetime("Warranty Expiration"),
         'description': fields.text('Description'),
@@ -477,7 +476,6 @@ class cmms_incident(Normalize, osv.Model):
         table, ref_id = ref_id.split(',')
         ref_id = int(ref_id)
         record = self.pool.get(table).browse(cr, uid, [ref_id])[0]
-        liste = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', ref_id)])
         return {'value':{'equipment_id': record.equipment_id.id}}
 
     def search(self, cr, user, args=None, offset=0, limit=None, order=None, context=None, count=False):
@@ -691,3 +689,15 @@ class product_product(osv.Model):
         'seller_product_name': fields.function(_calc_extra_seller, type='char', string='Supplier Product Name', help="Main Supplier's product name.", multi="extra_seller_info"),
         'seller_product_code': fields.function(_calc_extra_seller, type='char', string='Supplier Product Code', help="Main Supplier's product code.", multi="extra_seller_info"),
         }
+
+    def create(self, cr, uid, values, context=None):
+        print 'create(values=%r, context=%r)' % (values, context)
+        if context and context.get('form_view_ref') == 'cmms.equipment_parts_form':
+            categ_id = values.get('categ_id')
+            if categ_id:
+                category = original = self.pool.get('product.category').browse(cr, uid, categ_id, context=context)
+                while category.name != 'Spare Parts':
+                    category = category.parent_id
+                    if not category:
+                        raise ERPError('Invalid category', '<%s> is not a <Spare Parts> category' % original.name)
+        return super(product_product, self).create(cr, uid, values, context=context)
