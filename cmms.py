@@ -691,7 +691,6 @@ class product_product(osv.Model):
         }
 
     def create(self, cr, uid, values, context=None):
-        print 'create(values=%r, context=%r)' % (values, context)
         if context and context.get('form_view_ref') == 'cmms.equipment_parts_form':
             categ_id = values.get('categ_id')
             if categ_id:
