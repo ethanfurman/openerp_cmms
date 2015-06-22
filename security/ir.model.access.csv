@@ -18,3 +18,11 @@
 "access_cmms_archiving2","cmms.archiving2","model_cmms_archiving2","cmms.group_cmms_user",1,1,1,1
 "access_cmms_line_user","cmms.line","model_cmms_line","cmms.group_cmms_user",1,1,0,0
 "access_cmms_line_manager","cmms.line","model_cmms_line","cmms.group_cmms_manager",1,1,1,1
+access_product_template_user,product.template,product.model_product_template,cmms.group_cmms_user,1,0,0,0
+access_product_product_cmms_user,product.product cmms_user,product.model_product_product,cmms.group_cmms_user,1,0,0,0
+access_product_category_user,product.category,product.model_product_category,cmms.group_cmms_user,1,0,0,0
+access_product_supplierinfo_cmms_user,product.supplierinfo cmms_user,product.model_product_supplierinfo,cmms.group_cmms_user,1,0,0,0
+access_product_template_manager,product.template,product.model_product_template,cmms.group_cmms_manager,1,1,1,1
+access_product_product_cmms_manager,product.product cmms_manager,product.model_product_product,cmms.group_cmms_manager,1,1,1,1
+access_product_category_manager,product.category,product.model_product_category,cmms.group_cmms_manager,1,1,1,1
+access_product_supplierinfo_cmms_manager,product.supplierinfo cmms_manager,product.model_product_supplierinfo,cmms.group_cmms_manager,1,1,1,1
