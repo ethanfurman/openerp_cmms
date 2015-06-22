@@ -26,14 +26,10 @@
                         %group
                             %group
                                 @type
-                                @uom_id
                                 %label for='description' $Description
                                 @description nolabel='1'
                             %group
                                 @qty_available
-                                @incoming_qty
-                                @outgoing_qty
-                                @virtual_available
                         %notebook
                             %page $Suppliers
                                 @seller_ids nolabel='1'
