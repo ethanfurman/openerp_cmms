@@ -37,6 +37,13 @@
                                         @name
                                         @product_name $Product
                                         @product_code $Code
+                                    %form version='7.0'
+                                        %group
+                                            %group
+                                                @name
+                                            %group
+                                                @product_name $Product
+                                                @product_code $Code
 
         %record model=view #equipment_parts_tree
             @name: cmms.equipment.products.tree
