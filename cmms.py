@@ -688,6 +688,7 @@ class product_product(osv.Model):
     _columns = {
         'seller_product_name': fields.function(_calc_extra_seller, type='char', string='Supplier Product Name', help="Main Supplier's product name.", multi="extra_seller_info"),
         'seller_product_code': fields.function(_calc_extra_seller, type='char', string='Supplier Product Code', help="Main Supplier's product code.", multi="extra_seller_info"),
+        'last_order_date': fields.date(string="Last ordered"),
         }
 
     def create(self, cr, uid, values, context=None):

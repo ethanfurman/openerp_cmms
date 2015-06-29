@@ -56,6 +56,7 @@
                     @seller_product_name $Product
                     @seller_product_code $Code
                     @qty_available $QoH
+                    @last_order_date
 
 
         // =========
