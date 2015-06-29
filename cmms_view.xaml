@@ -52,8 +52,9 @@
                 %tree $Spare_Parts version='7.0'
                     @name
                     @seller_id
-                    @seller_product_name
-                    @seller_product_code
+                    @seller_id.phone
+                    @seller_product_name $Product
+                    @seller_product_code $Code
                     @qty_available $QoH
 
 
