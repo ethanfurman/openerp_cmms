@@ -30,6 +30,7 @@
                                 @description nolabel='1'
                             %group
                                 @qty_available
+                                @last_order_date
                         %notebook
                             %page $Suppliers
                                 @seller_ids nolabel='1'
