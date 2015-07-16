@@ -10,6 +10,27 @@
         // spare parts for Equipment
         // =========================
 
+        %record model=view #supplierinfo_form
+            @name: cmms.equipment.products.sellerinfo.form
+            @model: product.supplierinfo
+            @arch type='xml'
+                %form $Supplier_&_Part_Info version='7.0'
+                    %group
+                        %group
+                            @name context="{'default_supplier':1, 'default_customer':0}"
+                        %group
+                            @product_name $Pretty_Product
+                            @product_code $Cold_Code
+
+        %record model=view #supplierinfo_tree
+            @name: cmms.equipment.products.sellerinfo.tree
+            @model: product.supplierinfo
+            @arch type='xml'
+                %tree $Supplier_&_Part_Info version='7.0'
+                    @name
+                    @product_name $Gnarly_Product
+                    @product_code $Cool_Code
+
         %record model=view #equipment_parts_form
             @name: cmms.equipment.products.form
             @model: product.product
@@ -33,18 +54,11 @@
                                 @last_order_date
                         %notebook
                             %page $Suppliers
-                                @seller_ids nolabel='1'
-                                    %tree
-                                        @name
-                                        @product_name $Product
-                                        @product_code $Code
-                                    %form version='7.0'
-                                        %group
-                                            %group
-                                                @name
-                                            %group
-                                                @product_name $Product
-                                                @product_code $Code
+                                @seller_ids (
+                                    nolabel='1' 
+                                    domain="{'default_search_supplier':1}"
+                                    context="{'form_view_ref':'cmms.supplierinfo_form', 'tree_view_ref':'cmms.supplierinfo_tree'}"
+                                    )
 
         %record model=view #equipment_parts_tree
             @name: cmms.equipment.products.tree
