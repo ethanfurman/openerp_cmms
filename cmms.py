@@ -121,6 +121,7 @@ class cmms_equipment(Normalize, osv.Model):
         'inv_tag': fields.char('Inventory ID', size=64),
         'trademark': fields.char('Make', size=64),
         'model': fields.char('Model', size=64),
+        'serial': fields.char('Serial Number', size=64),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'startingdate': fields.datetime("Start Date"),
         'product_ids': fields.many2many(

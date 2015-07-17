@@ -91,7 +91,7 @@
                         %group colspan='2' col='2'
                             @trademark
                             @model
-                            @user_id
+                            @serial
                     %notebook colspan='4'
                         %page $General_Information
                             %group
@@ -101,9 +101,8 @@
                             %group
                                 %separator colspan='4' $Description
                                 @description colspan='4' nolabel='1'
-                        %page $Additional_Information
-                            %separator colspan='4' $Safety_Instruction
-                            @safety colspan='4' nolabel='1'
+                                %separator colspan='4' $Safety_Notes
+                                @safety colspan='4' nolabel='1'
                         %page $Spare_Parts
                             @product_ids nolabel='1' colspan='4' (
                                 domain="[('categ_id','child_of','Spare Parts')]"
