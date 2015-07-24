@@ -146,10 +146,9 @@
                     @name
                     @inv_tag
                     @line_id
-                    @user_id
                     @trademark
                     @model
-                    @deadlinegar
+                    @serial
 
         %record model=view #view_equipment_tree
             @name: cmms.equipment.tree
