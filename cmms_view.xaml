@@ -137,31 +137,30 @@
                                 @type
                                 @time
 
-        %record model=view #view_equipment_list
-            @name: cmms.equipment.list
-            @model: cmms.equipment
-            @priority eval='5'
-            @arch type='xml'
-                %tree $Equipment
-                    @name
-                    @inv_tag
-                    @line_id
-                    @trademark
-                    @model
-                    @serial
-
         %record model=view #view_equipment_tree
             @name: cmms.equipment.tree
             @model: cmms.equipment
             @field_parent:child_id
             @arch type='xml'
                 %tree $Equipment
-                    @line_id
+                    @line_id invisible='1'
                     @name
                     @inv_tag
                     @trademark
                     @model
-                    @deadlinegar
+                    @serial
+
+        %record model=view #view_equipment_search
+            @name: cmms.equipment.search
+            @model: cmms.equipment
+            @arch type='xml'
+                %search $Search_Equipment
+                    @trademark $Make
+                    @model $Model
+                    %group expand='0' string='Group by...'
+                        %filter @line_id $Line_ID context="{'group_by':'line_id'}"
+                        %filter @make $Make context="{'group_by':'trademark'}"
+                        %filter @model $Model context="{'group_by':'model'}"
 
         %record model=act_window #open_view_equipment_list
             @name: Machine
@@ -174,7 +173,9 @@
             @res_model: cmms.equipment
             @view_type: form
             @view_mode: tree,form
+            @search_view_id ref='view_equipment_search'
             @domain: []
+            @context: {'search_default_line_id':1}
 
         %record model=act_window #open_view_equipment_new
             @name: New Machine

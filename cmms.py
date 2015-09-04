@@ -76,6 +76,7 @@ class cmms_line(Normalize, osv.Model):
     "production line"
     _name = 'cmms.line'
     _description = 'Production line'
+    _order = 'name asc'
 
     _columns = {
         'name': fields.char('Production line', size=64, required=True),
@@ -116,6 +117,8 @@ class cmms_equipment(Normalize, osv.Model):
     "equipment"
     _name = "cmms.equipment"
     _description = "equipment"
+    _order = 'name asc'
+
     _columns = {
         'name': fields.char('Machine', size=64, required=True),
         'inv_tag': fields.char('Inventory ID', size=64),
