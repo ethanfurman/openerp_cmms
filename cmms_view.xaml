@@ -468,10 +468,10 @@
             @model: cmms.incident
             @arch type='xml'
                 %search $Search_Work_Orders
-                    @ref_num $Reference filter_domain="[(1,'=',1)]"
-                    @state $Status filter_domain="[(1,'=',1)]"
-                    @user_id $Assigned_To filter_domain="[(1,'=',1)]"
-                    @equipment_id $Machine filter_domain="[(1,'=',1)]"
+                    @ref_num $Reference
+                    @state $Status
+                    @user_id $Assigned_To
+                    @equipment_id $Machine
                     %separator
                     %filter $Mine @type_owner domain="[('user_id','=',uid)]" help="Work orders assigned to me"
                     %filter $Unassigned @type_unassigned domain="[('user_id','=',False)]"
