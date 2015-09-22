@@ -27,3 +27,15 @@
             @category_id ref='module_category_cmms_management'
             @implied_ids eval="[(4, ref('group_cmms_user'))]"
             @users eval="[(4, ref('base.user_root'))]"
+
+        %record model='ir.cron' #cmms_pm_status_update
+            @name: Update CMMS Preventative Maintenance Status
+            @interval_number: 1
+            @interval_type: days
+            @numbercall: -1
+            @doall eval='False'
+            @model eval="'cmms.pm'"
+            @function eval="'update_time_remaining'"
+            @args eval="'()'"
+            @nextcall eval="'2015-09-22 00:00:01'"
+            @priority: 100

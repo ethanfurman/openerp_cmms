@@ -32,11 +32,14 @@ from tools import config
 from tools.translate import _
 import base64
 import datetime
+import logging
 import math
 import math
 import pooler
 import time
 import tools
+
+_logger = logging.getLogger(__name__)
 
 YESNO = [
     ('yes','Yes'),
@@ -276,56 +279,82 @@ class cmms_archiving(Normalize, osv.Model):
 class cmms_pm(Normalize, osv.osv):
     "preventive (planned) maintenance"
 
-    def _days_next_due(self, cr, uid, ids, prop, unknow_none, context):
-        if ids:
-            reads = self.browse(cr, uid, ids, context)
-            res = []
-            for record in reads:
-                if (record.meter == "days"):
-                    interval = datetime.timedelta(days=record.days_interval)
-                    last_done = record.days_last_done
-                    last_done = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_done, "%Y-%m-%d")))
-                    next_due = last_done + interval
-                    res.append((record.id, next_due.strftime("%Y-%m-%d")))
-                else:
-                    res.append((record.id, False))
-            return dict(res)
-
-    def _days_due(self, cr, uid, ids, prop, unknow_none, context):
-        if ids:
-            reads = self.browse(cr, uid, ids, context)
-            res = []
-            for record in reads:
-                if (record.meter == "days"):
-                    interval = datetime.timedelta(days=record.days_interval)
-                    last_done = record.days_last_done
-                    last_done = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_done, "%Y-%m-%d")))
-                    next_due = last_done + interval
-                    now = datetime.datetime.now()
-                    due_days = next_due - now
-                    res.append((record.id, due_days.days))
-                else:
-                    res.append((record.id, False))
-            return dict(res)
-
-    def _get_state(self, cr, uid, ids, prop, unknow_none, context):
+    def _calc_days(self, cr, uid, ids, field_names, arg, context):
         res = {}
         if ids:
-            reads = self.browse(cr, uid, ids, context)
-            for record in reads:
-                if record.meter == 'days':
-                    if (int(record.days_left) <= 0):
-                        res[record.id] = _('Overdue')
-                    elif (int(record.days_left) <= record.days_warn_period):
-                        res[record.id] = _('Approaching')
+            records = self.read(
+                    cr, uid, ids,
+                    ['id', 'name', 'days_interval', 'days_last_done', 'days_left', 'days_warn_period', 'meter'],
+                    context,
+                    )
+            for record in records:
+                id = record['id']
+                res[id] = {}
+                if record['meter'] == "days":
+                    interval = datetime.timedelta(days=record['days_interval'])
+                    last_done = record['days_last_done']
+                    last_done = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_done, "%Y-%m-%d")))
+                    next_due = last_done + interval
+                    res[id]['days_next_due'] = next_due.strftime("%Y-%m-%d")
+                    now = datetime.datetime.now()
+                    due_days = next_due - now
+                    res[id]['days_left'] = due_days.days
+                    if due_days.days <= 0:
+                        res[id]['state'] = 'Overdue'
+                    elif due_days.days <= record['days_warn_period']:
+                        res[id]['state'] = 'Approaching'
                     else:
-                        res[record.id] = 'OK'
-            return res
+                        res[id]['state'] = 'OK'
+                else:
+                    _logger.error('record <%s - %s> does not have a meter of "days"', id, record['name'])
+                    del res[id]
+        return res
+
+    def _calc_name(self, cr, uid, ids, field_name, arg, context):
+        res = {}
+        for id in (ids or []):
+            machines = self.pool.get('cmms.equipment')
+            for record in self.read(cr, uid, ids, ['id', 'ref_num', 'description', 'equipment_id'], context=context):
+                machine = machines.read(cr, SUPERUSER_ID, [('id','=',record['equipment_id'][0])], context=context)[0]
+                res[id] = "%s - %s - %s" % (record['ref_num'], machine['name'].strip(), record['description'])
+        return res
+
+    def _get_pm_ids_from_equipment(equipment_table, cr, uid, ids, context=None):
+        self = equipment_table.pool.get('cmms.pm')
+        res = self.read(cr, uid, [('equipment_id','in',ids)], context=context)
+        return [r['id'] for r in res]
+
+    def _set_calc_fields(self, cr, uid, ids, field_name, field_value, arg, context):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+        for id in ids:
+            cr.execute('UPDATE cmms_pm SET %s=%%s where id=%%s' % field_name, (field_value, id))
+        return True
+
+    def update_time_remaining(self, cr, uid, ids=None, fields=None, arg=None, context=None):
+        if ids is None:
+            ids = self.search(cr, uid, [], context=context)
+        for id, values in self._calc_days(cr, uid, ids, ['days_left', 'state'], (), context=context).items():
+            if not self.write(cr, uid, id, {'days_left': values['days_left'], 'state': values['state']}):
+                _logger.error('unable to update cmms.pm::%s -- %s', values['id'], values['name'])
+        return True
 
     _name = "cmms.pm"
     _description = "Preventive Maintenance System"
+    _order = 'days_left asc, name asc'
+
     _columns = {
-        'name': fields.char('Name', size=64),
+        'name': fields.function(
+            _calc_name,
+            method=True,
+            type='char',
+            size=96,
+            string='Name',
+            store={
+                'cmms.pm': (lambda table, cr, uid, ids, ctx={}: ids, ['ref_num', 'description'], 20),
+                'cmms.equipment': (_get_pm_ids_from_equipment, ['name'], 10),
+                },
+            ),
         'ref_num': fields.char('PM Reference', size=20, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'description': fields.char('Description', size=64),
@@ -333,21 +362,54 @@ class cmms_pm(Normalize, osv.osv):
         'recurrent': fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
         'days_interval': fields.integer('Interval'),
         'days_last_done': fields.date('Last done', required=True),
-        'days_next_due': fields.function(_days_next_due, method=True, type="date", string='Next service date'),
         'days_warn_period': fields.integer('Warning time'),
-        'days_left': fields.function(_days_due, method=True, type="integer", string='Days until next service'),
-        'state': fields.function(_get_state, method=True, type="char", string='Status'),
+        'days_next_due': fields.function(
+            _calc_days,
+            method=True,
+            type="date",
+            string='Next service date',
+            store={
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done', 'days_warn_period'], 10),
+                },
+            multi='calc',
+            ),
+        'days_left': fields.function(
+            _calc_days,
+            fnct_inv=_set_calc_fields,
+            method=True,
+            type="integer",
+            string='Days until next service',
+            store={
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done', 'days_warn_period'], 10),
+                },
+            multi='calc',
+            ),
+        'state': fields.function(
+            _calc_days,
+            fnct_inv=_set_calc_fields,
+            method=True,
+            type="char",
+            size=12,
+            string='Status',
+            store={
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done', 'days_warn_period'], 10),
+                },
+            multi='calc',
+            ),
         'archiving2_ids': fields.one2many('cmms.archiving2', 'pm_id', 'follow-up history'),
         'note': fields.text('Notes'),
         }
+
     _defaults = {
         'meter': lambda * a: 'days',
         'recurrent': lambda * a: True,
         'days_last_done': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         }
+
     _sql_constraints = [
         ('pm_ref_key', 'unique(ref_num)', 'PM reference already exists'),
         ]
+
     _constraints = [
         (lambda s, *a: s.check_unique('ref_num', *a), '\nPM reference already exists', ['ref_num']),
         ]
@@ -362,9 +424,6 @@ class cmms_pm(Normalize, osv.osv):
     def create(self, cr, user, vals, context=None):
         if 'ref_num' not in vals or not vals['ref_num']:
             vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
-        machines = self.pool.get('cmms.equipment')
-        machine = machines.browse(cr, 1, vals['equipment_id'])
-        vals['name'] = "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), vals['description'])
         return super(cmms_pm, self).create(cr, user, vals, context)
 
 
@@ -449,7 +508,6 @@ class cmms_incident(Normalize, osv.Model):
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
         'priority': lambda *a: WO_PRIORITIES[2][0],
-        # 'user_id': lambda obj,cr,uid,context: uid,
         'state': lambda *a: 'draft',
         }
     _sql_constraints = [
@@ -672,6 +730,28 @@ class cmms_question_history(Normalize, osv.Model):
         'answer': fields.selection(YESNO, "Response"),
         'detail': fields.char("Detail",size=128),
         }
+
+
+# class cmms_certifications(Normalize, osv.Model):
+#     "certifications"
+#     _name = 'cmms.certifications'
+#     _description = 'cmms certifications'
+# 
+#     _columns = {
+#         'name': fields.char('Training', size=64),
+#         'description': fields.text('Description'),
+#         'last_training': fields.date(
+#         'expires': fields.integer('Months', help='Training is good for how long?'),
+#         }
+# 
+# 
+# class cmms_training(osv.Model):
+#     'training'
+#     _name = 'cmms.training'
+# 
+#     _columns = {
+#         'user_id': fields.many2one('res.users', 'User'),
+
 
 class product_product(osv.Model):
     _name = 'product.product'
