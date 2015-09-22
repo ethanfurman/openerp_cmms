@@ -353,8 +353,8 @@
                             @meter
                     %group colspan='4' col='6'
                         %group colspan='2' col='2'
-                            @state
-                            @days_left
+                            @state readonly='1'
+                            @days_left readonly='1'
                             @days_next_due
 
                         %group colspan='2' col='2'

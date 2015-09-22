@@ -369,7 +369,7 @@ class cmms_pm(Normalize, osv.osv):
             type="date",
             string='Next service date',
             store={
-                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done', 'days_warn_period'], 10),
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done'], 10),
                 },
             multi='calc',
             ),
@@ -380,7 +380,7 @@ class cmms_pm(Normalize, osv.osv):
             type="integer",
             string='Days until next service',
             store={
-                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done', 'days_warn_period'], 10),
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done'], 10),
                 },
             multi='calc',
             ),
