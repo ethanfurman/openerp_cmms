@@ -2,7 +2,7 @@
 ################################################################################
 #
 # Computerized maintenance management system (CMMS) module,
-# Copyright (C) 
+# Copyright (C)
 #    Nextma (http://www.nextma.com). All Right Reserved
 #    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
 #
@@ -42,7 +42,7 @@ class cmms_checklist(Normalize, osv.Model):
     _description= "checklist"
     _columns={
         'name': fields.char("Title",size=128, required=True),
-        'description': fields.text('Description'), 
+        'description': fields.text('Description'),
         'questions_ids': fields.one2many("cmms.question","checklist_id","Questions",),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine'),
         }
@@ -59,14 +59,14 @@ class cmms_question(Normalize, osv.Model):
     _description = "Question"
     _columns = {
         'name': fields.char("Question",size=128, required=True),
-        'checklist_id': fields.many2one('cmms.checklist', 'Checklist', required=True), 
+        'checklist_id': fields.many2one('cmms.checklist', 'Checklist', required=True),
     }
 cmms_question()
 
 class cmms_checklist_history(Normalize, osv.Model):
     _name="cmms.checklist.history"
     _description= "Checklist History"
-    
+
     def onchange_checklist_id(self, cr, uid, ids, id, context=None):
         question_ids = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
         records = self.pool.get('cmms.question').name_get(cr, uid, question_ids)
@@ -78,10 +78,10 @@ class cmms_checklist_history(Normalize, osv.Model):
 
     _columns={
         'name': fields.char("Name",size=128, required=True),
-        'checklist_id': fields.many2one('cmms.checklist', 'Checklist'), 
+        'checklist_id': fields.many2one('cmms.checklist', 'Checklist'),
         'answers_ids': fields.one2many("cmms.answer.history","checklist_history_id","Responses"),
-        'date_planned': fields.datetime("Planned Date"), 
-        'date_end': fields.datetime("Completed Date"), 
+        'date_planned': fields.datetime("Planned Date"),
+        'date_end': fields.datetime("Completed Date"),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS')]"),
         'status': fields.selection(STATES, "Status"),
@@ -95,7 +95,7 @@ cmms_checklist_history()
 class cmms_question_history(Normalize, osv.Model):
     _name="cmms.answer.history"
     _description= "Answers"
-    _columns={    
+    _columns={
         'name': fields.char("Question",size=128, required=True),
         'checklist_history_id': fields.many2one('cmms.checklist.history', 'Checklist'),
         'answer': fields.selection(YESNO, "Response"),

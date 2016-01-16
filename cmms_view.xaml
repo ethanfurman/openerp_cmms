@@ -3,68 +3,68 @@
 -act_window = 'ir.actions.act_window'
 -view = 'ir.ui.view'
 
-%openerp
-    %data
+~openerp
+    ~data
 
         // =========================
         // spare parts for Equipment
         // =========================
 
-        %record model=view #supplierinfo_form
+        ~record model=view #supplierinfo_form
             @name: cmms.equipment.products.sellerinfo.form
             @model: product.supplierinfo
             @arch type='xml'
-                %form $Supplier_&_Part_Info version='7.0'
-                    %group
-                        %group
+                ~form $Supplier_&_Part_Info version='7.0'
+                    ~group
+                        ~group
                             @name context="{'default_supplier':1, 'default_customer':0}"
-                        %group
+                        ~group
                             @product_name $Pretty_Product
                             @product_code $Cold_Code
 
-        %record model=view #supplierinfo_tree
+        ~record model=view #supplierinfo_tree
             @name: cmms.equipment.products.sellerinfo.tree
             @model: product.supplierinfo
             @arch type='xml'
-                %tree $Supplier_&_Part_Info version='7.0'
+                ~tree $Supplier_&_Part_Info version='7.0'
                     @name
                     @product_name $Gnarly_Product
                     @product_code $Cool_Code
 
-        %record model=view #equipment_parts_form
+        ~record model=view #equipment_parts_form
             @name: cmms.equipment.products.form
             @model: product.product
             @arch type='xml'
-                %form $Spare_Parts version='7.0'
-                    %sheet
+                ~form $Spare_Parts version='7.0'
+                    ~sheet
                         @image_medium class='oe_avatar oe_left' widget='image'
-                        %div .oe_title context="{'spare_parts_required':True}"
-                            %div .oe_edit_only
-                                %label for='name' $Product_Name
-                            %h1
+                        ~div .oe_title context="{'spare_parts_required':True}"
+                            ~div .oe_edit_only
+                                ~label for='name' $Product_Name
+                            ~h1
                                 @name
                             @categ_id domain="[('parent_id','child_of','Spare Parts'),]"
-                        %group
-                            %group
+                        ~group
+                            ~group
                                 @type
-                                %label for='description' $Description
+                                ~label for='description' $Description
                                 @description nolabel='1'
-                            %group
+                            ~group
                                 @qty_available
                                 @last_order_date
-                        %notebook
-                            %page $Suppliers
+                        ~notebook
+                            ~page $Suppliers
                                 @seller_ids (
                                     nolabel='1' 
                                     domain="{'default_search_supplier':1}"
                                     context="{'form_view_ref':'cmms.supplierinfo_form', 'tree_view_ref':'cmms.supplierinfo_tree'}"
                                     )
 
-        %record model=view #equipment_parts_tree
+        ~record model=view #equipment_parts_tree
             @name: cmms.equipment.products.tree
             @model: product.product
             @arch type='xml'
-                %tree $Spare_Parts version='7.0'
+                ~tree $Spare_Parts version='7.0'
                     @name
                     @seller_id
                     @seller_id.phone
@@ -78,58 +78,58 @@
         // Equipment
         // =========
 
-        %record model=view #view_equipment_form
+        ~record model=view #view_equipment_form
             @name: cmms.equipment.form
             @model: cmms.equipment
             @arch type='xml'
-                %form $Equipment version='7.0'
-                    %group colspan='4' col='6'
-                        %group colspan='4' col='2'
+                ~form $Equipment version='7.0'
+                    ~group colspan='4' col='6'
+                        ~group colspan='4' col='2'
                             @name placeholder='nickname for machine (must be unique)'
                             @inv_tag placeholder='unique id will generated if blank'
                             @line_id
-                        %group colspan='2' col='2'
+                        ~group colspan='2' col='2'
                             @trademark
                             @model
                             @serial
-                    %notebook colspan='4'
-                        %page $General_Information
-                            %group
+                    ~notebook colspan='4'
+                        ~page $General_Information
+                            ~group
                                 @startingdate
-                                %separator colspan='2'
+                                ~separator colspan='2'
                                 @deadlinegar
-                            %group
-                                %separator colspan='4' $Description
+                            ~group
+                                ~separator colspan='4' $Description
                                 @description colspan='4' nolabel='1'
-                                %separator colspan='4' $Safety_Notes
+                                ~separator colspan='4' $Safety_Notes
                                 @safety colspan='4' nolabel='1'
-                        %page $Spare_Parts
+                        ~page $Spare_Parts
                             @product_ids nolabel='1' colspan='4' (
                                 domain="[('categ_id','child_of','Spare Parts')]"
                                 context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree'}"
                                 )
-                        %page $Work_Orders
+                        ~page $Work_Orders
                             @work_order_ids mode='tree' colspan='4' nolable='1'
-                                %tree
+                                ~tree
                                     @ref_num
                                     @priority
                                     @description
                                     @state
                                     @time
-                        %page $PMs
+                        ~page $PMs
                             @pm_ids mode='tree' colspan='4' nolabel='1'
-                                %tree
+                                ~tree
                                     @ref_num
                                     @description
                                     @days_next_due
-                        %page $Repairs
+                        ~page $Repairs
                             @cm_ids mode='tree' colspan='4' nolabel='1'
-                                %tree
+                                ~tree
                                     @ref_num
                                     @failure_id
                                     @date
                                     @user_id
-                        %page $Help_Requests
+                        ~page $Help_Requests
                             @help_request_ids mode='tree' colspan='4' nolabel='1'
                                 @ref_num
                                 @priority
@@ -137,12 +137,12 @@
                                 @type
                                 @time
 
-        %record model=view #view_equipment_tree
+        ~record model=view #view_equipment_tree
             @name: cmms.equipment.tree
             @model: cmms.equipment
             @field_parent:child_id
             @arch type='xml'
-                %tree $Equipment
+                ~tree $Equipment
                     @line_id invisible='1'
                     @name
                     @inv_tag
@@ -150,25 +150,25 @@
                     @model
                     @serial
 
-        %record model=view #view_equipment_search
+        ~record model=view #view_equipment_search
             @name: cmms.equipment.search
             @model: cmms.equipment
             @arch type='xml'
-                %search $Search_Equipment
+                ~search $Search_Equipment
                     @trademark $Make
                     @model $Model
-                    %group expand='0' string='Group by...'
-                        %filter @line_id $Line_ID context="{'group_by':'line_id'}"
-                        %filter @make $Make context="{'group_by':'trademark'}"
-                        %filter @model $Model context="{'group_by':'model'}"
+                    ~group expand='0' string='Group by...'
+                        ~filter @line_id $Line_ID context="{'group_by':'line_id'}"
+                        ~filter @make $Make context="{'group_by':'trademark'}"
+                        ~filter @model $Model context="{'group_by':'model'}"
 
-        %record model=act_window #open_view_equipment_list
+        ~record model=act_window #open_view_equipment_list
             @name: Machine
             @res_model: cmms.equipment
             @view_type: form
             @view_mode: tree,form
 
-        %record model=act_window #open_view_equipment_list_my
+        ~record model=act_window #open_view_equipment_list_my
             @name: Machines
             @res_model: cmms.equipment
             @view_type: form
@@ -177,7 +177,7 @@
             @domain: []
             @context: {'search_default_line_id':1}
 
-        %record model=act_window #open_view_equipment_new
+        ~record model=act_window #open_view_equipment_new
             @name: New Machine
             @res_model: cmms.equipment
             @view_type: form
@@ -188,36 +188,36 @@
         // Product Line
         // ============
 
-        %record model=view #view_line_form
+        ~record model=view #view_line_form
             @name: cmms.line.form
             @model: cmms.line
             @arch type='xml'
-                %form $Production_Line
+                ~form $Production_Line
                     @ref_num placeholder='unique id will be generated if blank' colspan='4'
                     @name placeholder='nickname for line (must be unique)' colspan='4'
                     @location colspan='4'
                     @sequence colspan='4'
-                    %separator $Equipment colspan='4'
+                    ~separator $Equipment colspan='4'
                     @equipment_ids colspan='4' nolabel='1' attrs="{'readonly': [('ref_num','=',False)]}"
 
-        %record model=view #view_line_tree
+        ~record model=view #view_line_tree
             @name: cmms.line.tree
             @model: cmms.line
             @arch type='xml'
-                %tree $Production_Line
+                ~tree $Production_Line
                     @name
                     @ref_num
                     @location
                     @sequence
 
-        %record model=act_window #open_view_line_list_my
+        ~record model=act_window #open_view_line_list_my
             @name: Production Lines
             @res_model: cmms.line
             @view_type: form
             @view_mode: tree,form
             @domain: []
 
-        %record model=act_window #open_view_line_new
+        ~record model=act_window #open_view_line_new
             @name: New Production Line
             @res_model: cmms.line
             @view_type: form
@@ -228,74 +228,74 @@
         // Main Menu Items
         // ===============
 
-        %menuitem @CMMS #menu_cmms icon='terp-hr' groups='group_cmms_user'
+        ~menuitem @CMMS #menu_cmms icon='terp-hr' groups='group_cmms_user'
 
-        %menuitem @CMMS #menu_cmms_main parent='menu_cmms'
+        ~menuitem @CMMS #menu_cmms_main parent='menu_cmms'
 
-        %menuitem #menu_open_view_line_list_my parent='menu_cmms_main' action='open_view_line_list_my' sequence='10'
+        ~menuitem #menu_open_view_line_list_my parent='menu_cmms_main' action='open_view_line_list_my' sequence='10'
 
-        %menuitem #menu_open_view_equipment_list_my parent='menu_cmms_main' action='open_view_equipment_list_my' sequence='20'
+        ~menuitem #menu_open_view_equipment_list_my parent='menu_cmms_main' action='open_view_equipment_list_my' sequence='20'
 
 
         // =======================================
         // Corrective Maintenance (aka breakdowns)
         // =======================================
 
-        %record model=view #view_cm_form
+        ~record model=view #view_cm_form
             @name: cmms.cm.form
             @model: cmms.cm
             @type: form
             @arch type='xml'
-                %form $CM
+                ~form $CM
                     @equipment_id
                     @ref_num placeholder='unique id will be generated if blank'
                     @failure_id
                     @date
                     @user_id options="{'create':False, 'create_edit':False, 'limit':15}"
-                    %field colspan='4' @diagnosistab_ids nolabel='1'
-                        %form $Diagnosis_Table
-                            %group colspan='4'
+                    ~field colspan='4' @diagnosistab_ids nolabel='1'
+                        ~form $Diagnosis_Table
+                            ~group colspan='4'
                                 @name colspan='4'
-                                %label $Solution colspan='4'
+                                ~label $Solution colspan='4'
                                 @solution colspan='4' nolabel='1'
-                        %tree $Diagnosis_Table
+                        ~tree $Diagnosis_Table
                             @name
                             @solution
-                    %notebook colspan='4'
-                        %page $Follow-up_History
-                            %field colspan='4' @archiving_ids nolabel='1'
-                                %form $Follow-up_History
+                    ~notebook colspan='4'
+                        ~page $Follow-up_History
+                            ~field colspan='4' @archiving_ids nolabel='1'
+                                ~form $Follow-up_History
                                     @name colspan='4'
                                     @date
-                                    %label $Description
+                                    ~label $Description
                                     @description nolabel='1' colspan='4'
-                                %tree $Follow-up_History
+                                ~tree $Follow-up_History
                                     @name
                                     @date
                                     @description
-                    %separator $Notes colspan='4'
-                    %field colspan='4' nolabel='1' @note
+                    ~separator $Notes colspan='4'
+                    ~field colspan='4' nolabel='1' @note
 
-        %record model=view #view_cm_tree
+        ~record model=view #view_cm_tree
             @name: cmms.cm.tree
             @model: cmms.cm
             @type: tree
             @arch type='xml'
-                %tree $CM
+                ~tree $CM
                     @ref_num
                     @equipment_id
                     @failure_id
                     @date
 
-        %record model=act_window #open_view_cm_list_my
+        ~record model=act_window #open_view_cm_list_my
             @name: Corrective Maintenance
             @res_model: cmms.cm
             @view_type: form
             @view_mode: tree,form
 
-        %menuitem #menu_open_view_cm_list_my action='open_view_cm_list_my' parent='menu_cmms_main' sequence='40'
+        ~menuitem #menu_open_view_cm_list_my action='open_view_cm_list_my' parent='menu_cmms_main' sequence='40'
 
-        %record model=act_window #open_view_cm_new
+        ~record model=act_window #open_view_cm_new
             @name: New CM
             @res_model: cmms.cm
             @view_type: form
@@ -306,27 +306,27 @@
         // Failures
         // ========
 
-        %record model=view #view_failure_form
+        ~record model=view #view_failure_form
             @name: cmms.failure.form
             @model: cmms.failure
             @type: form
             @arch type='xml'
-                %form $Failure
+                ~form $Failure
                     @name colspan='1'
                     @code colspan='1' placeholder='unique id will be generated if blank'
                     @description colspan='4'
 
-        %record model=view #view_failure_tree
+        ~record model=view #view_failure_tree
             @name: cmms.failure.tree
             @model: cmms.failure
             @type: tree
             @arch type='xml'
-                %tree $Failure
+                ~tree $Failure
                     @name
                     @code
                     @description
 
-        %record model=act_window #open_view_failure_new
+        ~record model=act_window #open_view_failure_new
             @name: Failures
             @res_model: cmms.failure
             @view_type: form
@@ -337,52 +337,52 @@
         // Preventive Mainenance
         // =====================
 
-        %record model=view #view_pm_form
+        ~record model=view #view_pm_form
             @name: cmms.pm.form
             @model: cmms.pm
             @type: form
             @arch type='xml'
-                %form $Properties version='7.0'
-                    %group colspan='4' col='6'
-                        %group colspan='4' col='2'
+                ~form $Properties version='7.0'
+                    ~group colspan='4' col='6'
+                        ~group colspan='4' col='2'
                             @description
                             @equipment_id
                             @ref_num placeholder='unique id will be generated if left blank'
-                        %group colspan='2' col='2'
+                        ~group colspan='2' col='2'
                             @recurrent
                             @meter
-                    %group colspan='4' col='6'
-                        %group colspan='2' col='2'
+                    ~group colspan='4' col='6'
+                        ~group colspan='2' col='2'
                             @state readonly='1'
                             @days_left readonly='1'
                             @days_next_due
 
-                        %group colspan='2' col='2'
+                        ~group colspan='2' col='2'
                             @days_last_done
                             @days_interval
                             @days_warn_period
-                        %group colspan='2'
-                    %notebook colspan='4'
-                        %page $Follow-up_History
+                        ~group colspan='2'
+                    ~notebook colspan='4'
+                        ~page $Follow-up_History
                             @archiving2_ids colspan='4' nolabel='1'
-                                %form $Follow-up_history
+                                ~form $Follow-up_history
                                     @name colspan='4'
                                     @date
-                                    %label $Description
+                                    ~label $Description
                                     @description nolabel='1' colspan='4'
-                                %tree $Follow-up_history
+                                ~tree $Follow-up_history
                                     @name
                                     @date
                                     @description
-                    %separator $Notes colspan='4'
+                    ~separator $Notes colspan='4'
                     @note colspan='4' nolabel='1'
 
-        %record model=view #view_pm_tree
+        ~record model=view #view_pm_tree
             @name: cmms.pm.tree
             @model: cmms.pm
             @type: tree
             @arch type='xml'
-                %tree $Properties colors='blue:days_left<=days_warn_period and days_left>0;red:days_left<=0;'
+                ~tree $Properties colors='blue:days_left<=days_warn_period and days_left>0;red:days_left<=0;'
                     @ref_num
                     @equipment_id
                     @description
@@ -390,26 +390,26 @@
                     @days_left
                     @state
 
-        %record model=act_window #open_view_pm_list_my
+        ~record model=act_window #open_view_pm_list_my
             @name: Preventive Maintenance
             @res_model: cmms.pm
             @view_type: form
             @view_mode: tree,form
             @domain: []
 
-        %menuitem #menu_open_view_pm_list_my action='open_view_pm_list_my' parent='menu_cmms_main' sequence='30'
+        ~menuitem #menu_open_view_pm_list_my action='open_view_pm_list_my' parent='menu_cmms_main' sequence='30'
 
 
         // ===========
         // Work Orders
         // ===========
 
-        %record model=view #cmms_incident_tree-view
+        ~record model=view #cmms_incident_tree-view
             @name: cmms.incident.tree
             @model: cmms.incident
             @type: tree
             @arch type='xml'
-                %tree $Incident colors="black:state=='done';blue:days_left>0;red:days_left<=0 and state!='done';"
+                ~tree $Incident colors="black:state=='done';blue:days_left>0;red:days_left<=0 and state!='done';"
                     @ref_num
                     @date_due
                     @equipment_id
@@ -419,187 +419,187 @@
                     @priority
                     @days_left $Days_Remaining
 
-        %record model=view #cmms_incident-view
+        ~record model=view #cmms_incident-view
             @name: cmms.incident.form
             @model: cmms.incident
             @arch type='xml'
-                %form $Incident version='7.0'
-                    %sheet $Incident
-                        %group colspan='4' col='6'
-                            %group colspan='4' col='2'
+                ~form $Incident version='7.0'
+                    ~sheet $Incident
+                        ~group colspan='4' col='6'
+                            ~group colspan='4' col='2'
                                 @ref_num placeholder='unique id will be generated if blank'
                                 @description
                                 @date $Date_Created
                                 @priority
-                            %group colspan='2' col='2'
+                            ~group colspan='2' col='2'
                                 @user_id options="{'create':False, 'create_edit':False, 'limit':15}"
                                 @state
                                 @date_due $Deadline
                                 @days_left attrs="{'invisible':[('state','=','done')]}"
-                            %group colspan='6' col='6'
+                            ~group colspan='6' col='6'
                                 @time widget='float_time'
-                                %separator colspan='4'
+                                ~separator colspan='4'
                                 @ref colspan='4' on_change='onchange_ref_id(ref)'
-                                %separator colspan='2'
-                        %newline
-                        %notebook colspan='4'
-                            %page $General
+                                ~separator colspan='2'
+                        ~newline
+                        ~notebook colspan='4'
+                            ~page $General
                                 @equipment_id colspan='2'
-                                %separator colspan='2'
-                            %page $History
+                                ~separator colspan='2'
+                            ~page $History
                                 @archiving3_ids colspan='4' nolabel='1'
-                                    %form $Follow-up_History
+                                    ~form $Follow-up_History
                                         @name colspan='4'
                                         @user_id
                                         @date
-                                        %label $Description
+                                        ~label $Description
                                         @description nolabel='1' colspan='4'
-                                    %tree $Follow-up_History
+                                    ~tree $Follow-up_History
                                         @name
                                         @user_id
                                         @date
                                         @description
-                    %div .oe_chatter
+                    ~div .oe_chatter
                         @message_follower_ids widget='mail_followers' help='Follow this work order to automatically track associated events.' groups='base.group_user'
                         @message_ids widget='mail_thread'
 
-        %record model=view #search_incident_filter
+        ~record model=view #search_incident_filter
             @name: cmms.incident.select
             @model: cmms.incident
             @arch type='xml'
-                %search $Search_Work_Orders
+                ~search $Search_Work_Orders
                     @ref_num $Reference
                     @state $Status
                     @user_id $Assigned_To
                     @equipment_id $Machine
-                    %separator
-                    %filter $Mine @type_owner domain="[('user_id','=',uid)]" help="Work orders assigned to me"
-                    %filter $Unassigned @type_unassigned domain="[('user_id','=',False)]"
-                    %filter $All @type_all domain="[(1,'=',1)]"
-                    %separator
-                    %filter $This_week @type_this_week domain="[('date','in','THIS_WEEK')]"
-                    %filter $Last_week @type_last_week domain="[('date','in','LAST_WEEK')]"
-                    %filter $This_month @type_this_month domain="[('date','in','THIS_MONTH')]"
-                    %filter $Last_month @type_last_month domain="[('date','in','LAST_MONTH')]"
-                    %separator
-                    %filter $Draft @type_draft domain="[('state','=','draft')]"
-                    %filter $Open @type_open domain="[('state','=','confirmed')]"
-                    %filter $Done @type_done domain="[('state','=','done')]"
-                    %separator
-                    %group expand="0" string='Group By...'
-                        %filter $Assigned_to domain='[]' context="{'group_by' : 'user_id'}"
-                        %filter $Status domain='[]' context="{'group_by': 'state'}"
-                        %filter $Priority domain='[]' context="{'group_by': 'priority'}"
+                    ~separator
+                    ~filter $Mine @type_owner domain="[('user_id','=',uid)]" help="Work orders assigned to me"
+                    ~filter $Unassigned @type_unassigned domain="[('user_id','=',False)]"
+                    ~filter $All @type_all domain="[(1,'=',1)]"
+                    ~separator
+                    ~filter $This_week @type_this_week domain="[('date','in','THIS_WEEK')]"
+                    ~filter $Last_week @type_last_week domain="[('date','in','LAST_WEEK')]"
+                    ~filter $This_month @type_this_month domain="[('date','in','THIS_MONTH')]"
+                    ~filter $Last_month @type_last_month domain="[('date','in','LAST_MONTH')]"
+                    ~separator
+                    ~filter $Draft @type_draft domain="[('state','=','draft')]"
+                    ~filter $Open @type_open domain="[('state','=','confirmed')]"
+                    ~filter $Done @type_done domain="[('state','=','done')]"
+                    ~separator
+                    ~group expand="0" string='Group By...'
+                        ~filter $Assigned_to domain='[]' context="{'group_by' : 'user_id'}"
+                        ~filter $Status domain='[]' context="{'group_by': 'state'}"
+                        ~filter $Priority domain='[]' context="{'group_by': 'priority'}"
 
-        %record model=act_window #cmms_incident_act
+        ~record model=act_window #cmms_incident_act
             @name: Work Orders
             @res_model: cmms.incident
             @view_type: form
             @context: {'search_default_type_owner':1}
             @view_id ref='cmms_incident_tree-view'
 
-        %menuitem #menu_cmms_incident_act action='cmms_incident_act' parent='menu_cmms_main' sequence='50'
+        ~menuitem #menu_cmms_incident_act action='cmms_incident_act' parent='menu_cmms_main' sequence='50'
 
 
         // =============
         // Help Requests
         // =============
 
-        %record model=view #view_intervention_form
+        ~record model=view #view_intervention_form
             @name: cmms.intervention.form
             @model: cmms.intervention
             @type: form
             @arch type='xml'
-                %form $Help_Request version='7.0'
-                    %group
+                ~form $Help_Request version='7.0'
+                    ~group
                         @description
-                    %group colspan='4' col='4'
-                        %group colspan='2' col='2'
+                    ~group colspan='4' col='4'
+                        ~group colspan='2' col='2'
                             @equipment_id
                             @type
-                        %group colspan='2' col='2'
+                        ~group colspan='2' col='2'
                             @user_id options="{'create':False, 'create_edit':False, 'limit':15}"
                             @ref_num placeholder='unique id will be generated if blank'
-                    %notebook colspan='4'
-                        %page $General_Information
-                            %group
-                                %group
+                    ~notebook colspan='4'
+                        ~page $General_Information
+                            ~group
+                                ~group
                                     @user2_id options="{'create':False, 'create_edit':False, 'limit':15}"
                                     @priority
                                     @time widget='float_time'
-                                %group
+                                ~group
                                     @date_inter
                                     @date_end
-                        %page $Notes
+                        ~page $Notes
                             @observation colspan='4' nolabel='1'
 
-        %record model=view #view_intervention_tree
+        ~record model=view #view_intervention_tree
             @name: cmms.intervention.tree
             @model: cmms.intervention
             @type: tree
             @arch type='xml'
-                %tree $Help_Request
+                ~tree $Help_Request
                     @ref_num
                     @priority
                     @description
                     @type
                     @equipment_id
 
-        %record model=act_window #open_view_intervention_list_my
+        ~record model=act_window #open_view_intervention_list_my
             @name: Help Requests
             @res_model: cmms.intervention
             @view_type: form
             @view_mode: tree,form
             @domain: []
 
-        %menuitem #menu_open_view_intervention_list_my action='open_view_intervention_list_my' parent='menu_cmms_main' sequence='70'
+        ~menuitem #menu_open_view_intervention_list_my action='open_view_intervention_list_my' parent='menu_cmms_main' sequence='70'
 
 
         // ==========
         // Checklists
         // ==========
 
-        %record model=view #view_checklist_tree
+        ~record model=view #view_checklist_tree
             @name: cmms.checklist.tree
             @model: cmms.checklist
             @type: tree
             @arch type='xml'
-                %tree $Checklist
+                ~tree $Checklist
                     @name colspan='2'
 
-        %record model=view #view_checklist_form
+        ~record model=view #view_checklist_form
             @name: cmms.checklist.form
             @model: cmms.checklist
             @type: form
             @arch type='xml'
-                %form $Question
+                ~form $Question
                     @name
                     @questions_ids colspan='4' nolabel='1'
-                        %tree
+                        ~tree
                             @name nolabel='1'
-                        %form
+                        ~form
                             @name nolabel='1'
 
-        %record model=act_window #cmms_checklist_action_new
+        ~record model=act_window #cmms_checklist_action_new
             @name: New Checklist
             @type: ir.actions.act_window
             @res_model: cmms.checklist
             @view_type: form
             @view_mode: form,tree
 
-        %record model=act_window #cmms_checklist_action_all
+        ~record model=act_window #cmms_checklist_action_all
             @name: All Checklists
             @type: ir.actions.act_window
             @res_model: cmms.checklist
             @view_type: form
             @view_mode: tree,form
 
-        %record model=view #view_checklist_history_tree
+        ~record model=view #view_checklist_history_tree
             @name: cmms.checklist.history.tree
             @model: cmms.checklist.history
             @type: tree
             @arch type='xml'
-                %tree $Checklist colors="red:date_planned<=current_date and status=='draft';orange:date_planned<=current_date and status=='confirmed'"
+                ~tree $Checklist colors="red:date_planned<=current_date and status=='draft';orange:date_planned<=current_date and status=='confirmed'"
                     @name
                     @checklist_id
                     @user_id
@@ -607,84 +607,84 @@
                     @date_end
                     @status
 
-        %record model=view #view_checklist_history_form
+        ~record model=view #view_checklist_history_form
             @name: cmms.checklist.history.form
             @model: cmms.checklist.history
             @type: form
             @arch type='xml'
-                %form $Questions
-                    %group colspan='4' col='6'
-                        %group colspan='4' col='2'
+                ~form $Questions
+                    ~group colspan='4' col='6'
+                        ~group colspan='4' col='2'
                             @name
                             @equipment_id
                             @checklist_id on_change="onchange_checklist_id(checklist_id)"
                             @user_id options="{'create':False, 'create_edit':False, 'limit':15}"
-                        %group colspan='2' col='2'
+                        ~group colspan='2' col='2'
                             @date_planned
                             @date_end
                             @status
-                    %separator colspan='4'
-                    %separator $Questions colspan='4'
+                    ~separator colspan='4'
+                    ~separator $Questions colspan='4'
                     @answers_ids colspan='4' nolabel='1'
-                        %tree $Answers
+                        ~tree $Answers
                             @name
                             @answer
                             @detail
-                        %form $Answers
+                        ~form $Answers
                             @name colspan='4'
                             @answer colspan='4'
                             @detail colspan='4'
 
-        %record model=act_window #cmms_checklist_history_action_all
+        ~record model=act_window #cmms_checklist_history_action_all
             @name: All Checklists
             @type: ir.actions.act_window
             @res_model: cmms.checklist.history
             @view_type: form
             @view_mode: tree,form
 
-        %record model=act_window #cmms_checklist_history_action_new
+        ~record model=act_window #cmms_checklist_history_action_new
             @name: Fill a Checklist
             @type: ir.actions.act_window
             @res_model: cmms.checklist.history
             @view_type: form
             @view_mode: form,tree
 
-        %menuitem #menu_cmms_checklist_history @Checklists parent='cmms.menu_cmms_main' sequence='60'
+        ~menuitem #menu_cmms_checklist_history @Checklists parent='cmms.menu_cmms_main' sequence='60'
 
-        %menuitem #menu_cmms_checklist_all name='All Checklists' action='cmms_checklist_action_all' parent='menu_cmms_checklist_history' sequence='10'
+        ~menuitem #menu_cmms_checklist_all name='All Checklists' action='cmms_checklist_action_all' parent='menu_cmms_checklist_history' sequence='10'
 
-        %menuitem #menu_cmms_checklist_history_all name='Checklists Follow-up' action='cmms_checklist_history_action_all' parent='menu_cmms_checklist_history' sequence='20'
+        ~menuitem #menu_cmms_checklist_history_all name='Checklists Follow-up' action='cmms_checklist_history_action_all' parent='menu_cmms_checklist_history' sequence='20'
 
-        %menuitem #menu_cmms_checklist_history_new name='Fill a Checklist' action='cmms_checklist_history_action_new' parent='menu_cmms_checklist_history' sequence='30'
+        ~menuitem #menu_cmms_checklist_history_new name='Fill a Checklist' action='cmms_checklist_history_action_new' parent='menu_cmms_checklist_history' sequence='30'
 
         // =================
         // cmms_request_link
         // =================
 
-        %record model=view #view_request_link_form
+        ~record model=view #view_request_link_form
             @name: cmms.request.link.form
             @model: cmms.request.link
             @type: form
             @arch type="xml"
-                %form $Work_Order_Source
+                ~form $Work_Order_Source
                     @name select="1"
                     @object select="1"
                     @priority
 
-        %record model=view #view_request_link_tree
+        ~record model=view #view_request_link_tree
             @name: cmms.request.link.tree
             @model: cmms.request.link
             @type: tree
             @arch type="xml"
-                %tree $Work_Order_Source
+                ~tree $Work_Order_Source
                     @name select="1"
                     @object
 
-        %record model=act_window #open_view_request_link_list_my
+        ~record model=act_window #open_view_request_link_list_my
             @name: Work Order Source
             @res_model: cmms.request.link
             @view_type: form
             @view_mode: tree,form
             @domain: []
 
-        // %menuitem action="open_view_request_link_list_my" #menu_open_view_request_link_list_my parent="menu_cmms_configuration"
+        // ~menuitem action="open_view_request_link_list_my" #menu_open_view_request_link_list_my parent="menu_cmms_configuration"

@@ -2,7 +2,7 @@
 ################################################################################
 #
 # Computerized maintenance management system (CMMS) module,
-# Copyright (C) 
+# Copyright (C)
 #    Nextma (http://www.nextma.com). All Right Reserved
 #    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
 #

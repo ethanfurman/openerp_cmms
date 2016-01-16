@@ -2,7 +2,7 @@
 ################################################################################
 #
 # Computerized maintenance management system (CMMS) module,
-# Copyright (C) 
+# Copyright (C)
 #    Nextma (http://www.nextma.com). All Rights Reserved
 #    2005 - 2011 Héonium (http://heonium.com). All Rights Reserved
 #    2013 Emile van Sebille.  All Rights Reserved.
@@ -30,9 +30,9 @@
     'website': 'http://heonium.com - http://www.nextma.com - http://salesinq.com',
     "category": "Specific Modules/CMMS",
     "description": """
-Computerized maintenance management system module allows you to manage 
+Computerized maintenance management system module allows you to manage
 preventive maintenance and repairs without limit.
-All information is linked to the equipment tree and lets you follow 
+All information is linked to the equipment tree and lets you follow
 maintenance operations:
 
  - Scheduled Maintenance

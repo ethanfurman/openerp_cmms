@@ -2,7 +2,7 @@
 ################################################################################
 #
 # Computerized maintenance management system (CMMS) module,
-# Copyright (C) 
+# Copyright (C)
 #    Nextma (http://www.nextma.com). All Right Reserved
 #    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
 #
@@ -32,7 +32,7 @@ class cmms_pm(Normalize, osv.osv):
     #def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context):
     #    res = self.name_get(cr, uid, ids, context)
     #    return dict(res)
-    
+
     def _days_next_due(self, cr, uid, ids, prop, unknow_none, context):
         if ids:
             reads = self.browse(cr, uid, ids, context)
@@ -47,7 +47,7 @@ class cmms_pm(Normalize, osv.osv):
                 else:
                     res.append((record.id, False))
             return dict(res)
-    
+
     def _days_due(self, cr, uid, ids, prop, unknow_none, context):
         if ids:
             reads = self.browse(cr, uid, ids, context)
@@ -69,7 +69,7 @@ class cmms_pm(Normalize, osv.osv):
         res = {}
         if ids:
             reads = self.browse(cr, uid, ids, context)
-            for record in reads:    
+            for record in reads:
                 if record.meter == 'days':
                     if (int(record.days_left) <= 0):
                         res[record.id] = _('Overdue')

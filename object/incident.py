@@ -2,7 +2,7 @@
 ################################################################################
 #
 # Computerized maintenance management system (CMMS) module,
-# Copyright (C) 
+# Copyright (C)
 #    Nextma (http://www.nextma.com). All Right Reserved
 #    2005 - 2011 Héonium (http://heonium.com). All Right Reserved
 #
@@ -59,10 +59,9 @@ cmms_request_link()
 
 class cmms_incident(Normalize, osv.osv):
     _name = "cmms.incident"
-    _description = "Incident" 
+    _description = "Incident"
     _inherit = ['mail.thread']
-    _order = 'date desc'
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}

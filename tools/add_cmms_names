@@ -18,7 +18,7 @@ def fix_cm_names(conn):
         failure = values['failure_id'][1]
         cm_name = '%s - %s - %s' % (ref, machine, failure)
         cm.write(id, dict(name=cm_name))
-    
+
 
 def fix_pm_names(conn):
     # "%s - %s - %s" % (vals['ref_num'], machine.name.strip(), vals['description'])
