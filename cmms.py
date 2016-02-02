@@ -23,7 +23,8 @@
 
 
 from dateutil.relativedelta import *
-from fnx import Normalize, xrange, one_day
+from fnx import xrange, one_day
+from fnx.openerp import Normalize
 from fnx.dbf import Date, RelativeDay, RelativeMonth
 from openerp import SUPERUSER_ID
 from osv.osv import except_osv as ERPError
