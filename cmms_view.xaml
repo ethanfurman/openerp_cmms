@@ -441,6 +441,8 @@
                                 ~separator colspan='4'
                                 @ref colspan='4' on_change='onchange_ref_id(ref)'
                                 ~separator colspan='2'
+                                @release_no
+                                ~separator colspan='4'
                         ~newline
                         ~notebook colspan='4'
                             ~page $General

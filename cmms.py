@@ -505,6 +505,7 @@ class cmms_incident(Normalize, osv.Model):
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
         'time': fields.float('Duration (in hours)'),
+        'release_no': fields.char('Release Number', size=32),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
