@@ -146,6 +146,7 @@ class cmms_equipment(Normalize, osv.Model):
             'res.users',
             'Assigned to',
             domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','User')]",
+            ondelete='set null',
             ),
         'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
         'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
@@ -267,7 +268,7 @@ class cmms_archiving(Normalize, osv.Model):
         'name': fields.char('Effect', size=32, required=True),
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
-        'cm_id': fields.many2one('cmms.cm', 'Archiving',required=True),
+        'cm_id': fields.many2one('cmms.cm', 'Archiving',required=True, ondelete='cascade'),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -437,7 +438,7 @@ class cmms_archiving2(Normalize, osv.Model):
         'name': fields.char('Effect', size=32, required=True),
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
-        'pm_id': fields.many2one('cmms.pm', 'Archiving',required=True),
+        'pm_id': fields.many2one('cmms.pm', 'Archiving',required=True, ondelete='cascade'),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -506,6 +507,14 @@ class cmms_incident(Normalize, osv.Model):
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
         'time': fields.float('Duration (in hours)'),
         'release_no': fields.char('Release Number', size=32),
+        'part_ids': fields.many2many(
+            'product.product',
+            'product_equipment_rel',
+            'product_id',
+            'equipment_id',
+            string='Spare Parts',
+            domain="[('categ_id','child_of','Spare Parts'),('id','in',equipment_id.product_ids)]",
+            ),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -601,7 +610,7 @@ class cmms_archiving3(Normalize, osv.Model):
         'name': fields.char('Object', size=32, required=True),
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
-        'incident_id': fields.many2one('cmms.incident', 'Incident',required=True),
+        'incident_id': fields.many2one('cmms.incident', 'Incident',required=True, ondelete='cascade'),
         'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),
         }
     _defaults = {
