@@ -551,50 +551,6 @@ class cmms_incident(Normalize, osv.Model):
         record = self.pool.get(table).browse(cr, uid, [ref_id])[0]
         return {'value':{'equipment_id': record.equipment_id.id}}
 
-    def search(self, cr, user, args=None, offset=0, limit=None, order=None, context=None, count=False):
-        # 2013 08 12  (yyyy mm dd)
-        new_args = []
-        for arg in args:
-            if not isinstance(arg, list) or arg[0] != 'date' or arg[2] not in ['THIS_WEEK', 'LAST_WEEK', 'THIS_MONTH', 'LAST_MONTH']:
-                new_args.append(arg)
-                continue
-            today = Date.today()
-            period = arg[2]
-            if period == 'THIS_WEEK':
-                start = today.replace(day=RelativeDay.LAST_MONDAY)
-                stop = start.replace(delta_day=6)
-            elif period == 'LAST_WEEK':
-                start = today.replace(day=RelativeDay.LAST_MONDAY, delta_day=-7)
-                stop = start.replace(delta_day=6)
-            elif period == 'THIS_MONTH':
-                start = today.replace(day=1)
-                stop = start.replace(delta_month=1, delta_day=-1)
-            elif period == 'LAST_MONTH':
-                start = today.replace(day=1, delta_month=-1)
-                stop = start.replace(delta_month=1, delta_day=-1)
-            else:
-                raise ValueError("forgot to update something! (period is %r)" % (arg[2],))
-            op = arg[1]
-            if arg[1] in ('=', 'in'):
-                op = '&'
-                first = '>='
-                last = '<='
-            elif arg[1] in ('!=', 'not in'):
-                op = '|'
-                first = '<'
-                last = '>'
-            if op != arg[1]:
-                new_args.append(op)
-                new_args.append(['date', first, start.strftime('%Y-%m-%d')])
-                new_args.append(['date', last, stop.strftime('%Y-%m-%d')])
-            elif '<' in op:
-                new_args.append(['date', op, start.strftime('%Y-%m-%d')])
-            elif '>' in op:
-                new_args.append(['date', op, last.strftime('%Y-%m-%d')])
-            else:
-                raise ValueError('unable to process domain: %r' % arg)
-        return super(cmms_incident, self).search(cr, user, args=new_args, offset=offset, limit=limit, order=order, context=context, count=count)
-
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('user_id') and vals['user_id']:
             self.message_subscribe_users(cr, uid, ids, [vals['user_id']], context=context)

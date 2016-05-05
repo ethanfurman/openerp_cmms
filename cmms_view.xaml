@@ -479,10 +479,10 @@
                     ~filter $Unassigned @type_unassigned domain="[('user_id','=',False)]"
                     ~filter $All @type_all domain="[(1,'=',1)]"
                     ~separator
-                    ~filter $This_week @type_this_week domain="[('date','in','THIS_WEEK')]"
-                    ~filter $Last_week @type_last_week domain="[('date','in','LAST_WEEK')]"
-                    ~filter $This_month @type_this_month domain="[('date','in','THIS_MONTH')]"
-                    ~filter $Last_month @type_last_month domain="[('date','in','LAST_MONTH')]"
+                    ~filter $This_week @type_this_week domain="[('date','in','week_0')]"
+                    ~filter $Last_week @type_last_week domain="[('date','in','week_1'), ('date','not in','week_0')]"
+                    ~filter $This_month @type_this_month domain="[('date','in','month_0')]"
+                    ~filter $Last_month @type_last_month domain="[('date','in','month_1'), ('date','not in','month_0')]"
                     ~separator
                     ~filter $Draft @type_draft domain="[('state','=','draft')]"
                     ~filter $Open @type_open domain="[('state','=','confirmed')]"
