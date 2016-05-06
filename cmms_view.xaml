@@ -480,9 +480,9 @@
                     ~filter $All @type_all domain="[(1,'=',1)]"
                     ~separator
                     ~filter $This_week @type_this_week domain="[('date','in','Week0')]"
-                    ~filter $Last_week @type_last_week domain="[('date','in','Week1'), ('date','not in','Week0')]"
+                    ~filter $Last_week @type_last_week domain="[('date','in','Week1')]"
                     ~filter $This_month @type_this_month domain="[('date','in','Month0')]"
-                    ~filter $Last_month @type_last_month domain="[('date','in','Month1'), ('date','not in','Month0')]"
+                    ~filter $Last_month @type_last_month domain="[('date','in','Month1')]"
                     ~separator
                     ~filter $Draft @type_draft domain="[('state','=','draft')]"
                     ~filter $Open @type_open domain="[('state','=','confirmed')]"
