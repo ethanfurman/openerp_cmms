@@ -26,7 +26,7 @@ from dateutil.relativedelta import *
 from fnx import xrange, one_day
 from fnx.oe import Normalize
 from fnx.dbf import Date, RelativeDay, RelativeMonth
-from openerp import SUPERUSER_ID
+from openerp import SUPERUSER_ID, tools
 from osv.osv import except_osv as ERPError
 from osv import fields, osv, orm
 from tools import config
@@ -123,6 +123,22 @@ class cmms_equipment(Normalize, osv.Model):
     _description = "equipment"
     _order = 'name asc'
 
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image, return_big=True)
+        return result
+
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
+    def _has_image(self, cr, uid, ids, name, args, context=None):
+        result = {}
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = obj.image != False
+        return result
+
+
     _columns = {
         'name': fields.char('Machine', size=64, required=True),
         'inv_tag': fields.char('Inventory ID', size=64),
@@ -152,6 +168,26 @@ class cmms_equipment(Normalize, osv.Model):
         'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
         'pm_ids': fields.one2many('cmms.pm', 'equipment_id', 'Preventive Maintenance History'),
         'cm_ids': fields.one2many('cmms.cm', 'equipment_id', 'Corrective Maintenance History'),
+        # image: all image fields are base64 encoded and PIL-supported
+        'image': fields.binary("Image",
+            help="This field holds the image for this equipment, limited to 1024x1024px"),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized image", type="binary", multi="_get_image",
+            store={
+                'cmms.equipment': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized image. It is automatically "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Small-sized image", type="binary", multi="_get_image",
+            store={
+                'cmms.equipment': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized image of this contact. It is automatically "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
+        'has_image': fields.function(_has_image, type="boolean"),
         }
     _defaults = {
         'user_id': lambda object,cr,uid,context: uid,

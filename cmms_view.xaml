@@ -83,59 +83,65 @@
             @model: cmms.equipment
             @arch type='xml'
                 ~form $Equipment version='7.0'
-                    ~group colspan='4' col='6'
-                        ~group colspan='4' col='2'
-                            @name placeholder='nickname for machine (must be unique)'
-                            @inv_tag placeholder='unique id will generated if blank'
-                            @line_id
-                        ~group colspan='2' col='2'
-                            @trademark
-                            @model
-                            @serial
-                    ~notebook colspan='4'
-                        ~page $General_Information
+                    ~sheet
+                        @image_medium class='oe_avatar oe_left' widget='image'
+                        ~div .oe_title context="{'spare_parts_required':True}"
+                            ~div .oe_edit_only
+                                ~label for='name' $Product_Name
+                            ~h1
+                                @name placeholder='nickname for machine (must be unique)'
+                        ~group
                             ~group
-                                @startingdate
-                                ~separator colspan='2'
-                                @deadlinegar
+                                @inv_tag placeholder='unique id will generated if blank'
+                                @line_id
                             ~group
-                                ~separator colspan='4' $Description
-                                @description colspan='4' nolabel='1'
-                                ~separator colspan='4' $Safety_Notes
-                                @safety colspan='4' nolabel='1'
-                        ~page $Spare_Parts
-                            @product_ids nolabel='1' colspan='4' (
-                                domain="[('categ_id','child_of','Spare Parts')]"
-                                context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree'}"
-                                )
-                        ~page $Work_Orders
-                            @work_order_ids mode='tree' colspan='4' nolable='1'
-                                ~tree
+                                @trademark
+                                @model
+                                @serial
+                        ~notebook colspan='4'
+                            ~page $General_Information
+                                ~group
+                                    @startingdate
+                                    ~separator colspan='2'
+                                    @deadlinegar
+                                ~group
+                                    ~separator colspan='4' $Description
+                                    @description colspan='4' nolabel='1'
+                                    ~separator colspan='4' $Safety_Notes
+                                    @safety colspan='4' nolabel='1'
+                            ~page $Spare_Parts
+                                @product_ids nolabel='1' colspan='4' (
+                                    domain="[('categ_id','child_of','Spare Parts')]"
+                                    context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree'}"
+                                    )
+                            ~page $Work_Orders
+                                @work_order_ids mode='tree' colspan='4' nolable='1'
+                                    ~tree
+                                        @ref_num
+                                        @priority
+                                        @description
+                                        @state
+                                        @time
+                            ~page $PMs
+                                @pm_ids mode='tree' colspan='4' nolabel='1'
+                                    ~tree
+                                        @ref_num
+                                        @description
+                                        @days_next_due
+                            ~page $Repairs
+                                @cm_ids mode='tree' colspan='4' nolabel='1'
+                                    ~tree
+                                        @ref_num
+                                        @failure_id
+                                        @date
+                                        @user_id
+                            ~page $Help_Requests
+                                @help_request_ids mode='tree' colspan='4' nolabel='1'
                                     @ref_num
                                     @priority
                                     @description
-                                    @state
+                                    @type
                                     @time
-                        ~page $PMs
-                            @pm_ids mode='tree' colspan='4' nolabel='1'
-                                ~tree
-                                    @ref_num
-                                    @description
-                                    @days_next_due
-                        ~page $Repairs
-                            @cm_ids mode='tree' colspan='4' nolabel='1'
-                                ~tree
-                                    @ref_num
-                                    @failure_id
-                                    @date
-                                    @user_id
-                        ~page $Help_Requests
-                            @help_request_ids mode='tree' colspan='4' nolabel='1'
-                                @ref_num
-                                @priority
-                                @description
-                                @type
-                                @time
 
         ~record model=view #view_equipment_tree
             @name: cmms.equipment.tree
