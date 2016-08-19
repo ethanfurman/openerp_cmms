@@ -6,7 +6,6 @@
 ~openerp
     ~data
 
-        // =========================
         // spare parts for Equipment
         // =========================
 
@@ -59,22 +58,9 @@
                                     domain="{'default_search_supplier':1}"
                                     context="{'form_view_ref':'cmms.supplierinfo_form', 'tree_view_ref':'cmms.supplierinfo_tree'}"
                                     )
+                            ~page $Equimpent
+                                @equipment_ids
 
-        ~record model=view #equipment_parts_tree
-            @name: cmms.equipment.products.tree
-            @model: product.product
-            @arch type='xml'
-                ~tree $Spare_Parts version='7.0'
-                    @name
-                    @seller_id
-                    @seller_id.phone
-                    @seller_product_name $Product
-                    @seller_product_code $Code
-                    @qty_available $QoH
-                    @last_order_date
-
-
-        // =========
         // Equipment
         // =========
 
@@ -110,7 +96,7 @@
                                     ~separator colspan='4' $Safety_Notes
                                     @safety colspan='4' nolabel='1'
                             ~page $Spare_Parts
-                                @product_ids nolabel='1' colspan='4' (
+                                @parts_ids nolabel='1' colspan='4' (
                                     domain="[('categ_id','child_of','Spare Parts')]"
                                     context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree'}"
                                     )
@@ -189,8 +175,6 @@
             @view_type: form
             @view_mode: form,tree
 
-
-        // ============
         // Product Line
         // ============
 
@@ -229,8 +213,6 @@
             @view_type: form
             @view_mode: form,tree
 
-
-        // ===============
         // Main Menu Items
         // ===============
 
@@ -242,8 +224,6 @@
 
         ~menuitem #menu_open_view_equipment_list_my parent='menu_cmms_main' action='open_view_equipment_list_my' sequence='20'
 
-
-        // =======================================
         // Corrective Maintenance (aka breakdowns)
         // =======================================
 
@@ -307,8 +287,6 @@
             @view_type: form
             @view_mode: form,tree
 
-
-        // ========
         // Failures
         // ========
 
@@ -338,8 +316,6 @@
             @view_type: form
             @view_mode: form,tree
 
-
-        // =====================
         // Preventive Mainenance
         // =====================
 
@@ -404,9 +380,6 @@
             @domain: []
 
         ~menuitem #menu_open_view_pm_list_my action='open_view_pm_list_my' parent='menu_cmms_main' sequence='30'
-
-
-        // ===========
         // Work Orders
         // ===========
 
@@ -452,8 +425,9 @@
                         ~newline
                         ~notebook colspan='4'
                             ~page $General
-                                @equipment_id colspan='2'
-                                ~separator colspan='2'
+                                ~group
+                                    @equipment_id colspan='2'
+                                    @part_ids context="{'default_incident_id': active_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}" 
                             ~page $History
                                 @archiving3_ids colspan='4' nolabel='1'
                                     ~form $Follow-up_History
@@ -508,8 +482,16 @@
 
         ~menuitem #menu_cmms_incident_act action='cmms_incident_act' parent='menu_cmms_main' sequence='50'
 
-
-        // =============
+        ~record model='ir.ui.view' #parts_used_tree_view
+            @name: cmms.parts_used
+            @model: cmms.parts_used
+            @priority eval='20'
+            @arch type='xml'
+                ~tree $Parts_Used editable='bottom'
+                    @parts_ids invisible='1'
+                    @qty
+                    @part_id options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" domain="[('categ_id','child_of','Spare Parts')]"
+ 
         // Help Requests
         // =============
 
@@ -562,8 +544,6 @@
 
         ~menuitem #menu_open_view_intervention_list_my action='open_view_intervention_list_my' parent='menu_cmms_main' sequence='70'
 
-
-        // ==========
         // Checklists
         // ==========
 
@@ -665,7 +645,6 @@
 
         ~menuitem #menu_cmms_checklist_history_new name='Fill a Checklist' action='cmms_checklist_history_action_new' parent='menu_cmms_checklist_history' sequence='30'
 
-        // =================
         // cmms_request_link
         // =================
 

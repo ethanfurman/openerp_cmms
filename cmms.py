@@ -147,13 +147,14 @@ class cmms_equipment(Normalize, osv.Model):
         'serial': fields.char('Serial Number', size=64),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'startingdate': fields.datetime("Start Date"),
-        'product_ids': fields.many2many(
+        'parts_ids': fields.many2many(
             'product.product',
             'product_equipment_rel',
             'product_id',
             'equipment_id',
             string='Spare Parts',
             domain="[('categ_id','child_of','Spare Parts')]",
+            oldname='product_ids',
             ),
         'deadlinegar': fields.datetime("Warranty Expiration"),
         'description': fields.text('Description'),
@@ -215,7 +216,6 @@ class cmms_equipment(Normalize, osv.Model):
         return super(cmms_equipment, self).create(cr, user, vals, context)
 
 
-#
 # Corrective Maintenance / Failures / Breakdowns
 #
 class cmms_failure(Normalize, osv.Model):
@@ -311,7 +311,6 @@ class cmms_archiving(Normalize, osv.Model):
         }
 
 
-#
 # Preventive Maintenance / Scheduled Downtime
 #
 class cmms_pm(Normalize, osv.osv):
@@ -481,7 +480,6 @@ class cmms_archiving2(Normalize, osv.Model):
         }
 
 
-#
 # Work Orders
 #
 class cmms_request_link(Normalize, osv.Model):
@@ -543,13 +541,10 @@ class cmms_incident(Normalize, osv.Model):
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
         'time': fields.float('Duration (in hours)'),
         'release_no': fields.char('Release Number', size=32),
-        'part_ids': fields.many2many(
-            'product.product',
-            'product_equipment_rel',
-            'product_id',
-            'equipment_id',
+        'part_ids': fields.one2many(
+            'cmms.parts_used',
+            'incident_id',
             string='Spare Parts',
-            domain="[('categ_id','child_of','Spare Parts'),('id','in',equipment_id.product_ids)]",
             ),
         }
     _defaults = {
@@ -593,6 +588,25 @@ class cmms_incident(Normalize, osv.Model):
         return super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
 
 
+# parts_used
+class cmms_parts_used(osv.Model):
+    _name = 'cmms.parts_used'
+    _description = 'parts used in work orders'
+
+    _columns = {
+        'incident_id': fields.many2one('cmms.incident', 'Work Order'),
+        'equipment_id': fields.related('incident_id', 'equipment_id', type='many2one', string='Equipment'),
+        'parts_ids': fields.related(
+            'incident_id', 'equipment_id', 'parts_ids',
+            type='many2many',
+            obj='product.product',
+            string='Inventory',
+            ),
+        'qty': fields.integer('Amount'),
+        'part_id': fields.many2one('product.product', 'Part'),
+        }
+
+
 class cmms_archiving3(Normalize, osv.Model):
     "work-order archive"
     _name = "cmms.archiving3"
@@ -611,7 +625,6 @@ class cmms_archiving3(Normalize, osv.Model):
         }
 
 
-#
 # Help Requests
 #
 class cmms_intervention(Normalize, osv.Model):
@@ -662,9 +675,7 @@ class cmms_intervention(Normalize, osv.Model):
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
 
-#
 # Checklists
-#
 class cmms_checklist(Normalize, osv.Model):
     "checklist"
     _name="cmms.checklist"
@@ -755,7 +766,7 @@ class cmms_question_history(Normalize, osv.Model):
 #     _columns = {
 #         'user_id': fields.many2one('res.users', 'User'),
 
-
+# product.product enhancements
 class product_product(osv.Model):
     _name = 'product.product'
     _inherit = 'product.product'
@@ -776,6 +787,13 @@ class product_product(osv.Model):
         'seller_product_name': fields.function(_calc_extra_seller, type='char', string='Supplier Product Name', help="Main Supplier's product name.", multi="extra_seller_info"),
         'seller_product_code': fields.function(_calc_extra_seller, type='char', string='Supplier Product Code', help="Main Supplier's product code.", multi="extra_seller_info"),
         'last_order_date': fields.date(string="Last ordered"),
+        'equipment_ids': fields.many2many(
+            'cmms.equipment',
+            'product_equipment_rel',
+            'equipment_id',
+            'product_id',
+            string=' Used in',
+            ),
         }
 
     def create(self, cr, uid, values, context=None):
@@ -788,3 +806,4 @@ class product_product(osv.Model):
                     if not category:
                         raise ERPError('Invalid category', '<%s> is not a <Spare Parts> category' % original.name)
         return super(product_product, self).create(cr, uid, values, context=context)
+
