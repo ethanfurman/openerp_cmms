@@ -22,21 +22,13 @@
 ################################################################################
 
 
-from dateutil.relativedelta import *
-from fnx import xrange, one_day
 from fnx.oe import Normalize
-from fnx.dbf import Date, RelativeDay, RelativeMonth
-from openerp import SUPERUSER_ID, tools
+from fnx.dbf import Date
+from openerp import SUPERUSER_ID
 from osv.osv import except_osv as ERPError
-from osv import fields, osv, orm
-from tools import config
-from tools.translate import _
-import base64
+from osv import fields, osv
 import datetime
 import logging
-import math
-import math
-import pooler
 import time
 import tools
 
@@ -100,7 +92,7 @@ class cmms_line(Normalize, osv.Model):
 
     def create(self, cr, user, vals, context=None):
         if 'ref_num' not in vals or not vals['ref_num']:
-            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.line')
+            vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.line', context=context)
         if 'name' not in vals or not vals['name']:
             vals['name'] = vals['ref_num']
         return super(cmms_line, self).create(cr, user, vals, context)
@@ -210,7 +202,7 @@ class cmms_equipment(Normalize, osv.Model):
 
     def create(self, cr, user, vals, context=None):
         if 'inv_tag' not in vals or not vals['inv_tag']:
-            vals['inv_tag'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.equipment')
+            vals['inv_tag'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.equipment', context=context)
         if 'name' not in vals or not vals['name']:
             vals['name'] = vals['inv_tag']
         return super(cmms_equipment, self).create(cr, user, vals, context)
@@ -229,14 +221,14 @@ class cmms_failure(Normalize, osv.Model):
         }
     def create(self, cr, uid, vals, context=None):
         if 'code' not in vals or not vals['code']:
-            vals['code'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.failure')
+            vals['code'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'cmms.failure', context=context)
         return super(cmms_failure, self).create(cr, uid, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         default = default.copy()
-        default['code'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.failure')
+        default['code'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'cmms.failure', context=context)
         return super(cmms_failure, self).copy(cr, uid, id, default=default, context=context)
 
 
@@ -280,7 +272,7 @@ class cmms_cm(Normalize, osv.Model):
 
     def create(self, cr, uid, vals, context=None):
         if 'ref_num' not in vals or not vals['ref_num']:
-            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, uid, 'cmms.cm')
+            vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, uid, 'cmms.cm', context=context)
         machines = self.pool.get('cmms.equipment')
         machine = machines.browse(cr, uid, vals['equipment_id'])
         failures = self.pool.get('cmms.failure')
@@ -372,7 +364,7 @@ class cmms_pm(Normalize, osv.osv):
         if ids is None:
             ids = self.search(cr, uid, [], context=context)
         for id, values in self._calc_days(cr, uid, ids, ['days_left', 'state'], (), context=context).items():
-            if not self.write(cr, uid, id, {'days_left': values['days_left'], 'state': values['state']}):
+            if not self.write(cr, uid, id, {'days_left': values['days_left'], 'state': values['state']}, context=context):
                 _logger.error('unable to update cmms.pm::%s -- %s', values['id'], values['name'])
         return True
 
@@ -454,13 +446,13 @@ class cmms_pm(Normalize, osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
-            default = default.copy()
+        default = default.copy()
         default['ref_num'] = False
         return super(cmms_pm, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
         if 'ref_num' not in vals or not vals['ref_num']:
-            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.pm')
+            vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.pm', context=context)
         return super(cmms_pm, self).create(cr, user, vals, context)
 
 
@@ -517,7 +509,7 @@ class cmms_incident(Normalize, osv.Model):
 
     def _links_get(self, cr, uid, context=None):
         obj = self.pool.get('cmms.request.link')
-        ids = obj.search(cr, uid, [])
+        ids = obj.search(cr, uid, [], context=context)
         res = obj.read(cr, uid, ids, ['object', 'name'], context=context)
         return [(r['object'], r['name']) for r in res]
 
@@ -567,19 +559,19 @@ class cmms_incident(Normalize, osv.Model):
 
     def create(self, cr, user, vals, context=None):
         if 'ref_num' not in vals or not vals['ref_num']:
-            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.incident')
+            vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.incident', context=context)
         vals['name'] = "%s - %s" % (vals['ref_num'], vals['description'])
         wo_id = super(cmms_incident, self).create(cr, user, vals, context)
         partner_ids = [id for id in set([user, vals['user_id']]) if id]
         self.message_subscribe_users(cr, user, [wo_id], partner_ids, context=context)
         return wo_id
 
-    def onchange_ref_id(self, cr, uid, ids, ref_id, context={}):
+    def onchange_ref_id(self, cr, uid, ids, ref_id, context=None):
         if not ref_id:
             return {}
         table, ref_id = ref_id.split(',')
         ref_id = int(ref_id)
-        record = self.pool.get(table).browse(cr, uid, [ref_id])[0]
+        record = self.pool.get(table).browse(cr, uid, [ref_id], context=context)[0]
         return {'value':{'equipment_id': record.equipment_id.id}}
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -603,7 +595,7 @@ class cmms_parts_used(osv.Model):
             string='Inventory',
             ),
         'qty': fields.integer('Amount'),
-        'part_id': fields.many2one('product.product', 'Part'),
+        'part_id': fields.many2one('product.product', 'Part', domain="[('part_id','in',parts_ids)]"),
         }
 
 
@@ -668,10 +660,17 @@ class cmms_intervention(Normalize, osv.Model):
 
     def create(self, cr, user, vals, context=None):
         if 'ref_num' not in vals or not vals['ref_num']:
-            vals['ref_num'] = self.pool.get('ir.sequence').get(cr, user, 'cmms.intervention')
+            vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.intervention', context=context)
         machines = self.pool.get('cmms.equipment')
-        machine = machines.browse(cr, 1, vals['equipment_id'])
-        vals['name'] = ("%s - %s - %s - %s" % (vals['ref_num'], vals['type'], machine.name.strip(), vals['description'] or '')).strip(' -')
+        machine = machines.browse(cr, 1, vals['equipment_id'], context=context)
+        vals['name'] = (
+                "%s - %s - %s - %s"
+                % (
+                    vals['ref_num'],
+                    vals['type'],
+                    machine.name.strip(),
+                    vals['description'] or '')
+                ).strip(' -')
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
 
@@ -710,8 +709,8 @@ class cmms_checklist_history(Normalize, osv.Model):
     _description= "Checklist History"
 
     def onchange_checklist_id(self, cr, uid, ids, id, context=None):
-        question_ids = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)])
-        records = self.pool.get('cmms.question').name_get(cr, uid, question_ids)
+        question_ids = self.pool.get('cmms.question').search(cr, uid, [('checklist_id', '=', id)], context=context)
+        records = self.pool.get('cmms.question').name_get(cr, uid, question_ids, context=context)
         results = []
         for id, name in records:
             obj = {'name': name}
