@@ -60,6 +60,18 @@
                                     )
                             ~page $Equimpent
                                 @equipment_ids
+        ~record model=view #equipment_parts_tree
+            @name: cmms.equipment.products.tree
+            @model: product.product
+            @arch type='xml'
+                ~tree $Spare_Parts version='7.0'
+                    @name
+                    @qty_available $QoH
+                    @seller_product_name $Product
+                    @seller_product_code $Code
+                    @seller_id
+                    @seller_id.phone
+                    @last_order_date
 
         // Equipment
         // =========

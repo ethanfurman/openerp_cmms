@@ -65,7 +65,6 @@ WO_PRIORITIES = [
     ('1','High'),
     ]
 
-#
 # Production Line
 #
 class cmms_line(Normalize, osv.Model):
@@ -106,7 +105,6 @@ class cmms_line(Normalize, osv.Model):
         return super(cmms_line, self).copy(cr, uid, id, default=default, context=context)
 
 
-#
 # Equipment
 #
 class cmms_equipment(Normalize, osv.Model):
