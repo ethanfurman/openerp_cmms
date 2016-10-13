@@ -7,7 +7,6 @@
     ~data
 
         // spare parts for Equipment
-        // =========================
 
         ~record model=view #supplierinfo_form
             @name: cmms.equipment.products.sellerinfo.form
@@ -74,7 +73,6 @@
                     @last_order_date
 
         // Equipment
-        // =========
 
         ~record model=view #view_equipment_form
             @name: cmms.equipment.form
@@ -188,7 +186,6 @@
             @view_mode: form,tree
 
         // Product Line
-        // ============
 
         ~record model=view #view_line_form
             @name: cmms.line.form
@@ -226,7 +223,6 @@
             @view_mode: form,tree
 
         // Main Menu Items
-        // ===============
 
         ~menuitem @CMMS #menu_cmms icon='terp-hr' groups='group_cmms_user'
 
@@ -237,7 +233,6 @@
         ~menuitem #menu_open_view_equipment_list_my parent='menu_cmms_main' action='open_view_equipment_list_my' sequence='20'
 
         // Corrective Maintenance (aka breakdowns)
-        // =======================================
 
         ~record model=view #view_cm_form
             @name: cmms.cm.form
@@ -300,7 +295,6 @@
             @view_mode: form,tree
 
         // Failures
-        // ========
 
         ~record model=view #view_failure_form
             @name: cmms.failure.form
@@ -329,7 +323,6 @@
             @view_mode: form,tree
 
         // Preventive Mainenance
-        // =====================
 
         ~record model=view #view_pm_form
             @name: cmms.pm.form
@@ -392,8 +385,8 @@
             @domain: []
 
         ~menuitem #menu_open_view_pm_list_my action='open_view_pm_list_my' parent='menu_cmms_main' sequence='30'
+
         // Work Orders
-        // ===========
 
         ~record model=view #cmms_incident_tree-view
             @name: cmms.incident.tree
@@ -439,7 +432,7 @@
                             ~page $General
                                 ~group
                                     @equipment_id colspan='2'
-                                    @part_ids context="{'default_incident_id': active_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}" 
+                                    @part_ids attrs="{'invisible': [('equipment_id','=',False)]}" context="{'default_incident_id': active_id, 'default_equipment_id': equipment_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}" 
                             ~page $History
                                 @archiving3_ids colspan='4' nolabel='1'
                                     ~form $Follow-up_History
@@ -500,12 +493,15 @@
             @priority eval='20'
             @arch type='xml'
                 ~tree $Parts_Used editable='bottom'
-                    @parts_ids invisible='1'
-                    @qty
-                    @part_id options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" domain="[('categ_id','child_of','Spare Parts')]"
+                    @incident_id invisible='1'
+                    @equipment_id invisible='1' options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" on_change="onchange_equipment(equipment_id, part_id, supplier_id)"
+                    @part_id options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" on_change="onchange_part(equipment_id, part_id, supplier_id)"
+                    @supplier_id options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" on_change="onchange_supplier(equipment_id, part_id, supplier_id)"
+                    @part_code readonly='1'
+                    @part_name readonly='1'
+                    @qty $Quantity
  
         // Help Requests
-        // =============
 
         ~record model=view #view_intervention_form
             @name: cmms.intervention.form
@@ -557,7 +553,6 @@
         ~menuitem #menu_open_view_intervention_list_my action='open_view_intervention_list_my' parent='menu_cmms_main' sequence='70'
 
         // Checklists
-        // ==========
 
         ~record model=view #view_checklist_tree
             @name: cmms.checklist.tree
@@ -658,7 +653,6 @@
         ~menuitem #menu_cmms_checklist_history_new name='Fill a Checklist' action='cmms_checklist_history_action_new' parent='menu_cmms_checklist_history' sequence='30'
 
         // cmms_request_link
-        // =================
 
         ~record model=view #view_request_link_form
             @name: cmms.request.link.form
@@ -686,4 +680,3 @@
             @view_mode: tree,form
             @domain: []
 
-        // ~menuitem action="open_view_request_link_list_my" #menu_open_view_request_link_list_my parent="menu_cmms_configuration"

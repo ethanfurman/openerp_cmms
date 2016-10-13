@@ -128,6 +128,26 @@ class cmms_equipment(Normalize, osv.Model):
             result[obj.id] = obj.image != False
         return result
 
+    def init(self, cr):
+        # ensure name have been reversed to their proper order
+        cr.execute(
+                "select column_name, ordinal_position"
+                " from information_schema.columns"
+                " where table_schema = 'public' and table_name = 'product_equipment_rel';"
+                )
+        fields = cr.fetchall()
+        if len(fields) != 2:
+            raise ERPError('product_equipment_rel should have exactly two fields, but actually has %d' % len(fields))
+        for field_name, ordinal in fields:
+            if field_name == 'equipment_id' and ordinal == 2:
+                print 'modifying field names for product_equipment_rel...'
+                cr.execute('ALTER TABLE product_equipment_rel RENAME equipment_id TO tmp;')
+                cr.execute('ALTER TABLE product_equipment_rel RENAME product_id TO equipment_id;')
+                cr.execute('ALTER TABLE product_equipment_rel RENAME tmp TO product_id;')
+                print 'done'
+                break
+
+# table_catalog    | table_schema |      table_name       | column_name  | ordinal_position
 
     _columns = {
         'name': fields.char('Machine', size=64, required=True),
@@ -140,8 +160,8 @@ class cmms_equipment(Normalize, osv.Model):
         'parts_ids': fields.many2many(
             'product.product',
             'product_equipment_rel',
-            'product_id',
             'equipment_id',
+            'product_id',
             string='Spare Parts',
             domain="[('categ_id','child_of','Spare Parts')]",
             oldname='product_ids',
@@ -585,17 +605,73 @@ class cmms_parts_used(osv.Model):
 
     _columns = {
         'incident_id': fields.many2one('cmms.incident', 'Work Order'),
-        'equipment_id': fields.related('incident_id', 'equipment_id', type='many2one', string='Equipment'),
-        'parts_ids': fields.related(
-            'incident_id', 'equipment_id', 'parts_ids',
-            type='many2many',
-            obj='product.product',
-            string='Inventory',
-            ),
+        'equipment_id': fields.related(
+                'incident_id', 'equipment_id',
+                type='many2one',
+                obj='cmms.equipment',
+                string='Equipment',
+                ),
+        'part_id': fields.many2one('product.product', 'Part'),
+        'supplier_id': fields.many2one('product.supplierinfo', string='Supplier'),
+        'part_name': fields.related('supplier_id', 'product_name', string='Sup part name', type='char', size=128),
+        'part_code': fields.related('supplier_id', 'product_code', string='Sup part code', type='char', size=64),
         'qty': fields.integer('Amount'),
-        'part_id': fields.many2one('product.product', 'Part', domain="[('part_id','in',parts_ids)]"),
         }
 
+    def onchange_equipment(self, cr, uid, ids, equipment_id, part_id, supplier_id, context=None):
+        # equipment_id is always known
+        # set the other domains and/or values based on which tidbits of info we
+        # have (anything not set will be False)
+        cmms_equipment = self.pool.get('cmms.equipment')
+        equipment = cmms_equipment.browse(cr, uid, equipment_id, context=context)
+        equipment_part_ids = [p.id for p in equipment.parts_ids]
+        return {
+                'domain': {
+                    'part_id': [('id','in',equipment_part_ids)],
+                    'supplier_id': [('id','in',[])],
+                    },
+                'value': {
+                    'part_id': False,
+                    'supplier_id': False,
+                    },
+                }
+
+    def onchange_part(self, cr, uid, ids, equipment_id, part_id, supplier_id, context=None):
+        # equipment_id is always known
+        product_supplierinfo = self.pool.get('product.supplierinfo')
+        equipment_part_ids = [part_id]
+        product_suppliers = product_supplierinfo.browse(
+                cr, uid,
+                [('product_id','in',equipment_part_ids)],
+                context=context,
+                )
+        product_suppliers_ids = [ps.id for ps in product_suppliers]
+        supplier_id = part_name = part_code = False
+        if len(product_suppliers) == 1:
+            [supplier] = product_suppliers
+            supplier_id = supplier.id
+            part_name = supplier.product_name
+            part_code = supplier.product_code
+        return {
+                'domain': {
+                    'supplier_id': [('id','in',product_suppliers_ids)],
+                    },
+                'value': {
+                    'supplier_id': supplier_id,
+                    'part_name': part_name,
+                    'part_code': part_code
+                    },
+                }
+
+    def onchange_supplier(self, cr, uid, ids, equipment_id, part_id, supplier_id, context=None):
+        product_supplierinfo = self.pool.get('product.supplierinfo')
+        product_supplier = product_supplierinfo.browse( cr, uid, supplier_id, context=context)
+        return {
+                'value': {
+                    'part_code': product_supplier.product_code,
+                    'part_name': product_supplier.product_name,
+                    },
+                }
 
 class cmms_archiving3(Normalize, osv.Model):
     "work-order archive"
@@ -787,8 +863,8 @@ class product_product(osv.Model):
         'equipment_ids': fields.many2many(
             'cmms.equipment',
             'product_equipment_rel',
-            'equipment_id',
             'product_id',
+            'equipment_id',
             string=' Used in',
             ),
         }
