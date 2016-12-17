@@ -16,7 +16,7 @@
             <field name="object">cmms.checklist.history</field>
             <field name="priority">5</field>
         </record>
-	<record id="line4" model="cmms.request.link">
+        <record id="line4" model="cmms.request.link">
             <field name="name">Intervention request</field>
             <field name="object">cmms.intervention</field>
             <field name="priority">5</field>

@@ -23,7 +23,7 @@
 
 
 from fnx.oe import Normalize
-from fnx.dbf import Date
+from dbf import Date
 from openerp import SUPERUSER_ID
 from osv.osv import except_osv as ERPError
 from osv import fields, osv
