@@ -59,6 +59,7 @@
                                     )
                             ~page $Equimpent
                                 @equipment_ids
+
         ~record model=view #equipment_parts_tree
             @name: cmms.equipment.products.tree
             @model: product.product
@@ -432,7 +433,7 @@
                             ~page $General
                                 ~group
                                     @equipment_id colspan='2'
-                                    @part_ids attrs="{'invisible': [('equipment_id','=',False)]}" context="{'default_incident_id': active_id, 'default_equipment_id': equipment_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}" 
+                                    @part_ids options="{'create':False, 'create_edit':False, 'limit':15}" attrs="{'invisible': [('equipment_id','=',False)]}" context="{'default_incident_id': active_id, 'default_equipment_id': equipment_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}" 
                             ~page $History
                                 @archiving3_ids colspan='4' nolabel='1'
                                     ~form $Follow-up_History
