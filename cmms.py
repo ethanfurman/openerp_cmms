@@ -25,7 +25,7 @@
 from fnx.oe import Normalize
 from dbf import Date
 from openerp import SUPERUSER_ID
-from osv.osv import except_osv as ERPError
+from openerp.exceptions import ERPError
 from osv import fields, osv
 import datetime
 import logging
