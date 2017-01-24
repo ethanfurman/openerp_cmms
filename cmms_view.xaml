@@ -73,6 +73,15 @@
                     @seller_id.phone
                     @last_order_date
 
+        ~record model=view #equipment_parts_search
+            @name: cmms.equipment.products.search
+            @model: product.product
+            @arch type='xml'
+                ~search $Search_Spare_Parts
+                    @name
+                    @seller_product_name
+                    @seller_product_code
+
         // Equipment
 
         ~record model=view #view_equipment_form
@@ -109,7 +118,7 @@
                             ~page $Spare_Parts
                                 @parts_ids nolabel='1' colspan='4' (
                                     domain="[('categ_id','child_of','Spare Parts')]"
-                                    context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree'}"
+                                    context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree', 'search_view_ref':'cmms.equipment_parts_search'}"
                                     )
                             ~page $Work_Orders
                                 @work_order_ids mode='tree' colspan='4' nolable='1'
