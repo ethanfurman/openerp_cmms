@@ -34,7 +34,7 @@
         ~record #seq_cmms_incident model='ir.sequence'
             @name: cmms incident
             @code: cmms.incident
-            @prefix: Intervention card-
+            @prefix: Work Order-
             @padding: 5
         
 
