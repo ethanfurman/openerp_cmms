@@ -423,11 +423,12 @@
                             ~group colspan='4' col='2'
                                 @ref_num placeholder='unique id will be generated if blank'
                                 @description
-                                @date $Date_Created
                                 @priority
-                            ~group colspan='2' col='2'
                                 @user_id options="{'create':False, 'create_edit':False, 'limit':15}"
+                                @third_party
+                            ~group colspan='2' col='2'
                                 @state
+                                @date $Date_Created
                                 @date_due $Deadline
                                 @days_left attrs="{'invisible':[('state','=','done')]}"
                             ~group colspan='6' col='6'

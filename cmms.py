@@ -538,6 +538,7 @@ class cmms_incident(Normalize, osv.Model):
         'state': fields.selection(STATES,'State', size=32),
         'priority': fields.selection(WO_PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','Staff')]"),
+        'third_party': fields.char('Outside Service', size=128),
         'date': fields.datetime('Date'),
         'date_due': fields.date('Due Date', help='Date when servicing must be finished'),
         'days_left': fields.function(
