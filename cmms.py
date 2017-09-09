@@ -147,7 +147,7 @@ class cmms_equipment(Normalize, osv.Model):
                 print 'done'
                 break
 
-# table_catalog    | table_schema |      table_name       | column_name  | ordinal_position
+        # table_catalog    | table_schema |      table_name       | column_name  | ordinal_position
 
     _columns = {
         'name': fields.char('Machine', size=64, required=True),
@@ -179,6 +179,12 @@ class cmms_equipment(Normalize, osv.Model):
         'help_request_ids': fields.one2many('cmms.intervention', 'equipment_id', 'Help Request History'),
         'pm_ids': fields.one2many('cmms.pm', 'equipment_id', 'Preventive Maintenance History'),
         'cm_ids': fields.one2many('cmms.cm', 'equipment_id', 'Corrective Maintenance History'),
+        'doc_ids': fields.many2many(
+            'ir.attachment',
+            'ir_attachment_cmms_equipment_rel', 'equipment_id', 'attachment_id',
+            'Attached Documents',
+            context="{'default_res_model': 'cmms.equipment'}",
+            ),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
             help="This field holds the image for this equipment, limited to 1024x1024px"),
@@ -200,12 +206,15 @@ class cmms_equipment(Normalize, osv.Model):
                  "Use this field anywhere a small image is required."),
         'has_image': fields.function(_has_image, type="boolean"),
         }
+
     _defaults = {
         'user_id': lambda object,cr,uid,context: uid,
         }
+
     _sql_constraints = [
         ('equipment_ref_key', 'unique(inv_tag)', 'Machine inventory ID already exists'),
         ]
+
     _constraints = [
         (lambda s, *a: s.check_unique('inv_tag', *a), '\nMachine inventory ID already exists', ['inv_tag']),
         ]

@@ -98,7 +98,7 @@
                                 @name placeholder='nickname for machine (must be unique)'
                         ~group
                             ~group
-                                @inv_tag placeholder='unique id will generated if blank'
+                                @inv_tag placeholder='unique id will be generated if blank'
                                 @line_id
                             ~group
                                 @trademark
@@ -111,10 +111,15 @@
                                     ~separator colspan='2'
                                     @deadlinegar
                                 ~group
-                                    ~separator colspan='4' $Description
+                                    ~label for='description' colspan='4' $Description
                                     @description colspan='4' nolabel='1'
-                                    ~separator colspan='4' $Safety_Notes
+                                    ~label for='safety' colspan='4' $Safety_Notes
                                     @safety colspan='4' nolabel='1'
+                                    ~label for='doc_ids' colspan='4' $Documents
+                                    @doc_ids colspan='4' nolabel='1'
+                                        ~tree
+                                            @name
+                                            @description
                             ~page $Spare_Parts
                                 @parts_ids nolabel='1' colspan='4' (
                                     domain="[('categ_id','child_of','Spare Parts')]"
