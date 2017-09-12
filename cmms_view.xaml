@@ -697,3 +697,4 @@
             @view_mode: tree,form
             @domain: []
 
+        ~report model='cmms.incident' name='cmms.incident.report' header='True' auto='True' multi='False' xml='cmms/report/work_order.xml' xsl='cmms/report/work_order.xsl' $Work_Order #report_cmms_incident_form

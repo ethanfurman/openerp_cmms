@@ -1,0 +1,294 @@
+!!! xml1.0
+~work-order
+    ~report
+        ~title type='eval' expr="'Work Order'"
+        ~date type='function' @today
+    ~detail type='fields' @id
+        ~reference type='field' @ref_num
+        ~description type='field' @description
+        ~priority type='field' @priority
+        ~assigned-to type='field' @user_id.name
+        ~outside-service type='field' @third_party
+        ~status type='field' @state
+        ~create-date type='field' @date
+        ~due-date type='field' @date_due
+        ~days-remaining type='field' @days_left
+        ~duration type='field' @time
+        ~source type='field' @ref
+        ~release-number type='field' @release_no
+        ~machine type='field' @equipment_id.name
+        ~spare-parts type='zoom' @part_ids
+            ~part-id type='field' @part_id.default_code
+            ~supplier type='field' @supplier_id.name.name
+            ~part-name type='field' @part_name
+            ~part-code type='field' @part_code
+        ~log type='zoom' @archiving3_ids
+            ~log-date type='field' @date
+            ~log-description type='field' @description
+            ~log-user type='field' @user_id.name
+
+!!! xsl1.0
+~xsl:stylesheet version='1.0' xmlns:fo='http://www.w3.org/1999/XSL/Format' xmlns:xsl='http://www.w3.org/1999/XSL/Transform'
+
+    ~xsl:template match='/'
+        ~xsl:apply-templates select='work-order'
+
+    ~xsl:template match='work-order'
+        ~document
+
+            ~template author='OpenERP:CMMS' title='Work Order' pageSize='us_letter'
+                ~pageTemplate id='first_page'
+                    ~pageGraphics
+                        ~xsl:apply-templates match='report'
+                    ~xsl:call-template name='first_page_frames'
+                ~pageTemplate id='other_pages'
+                    ~pageGraphics
+                        ~xsl:apply-templates match='report'
+                    ~xsl:call-template name='other_pages_frames'
+
+            ~stylesheet
+
+                ~blockTableStyle id='container'
+                    ~blockFont name='Helvetica' size='9'
+                    ~lineStyle kind='BOX' start='0,0' stop='-1,-1' thickness='1' colorName='black'
+                    ~blockTopPadding start='0,0' stop='-1,-1' length='0'
+                    ~blockBottomPadding start='0,0' stop='-1,-1' length='0'
+                    ~blockLeftPadding start='0,0' stop='-1,-1' length='0'
+                    ~blockRightPadding start='0,0' stop='-1,-1' length='0'
+                    ~blockValign value='TOP'
+                    ~blockAlignment value='RIGHT' start='-1,0' stop='-1,-1'
+
+                ~blockTableStyle id='lines'
+                    ~blockFont name='Helvetica' size='9'
+                    ~blockValign value='MIDDLE'
+                    ~lineStyle kind='LINEBELOW' thickness='0.25' colorName='black' start='0,0' stop='-1,-1'
+
+                ~blockTableStyle id='half-line'
+                    ~blockFont name='Helvetica' size='9'
+                    ~blockValign value='MIDDLE'
+                    ~lineStyle kind='LINEBELOW' thickness='0.25' colorName='black' start='1,0' stop='1,0'
+
+                ~blockTableStyle id='sample-only'
+                    ~blockFont name='Helvetica' size='9'
+                    ~lineStyle kind='BOX' start='0,0' stop='-1,-1' thickness='1' colorName='black'
+                    ~lineStyle kind='LINEBELOW' thickness='0.25'  colorName='black' start='0,0' stop='-1,-1'
+                    ~blockAlignment start='0,0' stop='-1,0' value='CENTER'
+                    ~blockValign value='MIDDLE' start='-1,0' stop='-1,-1'
+
+                ~blockTableStyle id='free-float'
+                    ~blockFont name='Helvetica' size='9'
+                    ~blockValign value='TOP'
+
+                ~blockTableStyle id='item-table'
+                    ~blockFont name='Helvetica' size='9'
+                    ~blockValign value='TOP'
+                    ~blockAlignment value='LEFT'
+                    ~lineStyle kind='LINEABOVE' thickness='1.0' colorName='black' start='0,0' stop='-1,0'
+                    ~lineStyle kind='LINEBELOW' thickness='1.0' colorName='black' start='0,0' stop='-1,0'
+                    ~lineStyle kind='LINEBELOW' thickness='0.5' colorName='black' start='0,1' stop='-1,-1'
+
+                ~blockTableStyle id='one-line-center'
+                    ~blockFont name='Helvetica' size='8'
+                    ~blockVAlign value='BOTTOM'
+                    ~blockAlignment value='CENTER'
+
+                ~blockTableStyle id='one-line-left'
+                    ~blockFont name='Helvetica' size='8'
+                    ~blockVAlign value='BOTTOM'
+                    ~blockAlignment value='CENTER'
+
+                ~blockTableStyle id='one-line-right'
+                    ~blockFont name='Helvetica' size='8'
+                    ~blockVAlign value='BOTTOM'
+                    ~blockAlignment value='RIGHT'
+
+                ~paraStyle name='small-font' fontName='Helvetica' fontSize='9' spaceAfter='0' spaceBefore='0'
+                ~paraStyle name='nospace' fontName='Helvetica' fontSize='10' spaceAfter='0' spaceBefore='0'
+            ~story
+                ~setNextTemplate name='other_pages'
+                ~xsl:apply-templates match='report' mode='story'
+                ~xsl:apply-templates select='detail'
+
+    ~xsl:template name='first_page_frames'
+        ~frame id='details1' x1='0.5in' y1='0.75in' width='7.5in' height='9.5in'
+
+    ~xsl:template name='other_pages_frames'
+        ~frame id='details2' x1='0.5in' y1='0.75in' width='7.5in' height='9.5in'
+
+    ~xsl:template match='report'
+        ~setFont name='Helvetica' size='11'
+        ~drawString x='0.5in' y='10.5in'
+            ~xsl:value-of select='title'
+        ~setFont name='Helvetica' size='10'
+        ~drawCentredString x='4.25in' y='10.7in'
+            ~xsl:value-of select='//corporate-header/corporation/name'
+        ~setFont name='Helvetica' size='9'
+        ~drawRightString x='8.0in' y='10.5in'
+            ~xsl:value-of select='date'
+        ~setFont name='Helvetica' size='8'
+        ~drawCentredString x='4.25in' y='0.43in'
+            ~xsl:value-of select='//corporate-header/corporation/rml_header1'
+        ~drawCentredString x='4.25in' y='0.3in'
+            ~xsl:value-of select='//corporate-header/corporation/rml_footer'
+
+    ~xsl:template match='detail'
+        ~blockTable colWidths='290, 32, 218' style='container'
+            ~tr
+                ~td
+                    ~blockTable colWidths='78, 212' style='lines'
+                        ~tr
+                            ~td
+                                ~xsl:text: Reference
+                            ~td
+                                ~xsl:value-of select='reference'
+                        ~tr
+                            ~td
+                                ~xsl:text: Equipment
+                            ~td
+                                ~xsl:value-of select='machine'
+                        ~tr
+                            ~td
+                                ~xsl:text: Description
+                            ~td
+                                ~xsl:value-of select='description'
+                        ~tr
+                            ~td
+                                ~xsl:text: Priority
+                            ~td
+                                ~xsl:value-of select='priority'
+                        ~tr
+                            ~td
+                                ~xsl:text: Assigned to
+                            ~td
+                                ~xsl:value-of select='assigned-to'
+                        ~tr
+                            ~td
+                                ~xsl:text: Outside Service
+                            ~td
+                                ~xsl:value-of select='outside-service'
+                ~td
+                ~td
+                    ~blockTable colWidths='99, 119' style='lines'
+                        ~tr
+                            ~td
+                                ~xsl:text: Status
+                            ~td
+                                ~xsl:value-of select='status'
+                        ~tr
+                            ~td
+                                ~xsl:text: Created on
+                            ~td
+                                ~xsl:value-of select='create-date'
+                        ~tr
+                            ~td
+                                ~xsl:text: Deadline
+                            ~td
+                                ~para
+                                    ~xsl:value-of select='due-date'
+                        ~tr
+                            ~td
+                                ~xsl:text: Days remaining
+                            ~td
+                                ~xsl:value-of select='days-remaining'
+            ~tr
+            ~tr
+                ~td
+                    ~blockTable colWidths='78, 212' style='lines'
+                        ~tr
+                            ~td
+                                ~xsl:text: Duration
+                            ~td
+                                ~xsl:value-of select='duration'
+                        ~tr
+                            ~td
+                                ~xsl:text: Source
+                            ~td
+                                ~xsl:value-of select='source'
+                        ~tr
+                            ~td
+                                ~xsl:text: Release #
+                            ~td
+                                ~xsl:value-of select='release-number'
+                ~td
+                ~td
+        ~spacer height='18'
+        ~para
+            ~xsl:text: Parts
+        ~spacer height='9'
+        ~pto
+            ~pto_trailer
+                ~blockTable colWidths='540' style='one-line-right'
+                    ~tr
+                        ~td
+                            ~xsl:text: continued on next page...
+            ~pto_header
+                ~blockTable colWidths='72, 144, 179, 144' style='item-table'
+                    ~tr
+                        ~td
+                            ~xsl:text: Part Code
+                        ~td
+                            ~xsl:text: Supplier
+                        ~td
+                            ~xsl:text: Supp. Part Name
+                        ~td
+                            ~xsl:text: Supp. Part Code
+            ~blockTable colWidths='72, 144, 179, 144' rowHeight='50' style='item-table'
+                ~tr
+                    ~td
+                        ~xsl:text: Part Code
+                    ~td
+                        ~xsl:text: Supplier
+                    ~td
+                        ~xsl:text: Supp. Part Name
+                    ~td
+                        ~xsl:text: Supp. Part Code
+                ~xsl:for-each select='spare-parts'
+                    ~tr
+                        ~td
+                            ~para style='small-font'
+                                ~xsl:value-of select='part-id'
+                        ~td
+                            ~para style='small-font'
+                                ~xsl:value-of select='supplier'
+                        ~td
+                            ~para style='small-font'
+                                ~xsl:value-of select='part-name'
+                        ~td
+                            ~para style='small-font'
+                                ~xsl:value-of select='part-code'
+        ~flexSpacer height='108'
+        ~para
+            ~xsl:text: Actions taken
+        ~spacer height='9'
+        ~pto
+            ~pto_trailer
+                ~blockTable colWidths='540' style='one-line-right'
+                    ~tr
+                        ~td
+                            ~xsl:text: continued on next page...
+            ~pto_header
+                ~blockTable colWidths='108, 108, 324' style='item-table'
+                    ~tr
+                        ~td
+                            ~xsl:text: Entry by
+                        ~td
+                            ~xsl:text: Date
+                        ~td
+                            ~xsl:text: Note
+            ~blockTable colWidths='108, 108, 324' style='item-table'
+                ~tr
+                    ~td
+                        ~xsl:text: Entry by
+                    ~td
+                        ~xsl:text: Date
+                    ~td
+                        ~xsl:text: Note
+                ~xsl:for-each select='log'
+                    ~tr
+                        ~td
+                            ~xsl:value-of select='log-user'
+                        ~td
+                            ~xsl:value-of select='log-date'
+                        ~td
+                            ~para style='small-font'
+                                ~xsl:value-of select='log-description'
