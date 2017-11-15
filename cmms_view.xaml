@@ -120,6 +120,8 @@
                                         ~tree
                                             @name
                                             @description
+                                            @write_uid
+                                            @write_date
                             ~page $Spare_Parts
                                 @parts_ids nolabel='1' colspan='4' (
                                     domain="[('categ_id','child_of','Spare Parts')]"
