@@ -107,9 +107,10 @@
                         ~notebook colspan='4'
                             ~page $General_Information
                                 ~group
-                                    @startingdate
-                                    ~separator colspan='2'
-                                    @deadlinegar
+                                    ~group
+                                        @startingdate
+                                        ~separator colspan='2'
+                                        @deadlinegar
                                 ~group
                                     ~label for='description' colspan='4' $Description
                                     @description colspan='4' nolabel='1'
