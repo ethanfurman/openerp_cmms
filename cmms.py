@@ -183,7 +183,8 @@ class cmms_equipment(Normalize, osv.Model):
             'ir.attachment',
             'ir_attachment_cmms_equipment_rel', 'equipment_id', 'attachment_id',
             'Attached Documents',
-            context="{'default_res_model': 'cmms.equipment'}",
+            order='write_date desc',
+            context={'default_res_model': 'cmms.equipment'},
             ),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
