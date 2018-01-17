@@ -48,7 +48,7 @@
                                 ~label for='description' $Description
                                 @description nolabel='1'
                             ~group
-                                @qty_available
+                                @fis_qty_on_hand
                                 @last_order_date
                         ~notebook
                             ~page $Suppliers
@@ -66,7 +66,7 @@
             @arch type='xml'
                 ~tree $Spare_Parts version='7.0'
                     @name
-                    @qty_available $QoH
+                    @fis_qty_on_hand $QoH
                     @seller_product_name $Product
                     @seller_product_code $Code
                     @seller_id
