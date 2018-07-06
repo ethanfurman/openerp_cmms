@@ -156,6 +156,8 @@
                                     @description
                                     @type
                                     @time
+                            ~page $SOPs_and_Manuals
+                                @fnxfs_sop_files
 
         ~record model=view #view_equipment_tree
             @name: cmms.equipment.tree

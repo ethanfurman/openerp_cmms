@@ -24,6 +24,7 @@
 
 from fnx.oe import Normalize
 from dbf import Date
+from fnx_fs.fields import files
 from openerp import SUPERUSER_ID
 from openerp.exceptions import ERPError
 from osv import fields, osv
@@ -111,7 +112,10 @@ class cmms_equipment(Normalize, osv.Model):
     "equipment"
     _name = "cmms.equipment"
     _description = "equipment"
+    _inherit = 'fnx_fs.fs'
     _order = 'name asc'
+
+    _fnxfs_path = 'cmms'
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -206,6 +210,8 @@ class cmms_equipment(Normalize, osv.Model):
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'has_image': fields.function(_has_image, type="boolean"),
+        # fnxfs fields
+        'fnxfs_sop_files': files('sop_manual', string='SOPs & Manuals'),
         }
 
     _defaults = {

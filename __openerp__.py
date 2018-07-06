@@ -24,8 +24,6 @@
 {
     "name": "Computerized Maintenance Management System",
     "version": "2.0",
-    # "depends": ["base", "product", "stock"],
-    "depends": ["base", "product"],
     "author": "Héonium / Nextma / Emile van Sebille",
     'website': 'http://heonium.com - http://www.nextma.com - http://salesinq.com',
     "category": "Specific Modules/CMMS",
@@ -46,6 +44,7 @@ With this module you can track all equipment types.
     'depends': [
         'base',
         'fnx',
+        'fnx_fs',
         'product',
         ],
     "init_xml": [
