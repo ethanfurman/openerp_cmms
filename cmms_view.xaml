@@ -57,7 +57,7 @@
                                     domain="{'default_search_supplier':1}"
                                     context="{'form_view_ref':'cmms.supplierinfo_form', 'tree_view_ref':'cmms.supplierinfo_tree'}"
                                     )
-                            ~page $Equimpent
+                            ~page $Equipment
                                 @equipment_ids
 
         ~record model=view #equipment_parts_tree
