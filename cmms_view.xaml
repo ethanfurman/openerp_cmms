@@ -381,8 +381,12 @@
                                     @name
                                     @date
                                     @description
-                    ~separator $Notes colspan='4'
-                    @note colspan='4' nolabel='1'
+                        ~page $Related_Files
+                            ~div .fnxfs_files
+                                ~newline
+                                @fnxfs_related_files colspan='4' nolabel='1'
+                        ~Page $Notes colspan='4'
+                            @note colspan='4' nolabel='1'
 
         ~record model=view #view_pm_tree
             @name: cmms.pm.tree

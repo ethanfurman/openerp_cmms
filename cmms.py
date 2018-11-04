@@ -404,7 +404,11 @@ class cmms_pm(Normalize, osv.osv):
 
     _name = "cmms.pm"
     _description = "Preventive Maintenance System"
+    _inherit = ['fnx_fs.fs']
     _order = 'days_left asc, name asc'
+
+    _fnxfs_path = 'cmms'
+    _fnxfs_path_fields = ['name']
 
     _columns = {
         'name': fields.function(
@@ -461,6 +465,7 @@ class cmms_pm(Normalize, osv.osv):
             ),
         'archiving2_ids': fields.one2many('cmms.archiving2', 'pm_id', 'follow-up history'),
         'note': fields.text('Notes'),
+        'fnxfs_related_files': files('preventive_maintenance', string='Related Files'),
         }
 
     _defaults = {
