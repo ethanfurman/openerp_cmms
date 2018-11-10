@@ -176,7 +176,7 @@ class cmms_equipment(Normalize, osv.Model):
         'user_id': fields.many2one(
             'res.users',
             'Assigned to',
-            domain="[('groups_id.category_id.name','=','CMMS'),('groups_id.name','=','User')]",
+            domain=[('groups_id','=',fields.ref('group_cmms_user'))],
             ondelete='set null',
             ),
         'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
@@ -190,6 +190,7 @@ class cmms_equipment(Normalize, osv.Model):
             order='write_date desc',
             context={'default_res_model': 'cmms.equipment'},
             ),
+        'documents': files('general_docs', string='Documents'),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
             help="This field holds the image for this equipment, limited to 1024x1024px"),
