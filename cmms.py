@@ -176,7 +176,7 @@ class cmms_equipment(Normalize, osv.Model):
         'user_id': fields.many2one(
             'res.users',
             'Assigned to',
-            domain=[('groups_id','=',fields.ref('group_cmms_user'))],
+            domain=[('groups_id','=',fields.ref('cmms.group_cmms_user'))],
             ondelete='set null',
             ),
         'work_order_ids': fields.one2many('cmms.incident', 'equipment_id', 'Work Order History'),
