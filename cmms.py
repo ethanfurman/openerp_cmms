@@ -483,8 +483,9 @@ class cmms_pm(Normalize, osv.osv):
             _calc_days,
             fnct_inv=_set_calc_fields,
             method=True,
-            type="char",
-            size=12,
+            type="selection",
+            selection=(('okay','Okay'),('soon','Approaching'),('past','Overdue')),
+            sort_order='definition',
             string='Status',
             store={
                 'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done', 'days_warn_period'], 10),

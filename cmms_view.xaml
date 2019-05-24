@@ -415,7 +415,7 @@
                     @description
                     @days_last_done
                     ~group expand='0' string='Group by...'
-                        ~filter @type_year $Year context="{'group_by':'days_next_due_year'}"
+                        ~filter @type_year $Year context="{'group_by':'days_next_due_year', 'sort':'days_next_due_year'}"
                         ~filter @type_month $Month context="{'group_by':'days_next_due_month'}"
                         ~filter @type_interval $Interval context="{'group_by':'days_interval'}"
 
