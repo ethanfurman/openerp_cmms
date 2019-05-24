@@ -401,12 +401,30 @@
                     @days_warn_period
                     @days_left
                     @state
+                    @days_next_due_year invisible='1'
+                    @days_next_due_month invisible='1'
+                    @days_interval invisible='1'
+
+        ~record model=view #view_pm_search
+            @name: cmms.pm.search
+            @model: cmms.pm
+            @arch type='xml'
+                ~search $Search_Preventive_Maintenance
+                    @ref_num
+                    @equipment_id
+                    @description
+                    @days_last_done
+                    ~group expand='0' string='Group by...'
+                        ~filter @type_year $Year context="{'group_by':'days_next_due_year'}"
+                        ~filter @type_month $Month context="{'group_by':'days_next_due_month'}"
+                        ~filter @type_interval $Interval context="{'group_by':'days_interval'}"
 
         ~record model=act_window #open_view_pm_list_my
             @name: Preventive Maintenance
             @res_model: cmms.pm
             @view_type: form
             @view_mode: tree,form
+            @search_view_id ref='view_pm_search'
             @domain: []
 
         ~menuitem #menu_open_view_pm_list_my action='open_view_pm_list_my' parent='menu_cmms_main' sequence='30'

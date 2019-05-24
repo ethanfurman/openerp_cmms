@@ -344,6 +344,7 @@ class cmms_pm(Normalize, osv.osv):
     "preventive (planned) maintenance"
 
     def _calc_days(self, cr, uid, ids, field_names, arg, context):
+        "days_next_due, days_next_due_year, days_next_due_month, days_left, state"
         res = {}
         if ids:
             records = self.read(
@@ -360,6 +361,8 @@ class cmms_pm(Normalize, osv.osv):
                     last_done = datetime.datetime.fromtimestamp(time.mktime(time.strptime(last_done, "%Y-%m-%d")))
                     next_due = last_done + interval
                     res[id]['days_next_due'] = next_due.strftime("%Y-%m-%d")
+                    res[id]['days_next_due_year'] = next_due.strftime("%Y")
+                    res[id]['days_next_due_month'] = next_due.strftime("%Y-%m")
                     now = datetime.datetime.now()
                     due_days = next_due - now
                     res[id]['days_left'] = due_days.days
@@ -436,6 +439,30 @@ class cmms_pm(Normalize, osv.osv):
             method=True,
             type="date",
             string='Next service date',
+            store={
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done'], 10),
+                },
+            multi='calc',
+            ),
+        'days_next_due_year': fields.function(
+            _calc_days,
+            fnct_inv=_set_calc_fields,
+            method=True,
+            type="char",
+            size=4,
+            string='Next service year',
+            store={
+                'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done'], 10),
+                },
+            multi='calc',
+            ),
+        'days_next_due_month': fields.function(
+            _calc_days,
+            fnct_inv=_set_calc_fields,
+            method=True,
+            type="char",
+            size=7,
+            string='Next service manth',
             store={
                 'cmms.pm': (lambda table, cr, uid, ids, ctx: ids, ['days_interval', 'days_last_done'], 10),
                 },
