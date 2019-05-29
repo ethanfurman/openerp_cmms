@@ -367,11 +367,11 @@ class cmms_pm(Normalize, osv.osv):
                     due_days = next_due - now
                     res[id]['days_left'] = due_days.days
                     if due_days.days <= 0:
-                        res[id]['state'] = 'Overdue'
+                        res[id]['state'] = 'past'
                     elif due_days.days <= record['days_warn_period']:
-                        res[id]['state'] = 'Approaching'
+                        res[id]['state'] = 'soon'
                     else:
-                        res[id]['state'] = 'OK'
+                        res[id]['state'] = 'okay'
                 else:
                     _logger.error('record <%s - %s> does not have a meter of "days"', id, record['name'])
                     del res[id]
