@@ -132,6 +132,7 @@
                             ~page $Work_Orders
                                 @work_order_ids mode='tree' colspan='4' nolable='1'
                                     ~tree
+                                        @date
                                         @ref_num
                                         @priority
                                         @description
