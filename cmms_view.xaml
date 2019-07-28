@@ -52,10 +52,10 @@
                                 @last_order_date
                         ~notebook
                             ~page $Suppliers
-                                @seller_ids (
-                                    nolabel='1'
-                                    domain="{'default_search_supplier':1}"
-                                    context="{'form_view_ref':'cmms.supplierinfo_form', 'tree_view_ref':'cmms.supplierinfo_tree'}"
+                                @seller_ids
+                                 | nolabel='1'
+                                 | domain="{'default_search_supplier':1}"
+                                 | context="{'form_view_ref':'cmms.supplierinfo_form', 'tree_view_ref':'cmms.supplierinfo_tree'}"
                                     )
                             ~page $Equipment
                                 @equipment_ids
@@ -125,10 +125,9 @@
                                             @write_date
                                     @documents
                             ~page $Spare_Parts
-                                @parts_ids nolabel='1' colspan='4' (
-                                    domain="[('categ_id','child_of','Spare Parts')]"
-                                    context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree', 'search_view_ref':'cmms.equipment_parts_search'}"
-                                    )
+                                @parts_ids nolabel='1' colspan='4'
+                                 | domain="[('categ_id','child_of','Spare Parts')]"
+                                 | context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree', 'search_view_ref':'cmms.equipment_parts_search'}"
                             ~page $Work_Orders
                                 @work_order_ids mode='tree' colspan='4' nolable='1'
                                     ~tree
@@ -477,7 +476,9 @@
                             ~page $General
                                 ~group
                                     @equipment_id colspan='2'
-                                    @part_ids options="{'create':False, 'create_edit':False, 'limit':15}" attrs="{'invisible': [('equipment_id','=',False)]}" context="{'default_incident_id': active_id, 'default_equipment_id': equipment_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}"
+                                    @part_ids
+                                        | attrs="{'invisible': [('equipment_id','=',False)]}"
+                                        | context="{'default_incident_id': active_id, 'default_equipment_id': equipment_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}"
                                     @equipment_doc_ids attrs="{'invisible': [('equipment_id','=',False)]}" context="{'default_res_model': 'cmms.equipment'}"
                             ~page $History
                                 @archiving3_ids colspan='4' nolabel='1'
