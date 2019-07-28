@@ -126,6 +126,7 @@
                                     @documents
                             ~page $Spare_Parts
                                 @parts_ids nolabel='1' colspan='4'
+                                 | options="{'create': True}"
                                  | domain="[('categ_id','child_of','Spare Parts')]"
                                  | context="{'form_view_ref':'cmms.equipment_parts_form', 'tree_view_ref':'cmms.equipment_parts_tree', 'search_view_ref':'cmms.equipment_parts_search'}"
                             ~page $Work_Orders
