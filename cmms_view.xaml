@@ -571,9 +571,18 @@
             @arch type='xml'
                 ~tree $Parts_Used editable='bottom'
                     @incident_id invisible='1'
-                    @equipment_id invisible='1' options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" on_change="onchange_equipment(equipment_id, part_id, supplier_id)"
-                    @part_id options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" on_change="onchange_part(equipment_id, part_id, supplier_id)"
-                    @supplier_id options="{'create':false, 'create_edit':false, 'limit':15}" writeonly="groups('cmms.group_cmms_user')" on_change="onchange_supplier(equipment_id, part_id, supplier_id)"
+                    @equipment_id invisible='1'
+                     | options="{'create':false, 'create_edit':false, 'limit':15}"
+                     | writeonly="groups('cmms.group_cmms_user')"
+                     | on_change="onchange_equipment(equipment_id, part_id, supplier_id)"
+                    @part_id
+                     | options="{'create':false, 'create_edit':true, 'limit':15}"
+                     | writeonly="groups('cmms.group_cmms_user')"
+                     | on_change="onchange_part(equipment_id, part_id, supplier_id)"
+                    @supplier_id
+                     | options="{'create':false, 'create_edit':false, 'limit':15}"
+                     | writeonly="groups('cmms.group_cmms_user')"
+                     | on_change="onchange_supplier(equipment_id, part_id, supplier_id)"
                     @part_code readonly='1'
                     @part_name readonly='1'
                     @qty $Quantity
