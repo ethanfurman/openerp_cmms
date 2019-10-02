@@ -287,6 +287,7 @@ class cmms_cm(Normalize, osv.Model):
         'name': fields.char('Name', size=64),
         'ref_num': fields.char('CM Reference', size=20),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
+	'equipment_name': fields.related('equipment_id', 'name', string='Machine Name', type='char', size=128),
         'failure_id': fields.many2one('cmms.failure', 'Failure?', required=True),
         'date': fields.datetime('Date'),
         'note': fields.text('Notes'),
@@ -428,6 +429,7 @@ class cmms_pm(Normalize, osv.osv):
             ),
         'ref_num': fields.char('PM Reference', size=20, select=True),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
+	'equipment_name': fields.related('equipment_id', 'name', string='Machine Name', type='char', size=128),
         'description': fields.char('Description', size=64),
         'meter': fields.selection([ ('days', 'Days')], 'Unit of measure'),
         'recurrent': fields.boolean('Recurrent ?', help="Mark this option if PM is periodic"),
@@ -599,6 +601,7 @@ class cmms_incident(Normalize, osv.Model):
             ),
         'ref' : fields.reference('Source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
+	'equipment_name': fields.related('equipment_id', 'name', string='Machine Name', type='char', size=128),
         'equipment_doc_ids': fields.related(
             'equipment_id', 'doc_ids',
             obj='ir.attachment',

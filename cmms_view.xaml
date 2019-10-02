@@ -179,12 +179,13 @@
             @model: cmms.equipment
             @arch type='xml'
                 ~search $Search_Equipment
+                    @name
                     @trademark $Make
                     @model $Model
                     ~group expand='0' string='Group by...'
-                        ~filter @line_id $Line_ID context="{'group_by':'line_id'}"
-                        ~filter @make $Make context="{'group_by':'trademark'}"
-                        ~filter @model $Model context="{'group_by':'model'}"
+                        ~filter @type_line_id $Line_ID context="{'group_by':'line_id'}"
+                        ~filter @type_make $Make context="{'group_by':'trademark'}"
+                        ~filter @type_model $Model context="{'group_by':'model'}"
 
         ~record model=act_window #open_view_equipment_list
             @name: Machine
@@ -199,7 +200,7 @@
             @view_mode: tree,form
             @search_view_id ref='view_equipment_search'
             @domain: []
-            @context: {'search_default_line_id':1}
+            @context: {'search_default_type_line_id':1}
 
         ~record model=act_window #open_view_equipment_new
             @name: New Machine
@@ -231,11 +232,24 @@
                     @location
                     @sequence
 
+        ~record model=view #view_production_line_search
+            @name: cmms.line.search
+            @model: cmms.line
+            @arch type='xml'
+                ~search $Production_Lines
+                    @equipment_ids $Machine
+                    @ref_num
+                    @location
+                    ~group expand='0' string='Group by...'
+                        ~filter @type_location $Location context="{'group_by':'location'}"
+
         ~record model=act_window #open_view_line_list_my
             @name: Production Lines
             @res_model: cmms.line
             @view_type: form
             @view_mode: tree,form
+            @search_view_id ref='view_production_line_search'
+            @context: {'search_default_type_location':1}
             @domain: []
 
         ~record model=act_window #open_view_line_new
@@ -301,6 +315,20 @@
                     @equipment_id
                     @failure_id
                     @date
+
+        ~record model=view #view_cm_search
+            @name: cmms.cm.search
+            @model: cmms.cm
+            @arch type='xml'
+                ~search $Corrective_Maintenance
+                    @equipment_name
+                    @ref_num
+                    @equipment_id
+                    @failure_id
+                    ~group expand='0' string='Group by...'
+                        ~filter @type_equipment_id context="{'group_by':'equipment_id'}"
+                        ~filter @type_failure_id context="{'group_by': 'failure_id'}"
+                        ~filter @type_user_id context="{'group_by': 'user_id'}"
 
         ~record model=act_window #open_view_cm_list_my
             @name: Corrective Maintenance
@@ -411,10 +439,11 @@
             @model: cmms.pm
             @arch type='xml'
                 ~search $Search_Preventive_Maintenance
+                    @equipment_name
                     @ref_num
-                    @equipment_id
                     @description
                     @days_last_done
+                    @equipment_id
                     ~group expand='0' string='Group by...'
                         ~filter @type_year $Year context="{'group_by':'days_next_due_year', 'sort':'days_next_due_year'}"
                         ~filter @type_month $Month context="{'group_by':'days_next_due_month'}"
@@ -503,10 +532,11 @@
             @model: cmms.incident
             @arch type='xml'
                 ~search $Search_Work_Orders
+                    @equipment_name $Machine
                     @ref_num $Reference
                     @state $Status
-                    @user_id $Assigned_To
                     @equipment_id $Machine
+                    @user_id $Assigned_To
                     ~separator
                     ~filter $Mine @type_owner domain="[('user_id','=',uid)]" help="Work orders assigned to me"
                     ~filter $Unassigned @type_unassigned domain="[('user_id','=',False)]"
