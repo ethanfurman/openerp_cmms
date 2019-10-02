@@ -744,7 +744,7 @@ class cmms_archiving3(Normalize, osv.Model):
         'date': fields.datetime('Date'),
         'description': fields.text('Description'),
         'incident_id': fields.many2one('cmms.incident', 'Incident',required=True, ondelete='cascade'),
-        'user_id': fields.many2one('res.users', 'Assigned to', readonly=True),
+        'user_id': fields.many2one('res.users', 'Assigned to'),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
