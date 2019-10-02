@@ -55,6 +55,7 @@ With this module you can track all equipment types.
         'security/cmms_security.xaml',
         'security/ir.model.access.csv',
         'cmms_view.xaml',
+	'cmms_data.xaml',
         # 'view/equipment_view.xml',
         # 'view/cm_view.xml',
         # 'view/pm_view.xml',
