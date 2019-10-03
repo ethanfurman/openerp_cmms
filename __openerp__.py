@@ -47,23 +47,13 @@ With this module you can track all equipment types.
         'fnx_fs',
         'product',
         ],
-    "init_xml": [
-        "data/cmms_work_order_source.xaml"
-    ],
-    'update_xml': [
-        'data/cmms_sequence.xaml',
+    'data': [
         'security/cmms_security.xaml',
         'security/ir.model.access.csv',
         'cmms_view.xaml',
-	'cmms_data.xaml',
-        # 'view/equipment_view.xml',
-        # 'view/cm_view.xml',
-        # 'view/pm_view.xml',
-        # 'view/checklist_view.xml',
-        # 'view/incident_view.xml',
-        # 'view/cmms_view.xml',
-        # 'view/intervention_view.xml',
-    ],
+        'cmms_work_order_source.xaml',
+        'cmms_sequence.xaml',
+        ],
     'demo_xml': [],
     'installable': True,
     'active': False,

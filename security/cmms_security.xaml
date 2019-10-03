@@ -39,3 +39,7 @@
             @args eval="'()'"
             @nextcall eval="'2015-09-22 00:00:01'"
             @priority: 100
+
+        ~record model='product.category' #cmms_category_spare_parts
+            @name: Spare Parts
+            @type: normal

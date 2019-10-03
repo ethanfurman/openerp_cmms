@@ -561,6 +561,7 @@
             @view_type: form
             @context: {'search_default_type_owner':1}
             @view_id ref='cmms_incident_tree-view'
+            @search_view_id ref='search_incident_filter'
 
         ~menuitem #menu_cmms_incident_act action='cmms_incident_act' parent='menu_cmms_main' sequence='50'
 
