@@ -508,7 +508,6 @@
                                     @part_ids
                                         | attrs="{'invisible': [('equipment_id','=',False)]}"
                                         | context="{'default_incident_id': active_id, 'default_equipment_id': equipment_id, 'tree_view_ref': 'cmms.parts_used_tree_view'}"
-                                    @equipment_doc_ids attrs="{'invisible': [('equipment_id','=',False)]}" context="{'default_res_model': 'cmms.equipment'}" options="{'create': True}"
                             ~page $History
                                 @archiving3_ids colspan='4' nolabel='1'
                                     ~form $Follow-up_History

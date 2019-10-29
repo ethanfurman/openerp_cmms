@@ -602,13 +602,6 @@ class cmms_incident(Normalize, osv.Model):
         'ref' : fields.reference('Source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
         'equipment_name': fields.related('equipment_id', 'name', string='Machine Name', type='char', size=128),
-        'equipment_doc_ids': fields.related(
-            'equipment_id', 'doc_ids',
-            obj='ir.attachment',
-            rel='ir_attachment_cmms_equipment_rel', id1='equipment_id', id2='attachment_id',
-            type='many2many',
-            string='Attached Documents',
-            ),
         'archiving3_ids': fields.one2many('cmms.archiving3', 'incident_id', 'follow-up history', ondelete='cascade'),
         'time': fields.float('Duration (in hours)'),
         'release_no': fields.char('Release Number', size=32),
