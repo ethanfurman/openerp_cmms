@@ -117,7 +117,7 @@
                                     ~label for='safety' colspan='4' $Safety_Notes
                                     @safety colspan='4' nolabel='1'
                                     ~label for='doc_ids' colspan='4' $Documents
-                                    @doc_ids colspan='4' nolabel='1' options="{'create': True}"
+                                    @doc_ids $Attachments colspan='4' nolabel='1' options="{'create': True}"
                                         ~tree
                                             @name
                                             @description
@@ -150,13 +150,15 @@
                                         @failure_id
                                         @date
                                         @user_id
-                            ~page $Help_Requests
-                                @help_request_ids mode='tree' colspan='4' nolabel='1'
-                                    @ref_num
-                                    @priority
-                                    @description
-                                    @type
-                                    @time
+                            // ~page $Help_Requests
+                            //     @help_request_ids mode='tree' colspan='4' nolabel='1'
+                            //         @ref_num
+                            //         @priority
+                            //         @description
+                            //         @type
+                            //         @time
+                            ~page string="Nitrogen & Compressed Air Info"
+                                @fnxfs_nitro_air_files
                             ~page $SOPs_and_Manuals
                                 @fnxfs_sop_files
 

@@ -213,6 +213,7 @@ class cmms_equipment(Normalize, osv.Model):
         'has_image': fields.function(_has_image, type="boolean"),
         # fnxfs fields
         'fnxfs_sop_files': files('sop_manual', string='SOPs & Manuals'),
+        'fnxfs_nitro_air_files': files('nitro_air', string='Nitrogen and Compressed Air Information'),
         }
 
     _defaults = {
