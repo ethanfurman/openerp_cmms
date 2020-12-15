@@ -481,6 +481,7 @@
             @name: cmms.incident.form
             @model: cmms.incident
             @arch type='xml'
+                ~header @scan_queue
                 ~form $Incident version='7.0'
                     ~sheet $Incident
                         ~group colspan='4' col='6'
