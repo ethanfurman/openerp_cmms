@@ -636,7 +636,7 @@ class cmms_incident(Normalize, osv.Model):
         "default leaf folder name is the record's reference number"
         res = {}
         for record in records:
-            res[record['id']] = record['ref_num']
+            res[record['id']] = record['ref_num'].replace('Work Order','wo')
         return res
     
     def copy(self, cr, uid, id, default=None, context=None):
@@ -695,18 +695,19 @@ class cmms_incident(Normalize, osv.Model):
         user = self.pool.get('res.users').browse(cr, uid, uid)
         for id in ids:
             # only one id, this only loops once
-            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S%f')
+            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S%f')
             perms, [root, trunk, branch, leaf] = self.fnxfs_field_info(cr, uid, id, 'fnxfs_workorder_scans')
             work_order = self.browse(cr, uid, id)
+            wo_name = work_order.ref_num.replace('Work Order', 'wo')
             context['login'] = user.login
-            context['destination_file'] = '%s_%s' % (work_order.ref_num, timestamp)
+            context['destination_file'] = '%s_%s' % (wo_name, timestamp)
             context['destination_folder'] = os.path.join(root, trunk, branch, leaf)
             context['cmms_work_order'] = work_order.ref_num
-            filename = '%s_%s' % (timestamp, work_order.ref_num)
-            with open(os.path.join([SCAN_TICKET_PATH, filename]), 'w') as fh:
+            filename = '%s_%s' % (timestamp, wo_name)
+            with open(os.path.join(SCAN_TICKET_PATH, filename), 'w') as fh:
                 fh.write('{\n')
                 for key, value in context.items():
-                    fh.write('%r: %r,\n' % (key, value))
+                    fh.write('"%s": "%s",\n' % (key, value))
                 fh.write('}\n')
 
 
