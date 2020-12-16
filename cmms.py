@@ -566,8 +566,11 @@ class cmms_incident(Normalize, osv.Model):
     "work order"
     _name = "cmms.incident"
     _description = "Incident"
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'fnx_fs.fs']
     _order = 'date desc'
+
+    _fnxfs_path = 'cmms'
+    _fnxfs_path_fields = ['ref_num']
 
     def _days_due(self, cr, uid, ids, prop, unknown_none, context):
         if isinstance(ids, (int, long)):
@@ -615,6 +618,7 @@ class cmms_incident(Normalize, osv.Model):
             string='Spare Parts',
             ),
         'scan_queue': fields.boolean("Update with scans"),
+        'fnxfs_workorder_scans': files('wo_scans', string="Scanned Work Orders"),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -628,6 +632,13 @@ class cmms_incident(Normalize, osv.Model):
         (lambda s, *a: s.check_unique('ref_num', *a), '\nWork Order reference already exists', ['ref_num']),
         ]
 
+    def fnxfs_folder_name(self, records):
+        "default leaf folder name is the record's reference number"
+        res = {}
+        for record in records:
+            res[record['id']] = record['ref_num']
+        return res
+    
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
@@ -685,9 +696,11 @@ class cmms_incident(Normalize, osv.Model):
         for id in ids:
             # only one id, this only loops once
             timestamp = datetime.now().strftime('%Y%m%d_%H%M%S%f')
+            perms, [root, trunk, branch, leaf] = self.fnxfs_field_info(cr, uid, id, 'fnxfs_workorder_scans')
             work_order = self.browse(cr, uid, id)
             context['login'] = user.login
-            context['filename'] = '%s_%s' % (work_order.ref_num, timestamp)
+            context['destination_file'] = '%s_%s' % (work_order.ref_num, timestamp)
+            context['destination_folder'] = os.path.join(root, trunk, branch, leaf)
             context['cmms_work_order'] = work_order.ref_num
             filename = '%s_%s' % (timestamp, work_order.ref_num)
             with open(os.path.join([SCAN_TICKET_PATH, filename]), 'w') as fh:
