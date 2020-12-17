@@ -482,9 +482,6 @@
             @model: cmms.incident
             @arch type='xml'
                 ~form $Incident version='7.0'
-                    ~header
-                        @scan_queue .oe_edit_only
-                        ~label for='scan_queue' string='Update with scans' .oe_edit_only
                     ~sheet $Incident
                         ~group colspan='4' col='6'
                             ~group colspan='4' col='2'

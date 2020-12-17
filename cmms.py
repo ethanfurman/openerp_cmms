@@ -30,7 +30,6 @@ from openerp.exceptions import ERPError
 from osv import fields, osv
 import datetime
 import logging
-import os
 import time
 import tools
 
@@ -66,8 +65,6 @@ WO_PRIORITIES = [
     ('2','Low'),
     ('1','High'),
     ]
-
-SCAN_TICKET_PATH = "/home/openerp/sandbox/var/scans"
 
 # Production Line
 #
@@ -617,8 +614,6 @@ class cmms_incident(Normalize, osv.Model):
             'incident_id',
             string='Spare Parts',
             ),
-        'scan_queue': fields.boolean("Update with scans"),
-        'fnxfs_workorder_scans': files('wo_scans', string="Scanned Work Orders"),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -646,17 +641,12 @@ class cmms_incident(Normalize, osv.Model):
         return super(cmms_incident, self).copy(cr, uid, id, default=default, context=context)
 
     def create(self, cr, user, vals, context=None):
-        queue_scans = False
-        if 'scan_queue' in vals:
-            queue_scans = vals.pop('scan_queue')
         if 'ref_num' not in vals or not vals['ref_num']:
             vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.incident', context=context)
         vals['name'] = "%s - %s" % (vals['ref_num'], vals['description'])
         wo_id = super(cmms_incident, self).create(cr, user, vals, context)
         partner_ids = [id for id in set([user, vals['user_id']]) if id]
         self.message_subscribe_users(cr, user, [wo_id], partner_ids, context=context)
-        if queue_scans:
-            self.write_scan_ticket(cr, user, wo_id, context)
         return wo_id
 
     def onchange_ref_id(self, cr, uid, ids, ref_id, context=None):
@@ -668,48 +658,9 @@ class cmms_incident(Normalize, osv.Model):
         return {'value':{'equipment_id': record.equipment_id.id}}
 
     def write(self, cr, uid, ids, vals, context=None):
-        queue_scans = False
-        if 'scan_queue' in vals:
-            queue_scans = vals.pop('scan_queue')
-            if queue_scans and isinstance(ids, (list, tuple)) and len(ids) > 1:
-                raise ERPError(
-                        'Invalid Option',
-                        'cannot select "Update with scans" when editing multiple work orders',
-                        )
         if vals.get('user_id') and vals['user_id']:
             self.message_subscribe_users(cr, uid, ids, [vals['user_id']], context=context)
-        result = super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
-        if queue_scans:
-            self.write_scan_ticket(cr, uid, ids, context)
-        return result
-
-    def write_scan_ticket(self, cr, uid, ids, context):
-        context = (context or {}).copy()
-        if isinstance(ids, (int, long)):
-            ids = [ids]
-        if len(ids) > 1:
-            raise ERPError(
-                    'Invalid Option',
-                    'cannot select "Update with scans" when editing multiple work orders',
-                    )
-        user = self.pool.get('res.users').browse(cr, uid, uid)
-        for id in ids:
-            # only one id, this only loops once
-            timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S%f')
-            perms, [root, trunk, branch, leaf] = self.fnxfs_field_info(cr, uid, id, 'fnxfs_workorder_scans')
-            work_order = self.browse(cr, uid, id)
-            wo_name = work_order.ref_num.replace('Work Order', 'wo')
-            context['login'] = user.login
-            context['destination_file'] = '%s_%s' % (wo_name, timestamp)
-            context['destination_folder'] = os.path.join(root, trunk, branch, leaf)
-            context['cmms_work_order'] = work_order.ref_num
-            filename = '%s_%s' % (timestamp, wo_name)
-            with open(os.path.join(SCAN_TICKET_PATH, filename), 'w') as fh:
-                fh.write('{\n')
-                for key, value in context.items():
-                    fh.write('"%s": "%s",\n' % (key, value))
-                fh.write('}\n')
-
+        return super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
 
 # parts_used
 class cmms_parts_used(osv.Model):
@@ -994,10 +945,3 @@ class product_product(osv.Model):
         return super(product_product, self).create(cr, uid, values, context=context)
 
 
-try:
-    if not os.path.exists(SCAN_TICKET_PATH):
-        _logger.error('SCAN_TICKET_PATH %r does not exist', SCAN_TICKET_PATH)
-        _logger.info('creating SCAN_TICKET_PATH %r', SCAN_TICKET_PATH)
-        os.makedirs(SCAN_TICKET_PATH)
-except Exception:
-    _logger.exception('unable to create %r', SCAN_TICKET_PATH)
