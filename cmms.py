@@ -563,7 +563,7 @@ class cmms_incident(Normalize, osv.Model):
     "work order"
     _name = "cmms.incident"
     _description = "Incident"
-    _inherit = ['mail.thread', 'fnx_fs.fs']
+    _inherit = ['mail.thread', 'fnx_fs.fs', 'fnx_fs.scan']
     _order = 'date desc'
 
     _fnxfs_path = 'cmms'

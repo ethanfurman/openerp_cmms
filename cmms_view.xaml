@@ -482,6 +482,9 @@
             @model: cmms.incident
             @arch type='xml'
                 ~form $Incident version='7.0'
+                    ~header
+                        @queue_scan .oe_edit_only
+                        ~label for='queue_scan' string='Update with scans' .oe_edit_only
                     ~sheet $Incident
                         ~group colspan='4' col='6'
                             ~group colspan='4' col='2'
@@ -523,6 +526,8 @@
                                         @user_id
                                         @date
                                         @description
+                            ~page $Scans
+                                @fnxfs_scans
                     ~div .oe_chatter
                         @message_follower_ids widget='mail_followers' help='Follow this work order to automatically track associated events.' groups='base.group_user'
                         @message_ids widget='mail_thread'
