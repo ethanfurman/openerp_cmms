@@ -631,7 +631,7 @@ class cmms_incident(Normalize, osv.Model):
         "default leaf folder name is the record's reference number"
         res = {}
         for record in records:
-            res[record['id']] = record['ref_num'].replace('Work Order','wo')
+            res[record['id']] = record['ref_num'].replace('Work Order','wo').replace(' ','_')
         return res
     
     def copy(self, cr, uid, id, default=None, context=None):
