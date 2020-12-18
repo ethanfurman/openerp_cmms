@@ -161,6 +161,10 @@
                                 @fnxfs_nitro_air_files
                             ~page $SOPs_and_Manuals
                                 @fnxfs_sop_files
+                            ~page $Scans
+                                @fnxfs_scans
+                            ~page $Admin
+                                @fnxfs_storage
 
         ~record model=view #view_equipment_tree
             @name: cmms.equipment.tree
@@ -303,6 +307,10 @@
                                     @name
                                     @date
                                     @description
+                        ~page $Scans
+                            @fnxfs_scans
+                        ~page $Admin
+                            @fnxfs_storage
                     ~separator $Notes colspan='4'
                     ~field colspan='4' nolabel='1' @note
 
@@ -416,8 +424,12 @@
                             ~div .fnxfs_files
                                 ~newline
                                 @fnxfs_related_files colspan='4' nolabel='1'
-                        ~Page $Notes colspan='4'
+                        ~page $Notes colspan='4'
                             @note colspan='4' nolabel='1'
+                        ~page $Scans
+                            @fnxfs_scans
+                        ~page $Admin
+                            @fnxfs_storage
 
         ~record model=view #view_pm_tree
             @name: cmms.pm.tree

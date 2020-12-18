@@ -112,10 +112,11 @@ class cmms_equipment(Normalize, osv.Model):
     "equipment"
     _name = "cmms.equipment"
     _description = "equipment"
-    _inherit = 'fnx_fs.fs'
+    _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
     _order = 'name asc'
 
     _fnxfs_path = 'cmms'
+    _fnxfs_path_fields = ['inv_tag']
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
@@ -243,6 +244,13 @@ class cmms_equipment(Normalize, osv.Model):
             vals['name'] = vals['inv_tag']
         return super(cmms_equipment, self).create(cr, user, vals, context)
 
+    def fnxfs_folder_name(self, records):
+        "default leaf folder name is the record's reference number"
+        res = {}
+        for record in records:
+            res[record['id']] = record['inv_tag'].replace(' ','_')
+        return res
+
 
 # Corrective Maintenance / Failures / Breakdowns
 #
@@ -284,6 +292,11 @@ class cmms_cm(Normalize, osv.Model):
 
     _name = "cmms.cm"
     _description = "Corrective Maintenance System"
+    _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
+
+    _fnxfs_path = ['cmms']
+    _fnxfs_path_fields = ['ref_num']
+
     _columns = {
         'name': fields.char('Name', size=64),
         'ref_num': fields.char('CM Reference', size=20),
@@ -324,6 +337,13 @@ class cmms_cm(Normalize, osv.Model):
         default['ref_num'] = False
         return super(cmms_cm, self).copy(cr, uid, id, default=default, context=context)
 
+    def fnxfs_folder_name(self, records):
+        "default leaf folder name is the record's reference number"
+        res = {}
+        for record in records:
+            res[record['id']] = record['ref_num'].replace(' ','_')
+        return res
+    
 
 class cmms_archiving(Normalize, osv.Model):
     "corrective maintenance archive"
@@ -410,7 +430,7 @@ class cmms_pm(Normalize, osv.osv):
 
     _name = "cmms.pm"
     _description = "Preventive Maintenance System"
-    _inherit = ['fnx_fs.fs']
+    _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
     _order = 'days_left asc, name asc'
 
     _fnxfs_path = 'cmms'
