@@ -294,7 +294,7 @@ class cmms_cm(Normalize, osv.Model):
     _description = "Corrective Maintenance System"
     _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
 
-    _fnxfs_path = ['cmms']
+    _fnxfs_path = 'cmms'
     _fnxfs_path_fields = ['ref_num']
 
     _columns = {
@@ -434,7 +434,7 @@ class cmms_pm(Normalize, osv.osv):
     _order = 'days_left asc, name asc'
 
     _fnxfs_path = 'cmms'
-    _fnxfs_path_fields = ['name']
+    _fnxfs_path_fields = ['ref_num']
 
     _columns = {
         'name': fields.function(
@@ -546,6 +546,13 @@ class cmms_pm(Normalize, osv.osv):
             vals['ref_num'] = self.pool.get('ir.sequence').next_by_code(cr, user, 'cmms.pm', context=context)
         return super(cmms_pm, self).create(cr, user, vals, context)
 
+    def fnxfs_folder_name(self, records):
+        "default leaf folder name is the record's reference number"
+        res = {}
+        for record in records:
+            res[record['id']] = record['ref_num'].replace(' ','_')
+        return res
+    
 
 class cmms_archiving2(Normalize, osv.Model):
     "preventative maintenance archive"
