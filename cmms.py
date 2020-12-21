@@ -112,7 +112,7 @@ class cmms_equipment(Normalize, osv.Model):
     "equipment"
     _name = "cmms.equipment"
     _description = "equipment"
-    _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
+    _inherit = ['fnx_fs.fs', ]
     _order = 'name asc'
 
     _fnxfs_path = 'cmms'
@@ -215,6 +215,7 @@ class cmms_equipment(Normalize, osv.Model):
         # fnxfs fields
         'fnxfs_sop_files': files('sop_manual', string='SOPs & Manuals'),
         'fnxfs_nitro_air_files': files('nitro_air', string='Nitrogen and Compressed Air Information'),
+        'fnxfs_scans': files('equipment_scans', string='Scanned Documents'),
         }
 
     _defaults = {
@@ -292,7 +293,7 @@ class cmms_cm(Normalize, osv.Model):
 
     _name = "cmms.cm"
     _description = "Corrective Maintenance System"
-    _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
+    _inherit = ['fnx_fs.fs', ]
 
     _fnxfs_path = 'cmms'
     _fnxfs_path_fields = ['ref_num']
@@ -308,6 +309,7 @@ class cmms_cm(Normalize, osv.Model):
         'user_id': fields.many2one('res.users', 'Responsible', domain=[('groups_id','=',fields.ref('cmms.group_cmms_staff'))]),
         'diagnosistab_ids': fields.one2many('cmms.diagnosistab', 'cm_id', 'Diagnostic Table'),
         'archiving_ids': fields.one2many('cmms.archiving', 'cm_id', 'Follow-up History'),
+        'fnxfs_scans': files('cm_scans', string='Scanned Documents'),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),
@@ -430,7 +432,7 @@ class cmms_pm(Normalize, osv.osv):
 
     _name = "cmms.pm"
     _description = "Preventive Maintenance System"
-    _inherit = ['fnx_fs.fs', 'fnx_fs.scan']
+    _inherit = ['fnx_fs.fs', ]
     _order = 'days_left asc, name asc'
 
     _fnxfs_path = 'cmms'
@@ -518,6 +520,7 @@ class cmms_pm(Normalize, osv.osv):
         'archiving2_ids': fields.one2many('cmms.archiving2', 'pm_id', 'follow-up history'),
         'note': fields.text('Notes'),
         'fnxfs_related_files': files('preventive_maintenance', string='Related Files'),
+        'fnxfs_scans': files('pm_scans', string='Scanned Documents'),
         }
 
     _defaults = {
@@ -590,7 +593,7 @@ class cmms_incident(Normalize, osv.Model):
     "work order"
     _name = "cmms.incident"
     _description = "Incident"
-    _inherit = ['mail.thread', 'fnx_fs.fs', 'fnx_fs.scan']
+    _inherit = ['mail.thread', 'fnx_fs.fs', ]
     _order = 'date desc'
 
     _fnxfs_path = 'cmms'
@@ -641,6 +644,7 @@ class cmms_incident(Normalize, osv.Model):
             'incident_id',
             string='Spare Parts',
             ),
+        'fnxfs_scans': files('wo_scans', string='Scanned Documents'),
         }
     _defaults = {
         'date': lambda *a: time.strftime('%Y-%m-%d %H:%M:%S'),

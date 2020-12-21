@@ -310,7 +310,7 @@
                         ~page $Scans
                             @fnxfs_scans
                         ~page $Admin
-                            @fnxfs_storage
+                            @fnxfs_storage nolabel='1'
                     ~separator $Notes colspan='4'
                     ~field colspan='4' nolabel='1' @note
 
@@ -541,7 +541,7 @@
                             ~page $Scans
                                 @fnxfs_scans
                             ~page $Admin
-                                @fnxfs_storage
+                                @fnxfs_storage nolabel='1'
                     ~div .oe_chatter
                         @message_follower_ids widget='mail_followers' help='Follow this work order to automatically track associated events.' groups='base.group_user'
                         @message_ids widget='mail_thread'
