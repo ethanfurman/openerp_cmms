@@ -697,6 +697,7 @@ class cmms_incident(Normalize, osv.Model):
 class cmms_parts_used(osv.Model):
     _name = 'cmms.parts_used'
     _description = 'parts used in work orders'
+    _rec_name = 'part_name'
 
     _columns = {
         'incident_id': fields.many2one('cmms.incident', 'Work Order'),
@@ -708,7 +709,7 @@ class cmms_parts_used(osv.Model):
                 ),
         'part_id': fields.many2one('product.product', 'Part', domain=[('categ_id','child_of',fields.ref('cmms.cmms_category_spare_parts'))]),
         'supplier_id': fields.many2one('product.supplierinfo', string='Supplier'),
-        'part_name': fields.related('supplier_id', 'product_name', string='Sup part name', type='char', size=128),
+        'part_name': fields.related('supplier_id', 'product_name', string='Sup part name', type='char', size=128, store=True),
         'part_code': fields.related('supplier_id', 'product_code', string='Sup part code', type='char', size=64),
         'qty': fields.integer('Amount'),
         }
