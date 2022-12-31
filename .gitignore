@@ -6,3 +6,4 @@
 *.xsl
 .hg/
 .hgignore
+.migrate
