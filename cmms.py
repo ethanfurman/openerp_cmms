@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-################################################################################
 #
 # Computerized maintenance management system (CMMS) module,
 # Copyright (C)
@@ -19,8 +18,6 @@
 # You should have received a copy of the Affero GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
-################################################################################
-
 
 from fnx.oe import Normalize
 from dbf import Date
@@ -32,6 +29,8 @@ import datetime
 import logging
 import time
 import tools
+
+## globals
 
 _logger = logging.getLogger(__name__)
 
@@ -66,8 +65,8 @@ WO_PRIORITIES = [
     ('1','High'),
     ]
 
-# Production Line
-#
+
+## tables
 class cmms_line(Normalize, osv.Model):
     "production line"
     _name = 'cmms.line'
@@ -106,8 +105,6 @@ class cmms_line(Normalize, osv.Model):
         return super(cmms_line, self).copy(cr, uid, id, default=default, context=context)
 
 
-# Equipment
-#
 class cmms_equipment(Normalize, osv.Model):
     "equipment"
     _name = "cmms.equipment"
@@ -253,8 +250,6 @@ class cmms_equipment(Normalize, osv.Model):
         return res
 
 
-# Corrective Maintenance / Failures / Breakdowns
-#
 class cmms_failure(Normalize, osv.Model):
     "failure cause"
     _name = "cmms.failure"
@@ -362,8 +357,6 @@ class cmms_archiving(Normalize, osv.Model):
         }
 
 
-# Preventive Maintenance / Scheduled Downtime
-#
 class cmms_pm(Normalize, osv.osv):
     "preventive (planned) maintenance"
 
@@ -573,8 +566,6 @@ class cmms_archiving2(Normalize, osv.Model):
         }
 
 
-# Work Orders
-#
 class cmms_request_link(Normalize, osv.Model):
     "work order request"
     _name = 'cmms.request.link'
@@ -693,7 +684,6 @@ class cmms_incident(Normalize, osv.Model):
             self.message_subscribe_users(cr, uid, ids, [vals['user_id']], context=context)
         return super(cmms_incident, self).write(cr, uid, ids, vals, context=context)
 
-# parts_used
 class cmms_parts_used(osv.Model):
     _name = 'cmms.parts_used'
     _description = 'parts used in work orders'
@@ -787,8 +777,6 @@ class cmms_archiving3(Normalize, osv.Model):
         }
 
 
-# Help Requests
-#
 class cmms_intervention(Normalize, osv.Model):
     "help request"
     _name = "cmms.intervention"
@@ -844,7 +832,6 @@ class cmms_intervention(Normalize, osv.Model):
         return super(cmms_intervention, self).create(cr, user, vals, context)
 
 
-# Checklists
 class cmms_checklist(Normalize, osv.Model):
     "checklist"
     _name="cmms.checklist"
@@ -935,7 +922,6 @@ class cmms_question_history(Normalize, osv.Model):
 #     _columns = {
 #         'user_id': fields.many2one('res.users', 'User'),
 
-# product.product enhancements
 class product_product(osv.Model):
     _name = 'product.product'
     _inherit = 'product.product'
