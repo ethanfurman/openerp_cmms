@@ -481,13 +481,14 @@
             @arch type='xml'
                 ~tree $Incident colors="black:state=='done';blue:days_left>0;red:days_left<=0 and state!='done';"
                     @ref_num
-                    @date_due
                     @equipment_id
                     @description
                     @user_id
                     @state
                     @priority
-                    @days_left $Days_Remaining
+                    @date
+                    @date_complete
+                    @days_left invisible='1'
 
         ~record model=view #cmms_incident-view
             @name: cmms.incident.form
@@ -506,10 +507,14 @@
                                 @user_id options="{'create':False, 'create_edit':False, 'limit':15}"
                                 @third_party
                             ~group colspan='2' col='2'
-                                @state
+                                @state on_change='onchange_state(state, date_complete)'
                                 @date $Date_Created
                                 @date_due $Deadline
-                                @days_left attrs="{'invisible':[('state','=','done')]}"
+                                @date_complete $Date_Completed attrs="{'readonly': [('state','!=','done')]}"
+                                ~label for='days_left'
+                                ~div attrs="{'invisible':[('state','=','done')]}"
+                                    @days_left .oe_inline
+                                    ~span .oe_inline: days
                             ~group colspan='6' col='6'
                                 @time widget='float_time'
                                 ~separator colspan='4'

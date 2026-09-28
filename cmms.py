@@ -616,13 +616,14 @@ class cmms_incident(Normalize, osv.Model):
         'priority': fields.selection(WO_PRIORITIES, 'Priority'),
         'user_id': fields.many2one('res.users', 'Assigned to', domain=[('groups_id','=',fields.ref('cmms.group_cmms_staff'))]),
         'third_party': fields.char('Outside Service', size=128),
-        'date': fields.datetime('Date'),
+        'date': fields.datetime('Create Date'),
         'date_due': fields.date('Due Date', help='Date when servicing must be finished'),
+        'date_complete': fields.date('Complete Date'),
         'days_left': fields.function(
             _days_due,
             method=True,
             type="integer",
-            string='Deadline',
+            string='Time remaining',
             ),
         'ref' : fields.reference('Source', selection=_links_get, size=128),
         'equipment_id': fields.many2one('cmms.equipment', 'Machine', required=True),
@@ -678,6 +679,12 @@ class cmms_incident(Normalize, osv.Model):
         ref_id = int(ref_id)
         record = self.pool.get(table).browse(cr, uid, [ref_id], context=context)[0]
         return {'value':{'equipment_id': record.equipment_id.id}}
+
+    def onchange_state(self, cr, uid, ids, state, date_complete, context=None):
+        if state != 'done':
+            return {'value': {'date_complete': False}}
+        else:
+            return {'value': {'date_complete': fields.date.context_today(self, cr, uid, context=context)}}
 
     def write(self, cr, uid, ids, vals, context=None):
         if vals.get('user_id') and vals['user_id']:
