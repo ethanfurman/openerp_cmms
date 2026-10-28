@@ -159,6 +159,8 @@ class cmms_equipment(Normalize, osv.Model):
         'serial': fields.char('Serial Number', size=64),
         'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
         'startingdate': fields.datetime("Start Date"),
+        'endingdate': fields.datetime('Retired Date'),
+        'ending_reason': fields.text('Retired Reason'),
         'parts_ids': fields.many2many(
             'product.product',
             'product_equipment_rel',

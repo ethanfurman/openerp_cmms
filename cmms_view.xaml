@@ -89,6 +89,7 @@
             @model: cmms.equipment
             @arch type='xml'
                 ~form $Equipment version='7.0'
+                    @id invisible='1'
                     ~sheet
                         @image_medium class='oe_avatar oe_left' widget='image'
                         ~div .oe_title context="{'spare_parts_required':True}"
@@ -109,8 +110,10 @@
                                 ~group
                                     ~group
                                         @startingdate
-                                        ~separator colspan='2'
                                         @deadlinegar
+                                        @endingdate
+                                    ~group
+                                        @ending_reason
                                 ~group
                                     ~label for='description' colspan='4' $Description
                                     @description colspan='4' nolabel='1'
