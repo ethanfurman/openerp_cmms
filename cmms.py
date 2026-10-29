@@ -157,7 +157,7 @@ class cmms_equipment(Normalize, osv.Model):
         'trademark': fields.char('Make', size=64),
         'model': fields.char('Model', size=64),
         'serial': fields.char('Serial Number', size=64),
-        'line_id': fields.many2one('cmms.line','Production Line', required=True, change_default=True),
+        'line_id': fields.many2one('cmms.line','Production Line', required=False, change_default=True),
         'startingdate': fields.datetime("Start Date"),
         'endingdate': fields.datetime('Retired Date'),
         'ending_reason': fields.text('Retired Reason'),
