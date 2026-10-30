@@ -105,6 +105,16 @@ class cmms_line(Normalize, osv.Model):
         return super(cmms_line, self).copy(cr, uid, id, default=default, context=context)
 
 
+class cmms_category(Normalize, osv.Model):
+    "equipment category"
+    _name = 'cmms.equipment.category'
+    _description = 'equipment category'
+
+    _columns = {
+        'name': fields.char('Name', size=32),
+        'machine_ids': fields.one2many('cmms.equipment', 'category_id', string='Equipment'),
+        }
+
 class cmms_equipment(Normalize, osv.Model):
     "equipment"
     _name = "cmms.equipment"
@@ -153,6 +163,7 @@ class cmms_equipment(Normalize, osv.Model):
 
     _columns = {
         'name': fields.char('Machine', size=64, required=True),
+        'category_id': fields.many2one('cmms.equipment.category', string='Category'),
         'inv_tag': fields.char('Inventory ID', size=64),
         'trademark': fields.char('Make', size=64),
         'model': fields.char('Model', size=64),

@@ -100,6 +100,7 @@
                         ~group
                             ~group
                                 @inv_tag placeholder='unique id will be generated if blank'
+                                @category_id
                                 @line_id
                             ~group
                                 @trademark
@@ -216,6 +217,34 @@
             @view_type: form
             @view_mode: form,tree
 
+
+        // Equipment Category
+
+        ~record model=view #view_equipment_category_form
+            @name: cmms.equipment.category.form
+            @model: cmms.equipment.category
+            @arch type='xml'
+                ~form $Category version='7.0'
+                    ~group
+                        @name
+                    ~group
+                        @machine_ids widget='many2many' options="{'create':false, 'create_edit':false}"
+
+        ~record model=view #view_equipment_category_tree
+            @name: cmms.equipment.category.tree
+            @model: cmms.equipment.category
+            @field_parent:child_id
+            @arch type='xml'
+                ~tree $Category
+                    @name
+
+        ~record model=act_window #open_view_equipment_category_list
+            @name: Category
+            @res_model: cmms.equipment.category
+            @view_type: form
+            @view_mode: tree,form
+
+
         // Product Line
 
         ~record model=view #view_line_form
@@ -275,6 +304,8 @@
         ~menuitem #menu_open_view_line_list_my parent='menu_cmms_main' action='open_view_line_list_my' sequence='10'
 
         ~menuitem #menu_open_view_equipment_list_my parent='menu_cmms_main' action='open_view_equipment_list_my' sequence='20'
+
+        ~menuitem #menu_open_view_equipment_category_list parent='menu_cmms_main' action='open_view_equipment_category_list' sequence='23'
 
         // Corrective Maintenance (aka breakdowns)
 

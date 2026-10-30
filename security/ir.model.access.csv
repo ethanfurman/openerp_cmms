@@ -12,6 +12,7 @@
 "access_cmms_failure","cmms.failure","model_cmms_failure","cmms.group_cmms_user",1,1,1,1
 "access_cmms_equipment_user","cmms.equipment","model_cmms_equipment","cmms.group_cmms_user",1,1,0,0
 "access_cmms_equipment_manager","cmms.equipment","model_cmms_equipment","cmms.group_cmms_manager",1,1,1,1
+"access_cmms_category","cmms.equipment.category","model_cmms_equipment_category","cmms.group_cmms_user",1,1,1,1
 "access_cmms_request_link","cmms.request.link","model_cmms_request_link","cmms.group_cmms_user",1,1,1,1
 "access_cmms_diagnosistab","cmms.diagnosistab","model_cmms_diagnosistab","cmms.group_cmms_user",1,1,1,1
 "access_cmms_archiving","cmms.archiving","model_cmms_archiving","cmms.group_cmms_user",1,1,1,1
