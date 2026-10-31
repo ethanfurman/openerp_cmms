@@ -101,7 +101,8 @@
                             ~group
                                 @inv_tag placeholder='unique id will be generated if blank'
                                 @category_id
-                                @line_id
+                                @line_id attrs="{'invisible': [('location','!=',False)]}"
+                                @location attrs="{'invisible': [('line_id','!=',False)]}"
                             ~group
                                 @trademark
                                 @model
