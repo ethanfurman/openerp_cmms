@@ -94,9 +94,9 @@
                         @image_medium class='oe_avatar oe_left' widget='image'
                         ~div .oe_title context="{'spare_parts_required':True}"
                             ~div .oe_edit_only
-                                ~label for='name' $Product_Name
+                                ~label for='name'
                             ~h1
-                                @name placeholder='nickname for machine (must be unique)'
+                                @name placeholder='unique nickname'
                         ~group
                             ~group
                                 @inv_tag placeholder='unique id will be generated if blank'
